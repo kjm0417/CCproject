@@ -22,7 +22,7 @@ public class TestDataImporter
     [MenuItem("Tools/TestData 가져오기")]
     public static void Import()
     {
-        string path = Application.dataPath + "/TestData.json";
+        string path = Application.dataPath + "/02_Data/Json/TestData.json";
         string json = System.IO.File.ReadAllText(path);
         string wrappedJson = "{\"items\":" + json + "}";
 
@@ -37,7 +37,7 @@ public class TestDataImporter
             so.dropItemId = dto.dropItemId;
             so.dropRate = dto.dropRate;
 
-            string assetPath = "Assets/02_Data/SO/" + dto.id + ".asset";
+            string assetPath = "Assets/02_Data/SO/Data/" + dto.id + ".asset";
             AssetDatabase.CreateAsset(so, assetPath);
         }
         AssetDatabase.SaveAssets();

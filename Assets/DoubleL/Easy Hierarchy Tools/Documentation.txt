@@ -1,0 +1,19 @@
+Get started
+
+From the top menu
+Tools -> DoubleL -> Easy Hierarchy Tools
+
+2. Colors
+This tab allows you to add colors to objects in the Hierarchy window.
+
+3. Grouping
+In this tab, you can change the position of objects, merge them, and set a tag with the group name you want in front of the object name.
+
+4. Transform
+This tab has buttons to reset the position, rotation, and scale of the object, allowing you to reset the settings to your liking.
+
+The provided source code can be modified to suit your needs. 
+However, you may not redistribute or sell the source code.
+
+Please refer to the YouTube video for detailed instructions.
+thank you
