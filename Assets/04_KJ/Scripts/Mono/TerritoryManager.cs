@@ -35,7 +35,7 @@ public class TerritoryManager : MonoBehaviour
         //구역 딕셔너리 초기화 - 구역 id : 구역 객체
         foreach (TerritoryZone zone in FindObjectsOfType<TerritoryZone>())
         {
-                territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
+            territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
         }
 
         currencyProvider = FindAnyObjectByType<CurrencyManager>();
@@ -57,41 +57,11 @@ public class TerritoryManager : MonoBehaviour
         if (currencyProvider.TrySpend(territoryZone.TerritoryZoneData.RequireGold))
         {
             territoryZone.UnLockZone();
+            //territoryZone.GetComponent<TerritoryApproachTrigger>().isco
             return true;
         }
 
         return false;
-    }
-
-    BoxCollider2D prevConfinerBound;
-
-    CinemachineCamera cinemachineCamera;
-    CinemachineConfiner2D cinemachineConfiner2D;
-    /// <summary>
-    /// 구역 접근 했을 때 카메라 설정
-    /// </summary>
-    /// <param name="prevterritoryCam"></param>
-    /// <param name="approveterritoryCam"></param>
-    public void ApproveCameraTerritoryUnlock(TerritoryCamera approveterritoryCam)
-    {
-        cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
-        cinemachineConfiner2D = FindAnyObjectByType<CinemachineConfiner2D>();
-
-        prevConfinerBound = (BoxCollider2D)cinemachineConfiner2D.BoundingShape2D;  //이전 구역의 Bound 저장
-
-        cinemachineCamera.Follow = approveterritoryCam.TerritoryAnchor;
-        cinemachineConfiner2D.BoundingShape2D = approveterritoryCam.CameBoundCollider2D; //시네머신의 Bound를 다음 구역의 Bound 설정
-    }
-
-    /// <summary>
-    /// 선택 UI에서 구역 구매 거절 했을 때 카메라 설정
-    /// </summary>
-    /// <param name="prevterritoryCam"></param>
-    /// <param name="approveterritoryCam"></param>
-    public void LeaveCameraTerritoryUnlock()
-    {
-        cinemachineCamera.Follow = GameObject.FindGameObjectWithTag("Player").transform;
-        cinemachineConfiner2D.BoundingShape2D = prevConfinerBound; //시네머신의 Bound를 다음 구역의 Bound 설정
     }
 
 }

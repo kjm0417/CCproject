@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,7 +21,9 @@ public class TerritoryZone : MonoBehaviour
     [SerializeField]
     private bool isLocked = true; //구역이 잠겨 있는지 여부 (초기엔 잠겨 있음)
 
-    public static Action<TerritoryZone> OnZoneApproached;
+    public static Action<TerritoryZone, TerrirotyDirection> OnZoneApproached;
+    public static Action OnZoneLeaved;
+    public static Action<TerritoryZone> OnZoneBuyClick; //구역 구매 버튼 클릭 이벤트
 
     //외부 읽기 전용 프로퍼티
     public TerritoryZoneData TerritoryZoneData => territoryZoneData;
@@ -56,37 +59,57 @@ public class TerritoryZone : MonoBehaviour
         this.gameObject.name = "Zone_" + number;
 
         isLocked = false;
-    
-        //해당 구역 활성화 처리
-        Color c = territoryTileMap.color;
-        c.a = 1f;
-        territoryTileMap.color = c;
 
         //아이콘 UI 처리
         territoryIcon.UnLockUI();
-        territoryIcon.ArrowUI(false);
 
-        //TODO KJ - 구매 UI 처리
+        //구역이 밝아짐
+        StartCoroutine(TerritoryAlpha());
+    }
 
-        //TODO KJ - 카메라 이동 가능 범위 확장
-        //TODO KJ - 신규 구역에 자원 오브젝트 스폰
+    IEnumerator TerritoryAlpha()
+    {
+        Color c = territoryTileMap.color;
+        float startAlpha = c.a; 
+        float elapsed = 0f;
+
+        while (elapsed < 1.0f)
+        {
+            elapsed += Time.deltaTime;
+            c.a = Mathf.Lerp(startAlpha, 1f, elapsed / 1.0f);
+            territoryTileMap.color = c;
+            yield return null;
+        }
+
+        c.a = 1f;
+        territoryTileMap.color = c; //마지막에 정확히 1로 고정 (Lerp 오차 방지)
+
+        yield return new WaitForSeconds(1.0f);
+        TerritoryDirectionManager.Instance.ZoomOutClearTerritory();
     }
 
     /// <summary>
-    /// 잠겨 있는 구역에 접근 시 처리할 것
+    /// 해금되지 않는 구역에 접근 시 처리할 것
     /// </summary>
-    public void ApproachZone() 
+    public void ApproachZone(TerrirotyDirection terrirotyDirection) 
     {
-        //현재 구역 상/하/좌/우 화살표 생성
-        territoryIcon.ArrowUI(true);
-
-        //접근한 구역으로 카메라 이동     
-        TerritoryCamera approveterritoryCamera = GetComponent<TerritoryCamera>(); //접근한 구역의 카메라 컴포
-
-        TerritoryManager.Instance?.ApproveCameraTerritoryUnlock(approveterritoryCamera);
-
-        //선택 UI
-        OnZoneApproached?.Invoke(this);
-
+        //줌 아웃 UI
+        OnZoneApproached?.Invoke(this, terrirotyDirection);
     }
+
+    /// <summary>
+    /// 해금되지 않는 구역에 접근 후 이탈 시 처리할 것
+    /// </summary>
+    public void LeaveZone()
+    {
+        OnZoneLeaved?.Invoke();
+    }
+    /// <summary>
+    /// 해금되지 않는 구역에 줌 인 했을 때 처리할 것
+    /// </summary>
+    public void ZoomInZone()
+    {
+        OnZoneBuyClick?.Invoke(this); //줌인 시, 구매 의사 UI 활성화 하기 위한 이벤트 발행
+    }
+
 }

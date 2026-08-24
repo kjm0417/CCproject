@@ -1,5 +1,7 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TerritoryIcon : MonoBehaviour
 {
@@ -10,6 +12,20 @@ public class TerritoryIcon : MonoBehaviour
 
     [SerializeField]
     GameObject Arrows;
+
+    [SerializeField]
+    private Button zoomInBtn;
+
+    public event Action OnZoomInClick;
+
+    private void OnEnable()
+    {
+        zoomInBtn.onClick.AddListener(() => OnZoomInClick?.Invoke());
+    }
+    private void OnDisable()
+    {
+        zoomInBtn.onClick.RemoveAllListeners();
+    }
 
     private void Start()
     {
