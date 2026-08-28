@@ -16,6 +16,10 @@ MonoBehaviour:
   RequireGold: 30
   IsSpecialZone: 0
   ResourceSpawnTable:
-  - ResourcePrefab: {fileID: 0}
-    SpawnLongTime: 0
+  - ResourcePrefab: {fileID: 1583383562643593639, guid: b4b5addcac863114db1e5bc6310edf42, type: 3}
+    SpawnLongTime: 1
+    MaxCount: 10
+  - ResourcePrefab: {fileID: 4801886088550710931, guid: 7452d390e8442384f8e0f20eb71c39d9, type: 3}
+    SpawnLongTime: 1
+    MaxCount: 5
   NpcSlots: []

@@ -86,6 +86,7 @@ public class TerritoryZone : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
         TerritoryDirectionManager.Instance.ZoomOutClearTerritory();
+        GetComponent<ResourceSpawner>().SpawnInitial();
     }
 
     /// <summary>
