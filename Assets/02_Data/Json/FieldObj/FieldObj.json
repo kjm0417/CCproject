@@ -1,0 +1,68 @@
+﻿[
+  {
+    "ObjectID":41001,
+    "ObjectName":"참 나무",
+    "ObjectType":"Tree",
+    "HP":5,
+    "Description":"",
+    "RespawnTimeMin":45,
+    "RespawnTimeMax":60,
+    "InteractionRange":"1 * 2",
+    "DropGroupID":71001
+  },
+  {
+    "ObjectID":41002,
+    "ObjectName":"바위",
+    "ObjectType":"Rock",
+    "HP":5,
+    "Description":"",
+    "RespawnTimeMin":45,
+    "RespawnTimeMax":60,
+    "InteractionRange":"1 * 1",
+    "DropGroupID":71002
+  },
+  {
+    "ObjectID":41003,
+    "ObjectName":"석탄 바위",
+    "ObjectType":"Rock",
+    "HP":6,
+    "Description":"",
+    "RespawnTimeMin":55,
+    "RespawnTimeMax":65,
+    "InteractionRange":"1 * 1",
+    "DropGroupID":71003
+  },
+  {
+    "ObjectID":41004,
+    "ObjectName":"수풀",
+    "ObjectType":"Bush",
+    "HP":1,
+    "Description":"",
+    "RespawnTimeMin":20,
+    "RespawnTimeMax":30,
+    "InteractionRange":"1 * 1 ",
+    "DropGroupID":""
+  },
+  {
+    "ObjectID":42001,
+    "ObjectName":"나무 상자",
+    "ObjectType":"Interactive",
+    "HP":3,
+    "Description":"",
+    "RespawnTimeMin":0,
+    "RespawnTimeMax":0,
+    "InteractionRange":"1 * 1",
+    "DropGroupID":71004
+  },
+  {
+    "ObjectID":42002,
+    "ObjectName":"모닥불",
+    "ObjectType":"Interactive",
+    "HP":3,
+    "Description":"",
+    "RespawnTimeMin":0,
+    "RespawnTimeMax":0,
+    "InteractionRange":"1 * 1",
+    "DropGroupID":71005
+  }
+]
