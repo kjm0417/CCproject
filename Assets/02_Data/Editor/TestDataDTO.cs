@@ -11,36 +11,30 @@ public class TestDataDTO
     public string dropItemId;
     public float dropRate;
 }
-[System.Serializable]
-public class TestDataDtoList
-{
-    public List<TestDataDTO> items;
-}
 
-public class TestDataImporter
+public class TestDataImporter : BaseDataImporter<TestDataDTO, TestData>
 {
+    protected override string JsonFilePath => "/02_Data/Json/TestData.json";
+    protected override string SOFolderPath => "Assets/02_Data/SO/Data/";
+
+    protected override void MapDTOToSO(TestDataDTO dto, TestData so)
+    {
+        so.id = dto.id;
+        so.objectName = dto.objectName;
+        so.maxHP = dto.maxHP;
+        so.dropItemId = dto.dropItemId;
+        so.dropRate = dto.dropRate;
+    }
+
+    protected override string GetDTOID(TestDataDTO dto)
+    {
+        return dto.id;
+    }
+
     [MenuItem("Tools/TestData 가져오기")]
     public static void Import()
     {
-        string path = Application.dataPath + "/02_Data/Json/TestData.json";
-        string json = System.IO.File.ReadAllText(path);
-        string wrappedJson = "{\"items\":" + json + "}";
-
-        TestDataDtoList data = JsonUtility.FromJson<TestDataDtoList>(wrappedJson);
-
-        foreach (TestDataDTO dto in data.items)
-        {
-            TestData so = ScriptableObject.CreateInstance<TestData>();
-            so.id = dto.id;
-            so.objectName = dto.objectName;
-            so.maxHP = dto.maxHP;
-            so.dropItemId = dto.dropItemId;
-            so.dropRate = dto.dropRate;
-
-            string assetPath = "Assets/02_Data/SO/Data/" + dto.id + ".asset";
-            AssetDatabase.CreateAsset(so, assetPath);
-        }
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        BaseDataImporter<TestDataDTO, TestData> importer = new TestDataImporter();
+        importer.Import();
     }
 }
