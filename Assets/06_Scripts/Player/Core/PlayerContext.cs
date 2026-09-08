@@ -13,7 +13,11 @@ public class PlayerContext : MonoBehaviour
     // 애니메이션 부품(이동 상태 -> 애니메이터/방향) - 보통 자식(PlayerAnim)
     public PlayerAnimation Animation { get; private set; }
 
+    // 허기 부품(시간 감소 + 4단계) - 루트
+    public PlayerHunger Hunger { get; private set; }
+
     // 아직 안 만든 부품들 - 만들면 아래 주석과 Awake의 짝을 함께 푼다.
+    // public PlayerHealth Health { get; private set; }
     // public PlayerTargeting Targeting { get; private set; }
     // public PlayerInteraction Interaction { get; private set; }
     // public PlayerCollector Collector { get; private set; }
@@ -24,6 +28,7 @@ public class PlayerContext : MonoBehaviour
         Stats = GetComponent<PlayerStats>();
         Movement = GetComponent<PlayerMovement>();
         Animation = GetComponentInChildren<PlayerAnimation>(true); // 자식까지 탐색
+        Hunger = GetComponent<PlayerHunger>();
 
         //self + 자식에 있는 모든 IPlayerComponent 부품을 초기화
         InitializeComponents();
