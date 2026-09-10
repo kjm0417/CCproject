@@ -1,0 +1,15 @@
+﻿[
+  {
+    "CraftRecipeID":62001,
+    "ResultItemID":13002,
+    "ResultCount":1,
+    "CraftFacilityID":42002,
+    "CraftTimeSec":5,
+    "Material1ID":13001,
+    "Material1Count":1,
+    "Material2ID":0,
+    "Material2Count":0,
+    "Material3ID":0,
+    "Material3Count":0
+  }
+]

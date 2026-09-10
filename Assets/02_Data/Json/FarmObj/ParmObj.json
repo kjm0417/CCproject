@@ -1,0 +1,202 @@
+﻿[
+  {
+    "CropID":51101,
+    "CropName":"마늘 (01)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73006,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51201,
+    "CropName":"마늘 (02)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73006,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51301,
+    "CropName":"마늘 (03)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73006,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51401,
+    "CropName":"마늘 (04)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73006,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51501,
+    "CropName":"마늘 (05)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73001,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51102,
+    "CropName":"매실 (01)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73007,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51202,
+    "CropName":"매실 (02)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73007,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51302,
+    "CropName":"매실 (03)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73007,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51402,
+    "CropName":"매실 (04)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73007,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51502,
+    "CropName":"매실 (05)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73002,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51103,
+    "CropName":"보리 (01)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73008,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51203,
+    "CropName":"보리 (02)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73008,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51303,
+    "CropName":"보리 (03)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73008,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51403,
+    "CropName":"보리 (04)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73008,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51503,
+    "CropName":"보리 (05)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73003,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51104,
+    "CropName":"양파 (01)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73009,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51204,
+    "CropName":"양파 (02)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73009,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51304,
+    "CropName":"양파 (03)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73009,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51404,
+    "CropName":"양파 (04)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73009,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51504,
+    "CropName":"양파 (05)",
+    "TimePerStageSec":"",
+    "Regrowable":0,
+    "DropGroupID":73004,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51105,
+    "CropName":"오디 (01)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73010,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51205,
+    "CropName":"오디 (02)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73010,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51305,
+    "CropName":"오디 (03)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73010,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51405,
+    "CropName":"오디 (04)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73010,
+    "CropSeason":"Spring"
+  },
+  {
+    "CropID":51505,
+    "CropName":"오디 (05)",
+    "TimePerStageSec":"",
+    "Regrowable":100,
+    "DropGroupID":73005,
+    "CropSeason":"Spring"
+  }
+]
