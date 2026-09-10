@@ -10,15 +10,6 @@ public enum StatType
     MaxHp,       // 최대 체력 (현재 체력은 depletable 이라 여기서 다루지 않는다)
 }
 
-// 플레이어(및 공격/상호작용)가 바라보는 4방향.
-public enum FacingDirection
-{
-    Down,
-    Up,
-    Left,
-    Right,
-}
-
 // 허기 4단계 상태 (문서 2.2). 이동/전투 상태와는 독립된 축이라 별도 enum으로 둔다.
 public enum HungerTier
 {
@@ -26,4 +17,11 @@ public enum HungerTier
     Low,     // 1~19     : 달리기 제한, 회복효율 감소
     Normal,  // 20~79    : 일반
     Full,    // 80~100   : 이동/회복 보너스
+}
+
+// 재화 종류. 필요하면 여기에 추가/이름변경.
+public enum CurrencyType
+{
+    Gold, // 기본 재화(돈)
+    Gem,  // 보석 등 특수 재화
 }

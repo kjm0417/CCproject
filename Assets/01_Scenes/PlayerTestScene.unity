@@ -771,6 +771,10 @@ GameObject:
   - component: {fileID: 886695390}
   - component: {fileID: 886695389}
   - component: {fileID: 886695388}
+  - component: {fileID: 886695392}
+  - component: {fileID: 886695395}
+  - component: {fileID: 886695394}
+  - component: {fileID: 886695393}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -836,10 +840,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aa58038b1f6cbb479c89aeb78f6c665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMoveSpeed: 5
-  baseAttackPower: 10
-  baseAttackRange: 2
-  baseMaxHp: 100
 --- !u!114 &886695389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,6 +892,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b96290120f60a5e40a0f3e375487fd0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerContext
+  baseData: {fileID: 11400000, guid: ef40399788ae4284db9a1f3eaec8bef5, type: 2}
+--- !u!114 &886695392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886695385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b643001d932b2b4880761256da1d632, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVitals
+  maxHunger: 100
+  hungerDrainPerSecond: 0.5
+  lowThreshold: 20
+  fullThreshold: 80
+  starveInterval: 1
+  starveDamage: 1
+--- !u!114 &886695393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886695385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d34d1e7255872f64aad397c7f9d73ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDebugHUD
+--- !u!114 &886695394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886695385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ba96bd763936e48978861a15503931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallet
+--- !u!114 &886695395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886695385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbdddb868045f664a9dcb79c62dee79c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerProgression
+  baseExp: 100
+  exponent: 1.5
+  skillPointsPerLevel: 1
 --- !u!1 &1210603229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1249,6 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c188cc9f8fc6d8d4fb67c156d101bf0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
+  spriteDefaultFacesRight: 1
 --- !u!1001 &1415079195
 PrefabInstance:
   m_ObjectHideFlags: 0
