@@ -28,7 +28,7 @@ public class PlayerContext : MonoBehaviour
     public PlayerWallet Wallet { get; private set; }
 
     // 아직 안 만든 부품들 - 만들면 아래 주석과 Awake의 짝을 함께 푼다.
-    // public PlayerInteraction Interaction { get; private set; }
+    public PlayerInteraction Interaction { get; private set; }
 
     private void Awake()
     {
@@ -39,6 +39,7 @@ public class PlayerContext : MonoBehaviour
         Vitals = GetComponent<PlayerVitals>();
         Progression = GetComponent<PlayerProgression>();
         Wallet = GetComponent<PlayerWallet>();
+        Interaction = GetComponent<PlayerInteraction>();
 
         //self + 자식에 있는 모든 IPlayerComponent 부품을 초기화
         InitializeComponents();

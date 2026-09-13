@@ -1,24 +1,29 @@
+ï»¿using System.Collections;
 using UnityEngine;
 
-// ÀÌµ¿ »óÅÂ¸¦ ÀÐ¾î ¾Ö´Ï¸ÞÀÌÅÍ/½ºÇÁ¶óÀÌÆ®¿¡ ¹Ý¿µÇÏ´Â ºÎÇ°. "º¸ÀÌ´Â °Í"¸¸ ´ã´ç.
-// ¾Ö´Ï¸ÞÀÌ¼ÇÀº ÁÂ¿ì¸¸ ±¸ºÐÇÑ´Ù(È®Á¤). »óÇÏ·Îµµ ¿òÁ÷ÀÌÁö¸¸ »óÇÏ Àü¿ë ¾Ö´Ï¸ÞÀÌ¼ÇÀº ¾øÀ¸¹Ç·Î,
-// ¼¼·Î ÀÌµ¿ Áß¿¡´Â ¸¶Áö¸· ÁÂ¿ì ¹æÇâÀ» À¯ÁöÇÑ´Ù. ÁÂ¿ì ±¸ºÐÀº ½ºÇÁ¶óÀÌÆ® X µÚÁý±â·Î Ã³¸®.
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerAnimation : MonoBehaviour, IPlayerComponent
 {
-    [Header("½ºÇÁ¶óÀÌÆ® ¿øº»ÀÌ ¿À¸¥ÂÊÀ» º¸°í ÀÖÀ¸¸é true")]
+    [Header("ìŠ¤í”„ë¼ì´íŠ¸ ë°©í–¥")]
     [SerializeField]
     private bool spriteDefaultFacesRight = true;
+
+    [Header("ìƒí˜¸ìž‘ìš© ì• ë‹ˆë©”ì´ì…˜")]
+    [SerializeField]
+    private int farmingLayerIndex = 1;
+
+    [SerializeField]
+    private float interactionLayerHoldTime = 0.45f;
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private PlayerMovement movement;
+    private Coroutine interactionRoutine;
 
-    private bool hasMoving; // ¾Ö´Ï¸ÞÀÌÅÍ¿¡ Moving ÆÄ¶ó¹ÌÅÍ°¡ ÀÖÀ» ¶§¸¸ ¼¼ÆÃ(°æ°í ½ºÆÔ ¹æÁö)
-    private bool facingRight = true; // ¸¶Áö¸· ÁÂ¿ì ¹æÇâ (¼¼·Î ÀÌµ¿ ½Ã À¯Áö)
+    private bool hasMoving;
+    private bool facingRight = true;
 
-    // ¹Ù±ù(°ø°Ý/»óÈ£ÀÛ¿ë µî)¿¡¼­ ÁÂ¿ì ¹æÇâÀ» Àç»ç¿ëÇÒ ¼ö ÀÖ°Ô ³ëÃâ
     public bool FacingRight => facingRight;
 
     public void Initialize(PlayerContext context)
@@ -33,24 +38,64 @@ public class PlayerAnimation : MonoBehaviour, IPlayerComponent
         }
     }
 
-    // ÀÌµ¿(FixedUpdate) ÀÌÈÄÀÎ LateUpdate¿¡¼­ Ç¥ÇöÀ» ¹Ý¿µÇÑ´Ù.
+    public void PlayToolInteraction(ToolType toolType)
+    {
+        if (animator == null) return;
+
+        int stateHash = GetToolStateHash(toolType);
+        if (stateHash == 0) return;
+
+        if (interactionRoutine != null)
+        {
+            StopCoroutine(interactionRoutine);
+        }
+
+        interactionRoutine = StartCoroutine(PlayToolInteractionRoutine(stateHash));
+    }
+
     private void LateUpdate()
     {
         if (movement == null || animator == null) return;
 
         bool moving = movement.IsMoving;
-
-        // ÁÂ¿ì ÀÔ·ÂÀÌ ÀÖÀ» ¶§¸¸ ¹æÇâ °»½Å. ¼ø¼ö ¼¼·Î ÀÌµ¿(x=0)ÀÌ¸é ¸¶Áö¸· ÁÂ¿ì ¹æÇâ À¯Áö.
         float x = movement.MoveInput.x;
         if (moving && Mathf.Abs(x) > 0.0001f)
         {
             facingRight = x > 0f;
         }
 
-        // ÁÂ¿ì´Â ½ºÇÁ¶óÀÌÆ® µÚÁý±â·Î Ç¥Çö (»óÇÏ´Â ¹æÇâ Ç¥Çö ¾øÀ½)
-        spriteRenderer.flipX = (facingRight != spriteDefaultFacesRight);
+        spriteRenderer.flipX = facingRight != spriteDefaultFacesRight;
 
-        // °È±â/Á¤Áö ÀüÈ¯
         if (hasMoving) animator.SetBool(PlayerAnimHash.Moving, moving);
+    }
+
+    private IEnumerator PlayToolInteractionRoutine(int stateHash)
+    {
+        if (farmingLayerIndex < 0 || farmingLayerIndex >= animator.layerCount)
+        {
+            animator.Play(stateHash, 0, 0f);
+            yield break;
+        }
+
+        animator.SetLayerWeight(farmingLayerIndex, 1f);
+        animator.Play(stateHash, farmingLayerIndex, 0f);
+
+        yield return new WaitForSeconds(interactionLayerHoldTime);
+
+        animator.SetLayerWeight(farmingLayerIndex, 0f);
+        interactionRoutine = null;
+    }
+
+    private int GetToolStateHash(ToolType toolType)
+    {
+        switch (toolType)
+        {
+            case ToolType.Axe:
+                return PlayerAnimHash.PlayerAxe;
+            case ToolType.Pickaxe:
+                return PlayerAnimHash.PlayerPick;
+            default:
+                return 0;
+        }
     }
 }

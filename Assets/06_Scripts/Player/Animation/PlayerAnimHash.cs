@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-// ¾Ö´Ï¸ŞÀÌÅÍ ÆÄ¶ó¹ÌÅÍ ÇØ½Ã¸¦ ÇÑ °÷¿¡ ¸ğ¾ÆµĞ´Ù.
-// StringToHash¸¦ ½ÃÀÛ ½Ã ÇÑ ¹ø¸¸ °è»êÇØ º¸°ü -> ¹®ÀÚ¿­ ´ë½Å int·Î Á¢±Ù(¿ÀÅ¸ ¹æÁö + Á¶È¸ ºñ¿ë Á¦°Å).
+// ì• ë‹ˆë©”ì´í„° íŒŒë¼ë¯¸í„°ì™€ ìƒíƒœ ì´ë¦„ì„ í•œ ê³³ì—ì„œ ê´€ë¦¬í•œë‹¤.
 public static class PlayerAnimHash
 {
-    // °È´Â Áß ¿©ºÎ (Bool)
     public static readonly int Moving = Animator.StringToHash("Moving");
+    public static readonly int PlayerAxe = Animator.StringToHash("Player_Axe");
+    public static readonly int PlayerPick = Animator.StringToHash("Player_Pick");
 }
