@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 /// <summary>
-/// ±¸¿ªÀÌ ÇØ±İµÆÀ» ¶§, Á¤ÇØÁø ÀÚ¿ø ¸ñ·Ï(TerritoryZoneData.ResourceSpawnTable)´ë·Î ÀÚ¿ø ¿ÀºêÁ§Æ®¸¦ 
-/// Å¸ÀÏ ¿µ¿ª¾È ºó Ä­¿¡ ·£´ı ¹èÄ¡ÇÏ°í, ÆÄ±«µÇ¸é Á¤ÇØÁø ½Ã°£ µÚ ´Ù½Ã Ã¤¿ö ³Ö´Â ¿ªÇÒÀ» ÇÏ´Â ÄÄÆ÷³ÍÆ®.
+/// êµ¬ì—­ì´ í•´ê¸ˆëì„ ë•Œ, ì •í•´ì§„ ìì› ëª©ë¡(TerritoryZoneData.ResourceSpawnTable)ëŒ€ë¡œ ìì› ì˜¤ë¸Œì íŠ¸ë¥¼
+/// íƒ€ì¼ ì˜ì—­ì•ˆ ë¹ˆ ì¹¸ì— ëœë¤ ë°°ì¹˜í•˜ê³ , íŒŒê´´ë˜ë©´ ì •í•´ì§„ ì‹œê°„ ë’¤ ë‹¤ì‹œ ì±„ì›Œ ë„£ëŠ” ì—­í• ì„ í•˜ëŠ” ì»´í¬ë„ŒíŠ¸.
 /// </summary>
 public class ResourceSpawner : MonoBehaviour
 {
@@ -23,62 +23,60 @@ public class ResourceSpawner : MonoBehaviour
     private void Awake()
     {
         territoryTileMap.CompressBounds();
+
+        BoundsInt bounds = territoryTileMap.cellBounds;
+        Debug.Log($"bounds.min: {bounds.min}, bounds.max: {bounds.max}, size: {bounds.size}");
     }
     /// <summary>
-    /// ±¸¿ªÀÇ 6x6 Å¸ÀÏ ¹üÀ§¿¡¼­ Å×µÎ¸® 1Ä­¾¿ »« ¾ÈÂÊ(4x4) ¿µ¿ªÀÇ ¸ğµç Ä­ ÁÂÇ¥¸¦ »Ì¾Æ¼­, "¿©±â¿¡ ÀÚ¿ø ½ºÆùÇØµµ µÇ´Â Ä­µé"ÀÇ ¸ñ·ÏÀ¸·Î µ¹·ÁÁÖ´Â ¸Ş¼­µå.
+    /// Ground Tilemap ì „ì²´ ì˜ì—­ì˜ ëª¨ë“  ì¹¸ ì¢Œí‘œë¥¼ ë½‘ì•„ì„œ, "ì—¬ê¸°ì— ìì› ìŠ¤í°í•´ë„ ë˜ëŠ” ì¹¸ë“¤"ì˜ ëª©ë¡ìœ¼ë¡œ ëŒë ¤ì£¼ëŠ” ë©”ì„œë“œ.
     /// </summary>
     /// <returns></returns>
     private List<Vector3Int> GetVaildSpawnCells()
     {
-        Debug.Log($"cellBounds min: {territoryTileMap.cellBounds.min}, max: {territoryTileMap.cellBounds.max}");
-
-        BoundsInt bounds = territoryTileMap.cellBounds; //6x6 Å¸ÀÏ
-
-        //4x4 Å¸ÀÏ·Î ¸¸µé¾î¹ö¸®±â => 1x1ºÎÅÍ 4x4±îÁö ¸¸µé¾îÁÜ. ÃÑ Å©±â 4x4
-        var newMin = bounds.min + new Vector3Int(1, 1, 0); //bounds.min = (0,0,0)
-        var newMax = bounds.max - new Vector3Int(1, 1, 0); //bounds.max = (6,6,0) //UnityÀÇ max´Â "¸¶Áö¸· Ä­ ´ÙÀ½Ä­"±îÁö Æ÷ÇÔÇÏ´Â °ªÀÓ.
-        BoundsInt validBounds = new BoundsInt(newMin, newMax - newMin); //BoundsInt´Â (½ÃÀÛÁ¡,Å©±â) ¼ø¼­·Î ¸¸µê
+        BoundsInt bounds = territoryTileMap.cellBounds;
+        Debug.Log($"Ground bounds min: {bounds.min}, max: {bounds.max}, size: {bounds.size}");
 
         List<Vector3Int> cellList = new List<Vector3Int>();
-        foreach (var a in validBounds.allPositionsWithin) //allPositionsWithin¸¦ »ç¿ëÇÏ¸é À¯´ÏÆ¼°¡ ÇÏ³ª¾¿ validBounds ÀúÀåµÇ¾î ÀÖ´Â Å¸ÀÏµéÀ» °è»êÇØÁØ´Ù.
+        foreach (var pos in bounds.allPositionsWithin)
         {
-            cellList.Add(a);
+            cellList.Add(pos);
         }
 
         return cellList;
     }
 
     /// <summary>
-    /// ±¸¿ªÀÌ ÇØ±İµÈ Á÷ÈÄ ÇÑ ¹ø È£ÃâµÇ´Â, ½ÇÁ¦·Î ÀÚ¿øÀ» ¹èÄ¡ÇÏ´Â ¸Ş¼­µå
+    /// êµ¬ì—­ì´ í•´ê¸ˆëœ ì§í›„ í•œ ë²ˆ í˜¸ì¶œë˜ëŠ”, ì‹¤ì œë¡œ ìì›ì„ ë°°ì¹˜í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     public void SpawnInitial()
     {
         List<ResourceSpawnEntry> table = GetComponent<TerritoryZone>().TerritoryZoneData.ResourceSpawnTable;
-        List<Vector3Int> availableCells = GetVaildSpawnCells(); 
+        List<Vector3Int> availableCells = GetVaildSpawnCells();
 
         foreach (ResourceSpawnEntry entry in table)
         {
             for (int i = 0; i < entry.MaxCount; i++)
             {
-                if (availableCells.Count == 0) break; // Àú¹ø¿¡ ¾ê±âÇÑ ¾ÈÀüÀåÄ¡
+                if (availableCells.Count == 0) break; // ì €ë²ˆì— ì–˜ê¸°í•œ ì•ˆì „ì¥ì¹˜
 
                 int index =  Random.Range(0, availableCells.Count);
 
-                Vector3Int pickedCell = availableCells[index]; //¸®½ºÆ®¿¡¼­ index ¹øÂ° ÀÚ¸®¿¡ ÀÖ´Â ÁÂÇ¥°ª = ¿ì¸®°¡ »ç¿ëÇÒ ÀÚ¿øÀÇ ½ºÆù À§Ä¡
+                Vector3Int pickedCell = availableCells[index]; //ë¦¬ìŠ¤íŠ¸ì—ì„œ index ë²ˆì§¸ ìë¦¬ì— ìˆëŠ” ì¢Œí‘œê°’ = ìš°ë¦¬ê°€ ì‚¬ìš©í•  ìì›ì˜ ìŠ¤í° ìœ„ì¹˜
 
-                Vector3 spawnPos = territoryTileMap.GetCellCenterWorld(pickedCell); //GetCellCenterWorld(pickedCell) :  ÁÂÇ¥°ª(Ä­)¿¡ Á¤Áß¾Ó¿¡ ÇØ´çÇÏ´Â ½ÇÁ¦
-                //¿ùµå ÁÂÇ¥·Î ¹Ù²ãÁÖ´Â ÇÔ¼ö
+                Vector3 spawnPos = territoryTileMap.GetCellCenterWorld(pickedCell);
+                //GetCellCenterWorld(pickedCell) :  ì¢Œí‘œê°’(ì¹¸)ì— ì •ì¤‘ì•™ì— í•´ë‹¹í•˜ëŠ” ì‹¤ì œ
+                //ì›”ë“œ ì¢Œí‘œë¡œ ë°”ê¿”ì£¼ëŠ” í•¨ìˆ˜
 
                 GameObject resourceObj =  Instantiate(entry.ResourcePrefab, spawnPos, Quaternion.identity);
 
                 availableCells.Remove(pickedCell);
-                //ÀÌ°Ç Áö±İ ÀÌ¸Ş¼­µå°¡ ÇÑ ¹ø ½ÇÇàµÇ´Â µ¿¾È¸¸ ÀÇ¹Ì ÀÖ´Â °ÅÀÓ. ³ª¹« 5°³, µ¹ 3°³¸¦      
-                //¿¬´Ş¾Æ ½ºÆùÇÏ´Âµ¥, ¹æ±İ ³ª¹« ÇÏ³ª ³õÀº Ä­À» ±× ´ÙÀ½ µ¹ ½ºÆùÇÒ ¶§ ¶Ç »ÌÀ¸¸é °°Àº Ä­¿¡ µÎ °³°¡ °ãÃÄ ³õÀÓ.±×°Å ¸·À¸·Á°í »ÌÀº
-                //Áï½Ã ÈÄº¸ ¸ñ·Ï¿¡¼­ »©´Â °ÅÀÓ
-                
+                //ì´ê±´ ì§€ê¸ˆ ì´ë©”ì„œë“œê°€ í•œ ë²ˆ ì‹¤í–‰ë˜ëŠ” ë™ì•ˆë§Œ ì˜ë¯¸ ìˆëŠ” ê±°ì„. ë‚˜ë¬´ 5ê°œ, ëŒ 3ê°œë¥¼
+                //ì—°ë‹¬ì•„ ìŠ¤í°í•˜ëŠ”ë°, ë°©ê¸ˆ ë‚˜ë¬´ í•˜ë‚˜ ë†“ì€ ì¹¸ì„ ê·¸ ë‹¤ìŒ ëŒ ìŠ¤í°í•  ë•Œ ë˜ ë½‘ìœ¼ë©´ ê°™ì€ ì¹¸ì— ë‘ ê°œê°€ ê²¹ì³ ë†“ì„.ê·¸ê±° ë§‰ìœ¼ë ¤ê³  ë½‘ì€
+                //ì¦‰ì‹œ í›„ë³´ ëª©ë¡ì—ì„œ ë¹¼ëŠ” ê±°ì„
+
                 occupiedCells.Add(pickedCell, resourceObj);
-                // ³ªÁß¿¡ ÇÃ·¹ÀÌ¾î°¡ ±× ³ª¹«¸¦Ä³¼­ ÆÄ±«ÇÏ¸é, "ÀÌ Ä­ÀÌ ÀÌÁ¦ ´Ù½Ã ºñ¾ú´Ù"´Â °É ¾Ë¾Æ¾ß »õ ³ª¹«¸¦ ¸®½ºÆù½ÃÅ³ ¼ö ÀÖÀ½.
-                // ±Ùµ¥ ¾î¶² ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÆÀ» ¶§ "¾ê°¡ ¾î´À Ä­¿¡ ÀÖ´ø ³ğÀÌ¾úÁö?"¸¦ ¾Ë·Á¸é, ¹Ì¸® "ÀÌ Ä­ = ÀÌ ¿ÀºêÁ§Æ®"¶ó°í ±â·ÏÇØµĞ °Ô ÀÖ¾î¾ß ÇÔ
+                // ë‚˜ì¤‘ì— í”Œë ˆì´ì–´ê°€ ê·¸ ë‚˜ë¬´ë¥¼ìºì„œ íŒŒê´´í•˜ë©´, "ì´ ì¹¸ì´ ì´ì œ ë‹¤ì‹œ ë¹„ì—ˆë‹¤"ëŠ” ê±¸ ì•Œì•„ì•¼ ìƒˆ ë‚˜ë¬´ë¥¼ ë¦¬ìŠ¤í°ì‹œí‚¬ ìˆ˜ ìˆìŒ.
+                // ê·¼ë° ì–´ë–¤ ì˜¤ë¸Œì íŠ¸ê°€ íŒŒê´´ëì„ ë•Œ "ì–˜ê°€ ì–´ëŠ ì¹¸ì— ìˆë˜ ë†ˆì´ì—ˆì§€?"ë¥¼ ì•Œë ¤ë©´, ë¯¸ë¦¬ "ì´ ì¹¸ = ì´ ì˜¤ë¸Œì íŠ¸"ë¼ê³  ê¸°ë¡í•´ë‘” ê²Œ ìˆì–´ì•¼ í•¨
             }
         }
     }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3797528049147211113}
   - component: {fileID: 2724961591048284765}
+  - component: {fileID: 1332743865856607369}
   m_Layer: 0
   m_Name: Broil_apple
   m_TagString: Untagged
@@ -92,3 +93,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &1332743865856607369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583383562643593639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ff9676d5f440ee8da4d72724b5e7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NaturalResourceObject
+  data: {fileID: 0}
+  preferredToolType: 1
+  preferredToolMultiplier: 1.5
+  fallbackDamage: 1
+  dropper: {fileID: 0}
