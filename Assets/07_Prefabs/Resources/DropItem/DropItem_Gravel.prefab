@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2051265747238199171}
   - component: {fileID: 7672621953354016798}
   m_Layer: 0
-  m_Name: DropItem_Rock
+  m_Name: DropItem_Gravel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009dcbdb20334f40994ca364ea209885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 60d1cacc84328f049be9966b6a5e72bb, type: 2}
   count: 1
 --- !u!1 &8768160785967591672
 GameObject:
@@ -175,7 +175,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8794254266326841416, guid: ba91d3d4e351e6742a73857b3572809d, type: 3}
+  m_Sprite: {fileID: -3578582641699816866, guid: 7c4a5a75bbad7a74d8d9cafa1e8217a4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
