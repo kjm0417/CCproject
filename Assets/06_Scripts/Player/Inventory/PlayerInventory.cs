@@ -25,7 +25,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
     }
 
     // 아이템 획득. 넣지 못하고 남은 개수를 반환한다(0이면 전부 들어감 - 문서 3.1 꽉 참 처리).
-    public int Add(ItemData item, int count)
+    public int Add(InvenItemData item, int count)
     {
         if (item == null || count <= 0) return count;
         int remaining = count;

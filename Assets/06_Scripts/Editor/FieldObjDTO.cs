@@ -18,7 +18,7 @@ public class FieldObjDTO
 public class FieldObjImporter : BaseDataImporter<FieldObjDTO, FieldObjData>
 {
     protected override string JsonFilePath => "/02_Data/Json/FieldObj/FieldObj.json";
-    protected override string SOFolderPath => "Assets/02_Data/SO/FieldObjData/"; 
+    public override string SOFolderPath => "Assets/02_Data/SO/FieldObjData/"; 
 
     protected override void MapDTOToSO(FieldObjDTO dto, FieldObjData so)
     {

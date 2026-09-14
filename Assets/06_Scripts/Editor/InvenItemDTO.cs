@@ -18,7 +18,7 @@ public class InvenItemDTO
 public class InvenItemImporter : BaseDataImporter<InvenItemDTO, InvenItemData>
 {
     protected override string JsonFilePath => "/02_Data/Json/InvenItem/InvenItem.json";
-    protected override string SOFolderPath => "Assets/02_Data/SO/InvenItem/";
+    public override string SOFolderPath => "Assets/02_Data/SO/InvenItem/";
 
     protected override void MapDTOToSO(InvenItemDTO dto, InvenItemData so)
     {

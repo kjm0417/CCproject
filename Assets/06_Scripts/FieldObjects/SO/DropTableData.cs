@@ -4,14 +4,26 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DropTableData", menuName = "Game/DropTableData")]
 public class DropTableData : ScriptableObject
 {
-    [Header("데이터 연결 - 나중에 연결")]
-    [Tooltip("ItemData 에셋들이 준비된 뒤 연결합니다. 그 전까지는 드랍 항목에 ItemID만 넣어둬도 됩니다.")]
+    #region Json 데이터 매핑 용도 
+    public string DropGroupID;
+    public string ItemID;
+    public int DropRate;
+    public int MinCount;
+    public int MaxCount;
+    #endregion
+
+    [Header("데이터 연결")]
+    [Tooltip("ItemData 에셋들이 준비된 뒤 연결합니다.")]
     [SerializeField]
     private ItemDatabase itemDatabase;
 
-    [Tooltip("나중에 DropTable.json의 값을 여기에 옮깁니다. DropGroupID, ItemID, DropRate, MinCount, MaxCount를 사용합니다.")]
     [SerializeField]
     private List<DropTableEntry> entries = new List<DropTableEntry>();
+
+    public void AddEntry(DropTableEntry entry)
+    {
+        entries.Add(entry);
+    }
 
     public List<ItemDrop> Roll(int dropGroupId)
     {
@@ -22,7 +34,7 @@ public class DropTableData : ScriptableObject
             DropTableEntry entry = entries[i];
             if (entry.DropGroupID != dropGroupId) continue;
 
-            ItemData item = entry.ResolveItem(itemDatabase);
+            InvenItemData item = entry.ResolveItem(itemDatabase);
             if (item == null) continue;
 
             if (Random.Range(0f, 100f) <= entry.DropRate)
@@ -51,21 +63,22 @@ public class DropTableEntry
     public int MinCount = 1;
     public int MaxCount = 1;
 
-    public ItemData ResolveItem(ItemDatabase itemDatabase)
+    public InvenItemData ResolveItem(ItemDatabase itemDatabase)
     {
-        if (Item != null) return Item;
+        //if (Item != null) return Item;
+
         return itemDatabase != null ? itemDatabase.FindById(ItemID) : null;
     }
 }
 
 public readonly struct ItemDrop
 {
-    public ItemDrop(ItemData item, int count)
+    public ItemDrop(InvenItemData item, int count)
     {
         Item = item;
         Count = count;
     }
 
-    public ItemData Item { get; }
+    public InvenItemData Item { get; }
     public int Count { get; }
 }

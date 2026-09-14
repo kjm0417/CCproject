@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 660640049
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8794254266326841416, guid: ba91d3d4e351e6742a73857b3572809d, type: 3}
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e584903f9f8f43928067eb0d034d29b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FieldObjectDropper
-  dropTable: {fileID: 0}
+  dropTable: {fileID: 11400000, guid: 40edc66f02390e84186931e9c6f5cfa1, type: 2}
   pickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
   scatterRadius: 0.35
 --- !u!114 &6870656001676774855

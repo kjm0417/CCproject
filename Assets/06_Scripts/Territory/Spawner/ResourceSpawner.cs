@@ -25,7 +25,7 @@ public class ResourceSpawner : MonoBehaviour
         territoryTileMap.CompressBounds();
 
         BoundsInt bounds = territoryTileMap.cellBounds;
-        Debug.Log($"bounds.min: {bounds.min}, bounds.max: {bounds.max}, size: {bounds.size}");
+      
     }
     /// <summary>
     /// Ground Tilemap 전체 영역의 모든 칸 좌표를 뽑아서, "여기에 자원 스폰해도 되는 칸들"의 목록으로 돌려주는 메서드.

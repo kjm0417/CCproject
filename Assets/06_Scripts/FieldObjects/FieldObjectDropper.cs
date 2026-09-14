@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class FieldObjectDropper : MonoBehaviour
 {
-    [Header("데이터 연결 - 나중에 연결")]
-    [Tooltip("KJ가 드랍 테이블 데이터를 완성하면 DropTableData를 연결합니다.")]
+    [Header("데이터 연결")]
     [SerializeField]
     private DropTableData dropTable;
 
