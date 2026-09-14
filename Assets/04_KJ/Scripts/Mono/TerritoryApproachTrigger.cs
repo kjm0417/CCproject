@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 플레이어가 구역을 해금하려고 했을 때, 해당 구역이 플레이어 기준 상/하/좌/우 중 어디에 위치한지
 /// </summary>
-public enum TerrirotyDirection { Up, Down, Left, Right }
+public enum TerrirotyDirection { None, Up, Down, Left, Right }
 
 /// <summary>
 /// 구역 전용 - 플레이어 감지 기능 (개별 구역에 부착)
@@ -59,7 +59,12 @@ public class TerritoryApproachTrigger : MonoBehaviour
         if (isNowColliding && !isColliderApproach)
         {
             TerrirotyDirection dir = GetDirectionFrom(colliders[colliderCount - 1].transform.position);
-            currentZone.ApproachZone(dir);
+
+            TerritoryZone playerZone = PlayerZoneDetector.GetCurrentZone();
+            if (playerZone == null) return;
+
+            currentZone.ApproachZone(playerZone,dir);
+           
             isColliderApproach = true;
         }
         else if (!isNowColliding && isColliderApproach)

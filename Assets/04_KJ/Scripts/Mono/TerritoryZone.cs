@@ -14,9 +14,10 @@ public class TerritoryZone : MonoBehaviour
 
     [SerializeField]
     private TerritoryIcon territoryIcon;
+    public TerritoryIcon TerritoryIcon => territoryIcon;
 
     [SerializeField]
-    private Tilemap territoryTileMap; //구역에 대한 타일맵
+    private Tilemap territoryTileMapGround,territoryTileMapWall; //구역에 대한 타일맵
 
     [SerializeField]
     private bool isLocked = true; //구역이 잠겨 있는지 여부 (초기엔 잠겨 있음)
@@ -35,16 +36,85 @@ public class TerritoryZone : MonoBehaviour
 
     private void Awake()
     {
-        //구역별 잠금 여부에 따른 초기에 UI 설정
-        if (isLocked)
+        if(isLocked) //잠겨 있다면
         {
-            territoryIcon.LockUI(territoryZoneData.RequireGold);
+            LockedZoneSet();
         }
-           
         else
         {
+            UnLockedZoneSet();
+        }
+       
+    }
+
+    /// <summary>
+    /// 인접 구역에 해당하는 타일맵의 레이어를 변경
+    /// </summary>
+    public void UpdateAdjacentZoneLayer()
+    {
+        territoryTileMapGround.gameObject.layer = 6; //LockZone 레이어로 설정
+        territoryTileMapWall.gameObject.layer = 6;
+    }
+
+    /// <summary>
+    /// 구역이 잠겨있을 때 세팅
+    /// </summary>
+    private void LockedZoneSet()
+    {
+        territoryTileMapGround.gameObject.layer = 6; //LockZone 레이어로 설정
+        territoryTileMapWall.gameObject.layer = 6;
+
+        territoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = true;
+
+    }
+    /// <summary>
+    /// 구역이 잠겨있지 않을 때 세팅
+    /// </summary>
+    private void UnLockedZoneSet()
+    {
+        territoryTileMapGround.gameObject.layer = 7; //UnlockZone 레이어로 설정
+        territoryTileMapWall.gameObject.layer = 7;
+
+        territoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = false;
+    }
+
+    /// <summary>
+    /// 잠겨있는 구역에 해금 시도 과정에서 구역 아이콘 클릭 했을 때 
+    /// </summary>
+    public void TryLockedZoneSet()
+    {
+        territoryTileMapGround.gameObject.layer = 8; //TrylockZone 레이어로 설정
+        territoryTileMapWall.gameObject.layer = 8; //TrylockZone 레이어로 설정
+
+        //구매 아이콘 및 토지 구입 비용 관련 캔버스 활성화
+        if(IsLocked)
+        {
+            territoryIcon.FocusingImageUI(true);
+            territoryIcon.LockUI(territoryZoneData.RequireGold);
+        }
+
+        //현재 구역 기준 상/하/좌/우에 해당하는 구역들을 찾아서 , 구역 비용 UI 보여주고 , 포커싱 설정
+
+    }
+
+    /// <summary>
+    /// 잠겨있는 구역에 해금 시도 과정에서 뒤로가기 아이콘 클릭 했을 때
+    /// </summary>
+    public void TryUnLockedZoneSet()
+    {
+        territoryTileMapGround.gameObject.layer = 6; 
+        territoryTileMapWall.gameObject.layer = 6; 
+
+        //구매 아이콘 및 토지 구입 비용 관련 캔버스 활성화
+        if (IsLocked)
+        {
+            territoryIcon.FocusingImageUI(false);
+            territoryIcon.ButtonUI(false);
             territoryIcon.UnLockUI();
         }
+
+        //현재 구역 기준 상/하/좌/우에 해당하는 구역들을 찾아서 , 구역 비용 UI 보여주고 , 포커싱 설정
+
     }
 
 
@@ -53,6 +123,11 @@ public class TerritoryZone : MonoBehaviour
     /// </summary>
     public void UnLockZone()
     {
+        territoryIcon.FocusingIconUI(false);
+        territoryIcon.FocusingImageUI(false);
+
+        this.gameObject.layer = 7;
+
         string[] objParts = this.gameObject.name.Split('_');
         string number = objParts[1];
 
@@ -60,42 +135,55 @@ public class TerritoryZone : MonoBehaviour
 
         isLocked = false;
 
-        //아이콘 UI 처리
-        territoryIcon.UnLockUI();
-
         //구역이 밝아짐
         StartCoroutine(TerritoryAlpha());
     }
 
     IEnumerator TerritoryAlpha()
     {
-        Color c = territoryTileMap.color;
-        float startAlpha = c.a; 
+        Color c1 = territoryTileMapGround.color;
+        Color c2 = territoryTileMapWall.color;
+        float startAlpha1 = c1.a;
+        float startAlpha2 = c2.a;
         float elapsed = 0f;
 
         while (elapsed < 1.0f)
         {
             elapsed += Time.deltaTime;
-            c.a = Mathf.Lerp(startAlpha, 1f, elapsed / 1.0f);
-            territoryTileMap.color = c;
+            c1.a = Mathf.Lerp(startAlpha1, 1f, elapsed / 1.0f);
+            c2.a = Mathf.Lerp(startAlpha2, 1f, elapsed / 1.0f);
+            territoryTileMapGround.color = c1;
+            territoryTileMapWall.color = c2;
             yield return null;
         }
 
-        c.a = 1f;
-        territoryTileMap.color = c; //마지막에 정확히 1로 고정 (Lerp 오차 방지)
+        c1.a = 1f;
+        territoryTileMapGround.color = c1; //마지막에 정확히 1로 고정 (Lerp 오차 방지)
+        c2.a = 1f;
+        territoryTileMapWall.color = c2; //마지막에 정확히 1로 고정 (Lerp 오차 방지)
 
-        yield return new WaitForSeconds(1.0f);
-        TerritoryDirectionManager.Instance.ZoomOutClearTerritory();
+        territoryIcon.FocusingIconUI(false);
+        territoryIcon.FocusingImageUI(false);
+
+        UnLockedZoneSet();
+
         GetComponent<ResourceSpawner>().SpawnInitial();
+
+        yield return new WaitForSeconds(1.5f);
+
+        TerritoryDirectionManager.Instance.ResetBackClicked(this,true);
     }
 
+    TerrirotyDirection currentZoneDir; //현재 플레이어가 접근한 구역 기준으로 상/하/좌/우 어느 방향에서 접근했는지 저장
     /// <summary>
     /// 해금되지 않는 구역에 접근 시 처리할 것
     /// </summary>
-    public void ApproachZone(TerrirotyDirection terrirotyDirection) 
+    public void ApproachZone(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection) 
     {
-        //줌 아웃 UI
-        OnZoneApproached?.Invoke(this, terrirotyDirection);
+        currentZoneDir = terrirotyDirection;
+
+        //줌 아웃 UI 처리       
+        OnZoneApproached?.Invoke(playerZone, terrirotyDirection);
     }
 
     /// <summary>
@@ -104,13 +192,6 @@ public class TerritoryZone : MonoBehaviour
     public void LeaveZone()
     {
         OnZoneLeaved?.Invoke();
-    }
-    /// <summary>
-    /// 해금되지 않는 구역에 줌 인 했을 때 처리할 것
-    /// </summary>
-    public void ZoomInZone()
-    {
-        OnZoneBuyClick?.Invoke(this); //줌인 시, 구매 의사 UI 활성화 하기 위한 이벤트 발행
     }
 
 }
