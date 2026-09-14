@@ -2,15 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ±¸¿ª µ¥ÀÌÅÍ Å¬·¡½º
+/// êµ¬ì—­ ë°ì´í„°
 /// </summary>
 [CreateAssetMenu(fileName = "TerritoryZoneData", menuName = "Scriptable Objects/TerritoryZoneData")]
 public class TerritoryZoneData : ScriptableObject
 {
-    public int ZoneId; //±¸¿ª °íÀ¯ id
-    public float RequireGold; //±¸¿ª ÇØ±İÇÏ±â À§ÇÑ ÇÊ¿ä °ñµå
-    public bool IsSpecialZone;//Æ¯º°ÇÑ ±¸¿ªÀÎÁö ¿©ºÎ(npc µî)
-    
-    public List<ResourceSpawnEntry> ResourceSpawnTable; //ÀÌ ±¸¿ª¿¡¼­ ½ºÆùµÇ´Â ÀÚ¿ø ¿ÀºêÁ§Æ®µéÀÇ ¸ñ·Ï
-    public List<NpcSlotData> NpcSlots; //ÀÌ ±¸¿ª¿¡ ¹èÄ¡µÇ´Â NPCµéÀÇ ¸ñ·Ï
+    public int ZoneId; //êµ¬ì—­ ID
+    public float RequireGold; //í•´ê¸ˆ ì‹œ í•„ìš” ê³¨ë“œ
+    public bool IsSpecialZone;//íŠ¹ë³„ êµ¬ì—­ ì—¬ë¶€
+
+    public List<ResourceSpawnEntry> ResourceSpawnTable; //ìì› ìŠ¤í° í…Œì´ë¸”
+    public List<NpcSlotData> NpcSlots; //NPC ìŠ¤í° í…Œì´ë¸”
+
+    // ì¸ì ‘ Zone ID (-1 = ì—†ìŒ)
+    public int AdjacentZoneId_Up = -1;
+    public int AdjacentZoneId_Down = -1;
+    public int AdjacentZoneId_Left = -1;
+    public int AdjacentZoneId_Right = -1;
 }

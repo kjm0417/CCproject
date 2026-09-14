@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 /// <summary>
-/// ���� Ȯ�� �ý��� - ���� ����(ī�޶� ��)
+/// 영역 확인 시스템 - 영역 관리(카메라 제어)
 /// </summary>
 public class TerritoryDirectionManager : MonoBehaviour
 {
@@ -17,31 +19,36 @@ public class TerritoryDirectionManager : MonoBehaviour
         }
     }
 
-    CinemachineCamera cinemachineCamera;
-    CinemachineConfiner2D cinemachineConfiner2D;
+    CinemachineBrain brain;
+    [Header("플레이어 카메라")]
+    [SerializeField]
+    CinemachineCamera cinemachineCameraPlayer;
+    [SerializeField]
+    CinemachineConfiner2D cinemachineConfiner2DPlayer;
+    [SerializeField]
+    private BoxCollider2D defalutBound; //기본 플레이어 카메라 범위
 
+    private float initcinemachineCameraPlayerSize; //플레이어 카메라의 초기 사이즈
+    [Header("영역 카메라")]
+    [SerializeField]
+    CinemachineCamera cinemachineCameraZone;
+    [SerializeField]
+    CinemachineConfiner2D cinemachineConfiner2DZone;
+    [SerializeField]
+    AreaCameraZoom areaCameraZoom;
+
+    [SerializeField]
+    private BoxCollider2D zoomOutBound; //줌 아웃시 줌 카메라 범위
+
+    [SerializeField]
+    private float focusingduration; //줌 진입 -> 줌 포커싱, 줌 진출 -> 줌 복귀시간
+    [SerializeField]
+    private float zoomModeMaxSize; //줌 접근이 되어있을 때, 영역 줌 크기를 제어할 수 있는 최대 사이즈
     BoxCollider2D prevConfinerBound;
 
-    [SerializeField]
-    private BoxCollider2D zoomOutConfinerBound; //�� �ƿ��� �� ī�޶� ����
+    [SerializeField, Tooltip("영역의 최대 크기 = 정사각형 18X18 ")]
+    Vector2 maxZoneSize = new Vector2(18, 18);
 
-    [SerializeField] 
-    private float panSpeed = 5f; //�������� �ӵ�
-
-    [SerializeField]
-    private float zoomoutOrthSize; //�� �ƿ��� �� ī�޶� ������ ũ��
-
-    [SerializeField]
-    GameObject SwipeBackButtons;
-
-    [SerializeField]
-    Button backBtn;
-
-    public event Action OnBackClick;
-
-
-    private float initOrthSize; //�ʱ� ī�޶� ������ ũ��
-    private Vector2 activeDirection = Vector2.zero;
     private GameObject Player;
     private void Awake()
     {
@@ -56,87 +63,268 @@ public class TerritoryDirectionManager : MonoBehaviour
         }
 
     }
-    private void OnEnable()
-    {
-        backBtn.onClick.AddListener(() =>
-        {
-            ZoomOutClearTerritory();
-            OnBackClick?.Invoke();
-        });
-    }
-    private void OnDisable()
-    {
-        backBtn.onClick.RemoveAllListeners();
-    }
 
     private void Start()
     {
-        cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
-        cinemachineConfiner2D = FindAnyObjectByType<CinemachineConfiner2D>();
         Player = GameObject.FindGameObjectWithTag("Player").gameObject;
 
-        initOrthSize = cinemachineCamera.Lens.OrthographicSize;
+        brain = FindAnyObjectByType<CinemachineBrain>();
+
+        // 초기 상태: Player 카메라만 활성화
+        cinemachineCameraPlayer.enabled = true;
+        cinemachineCameraZone.enabled = false;
+
+        // Priority 초기값
+        cinemachineCameraPlayer.Priority = 10;
+        cinemachineCameraZone.Priority = 0;
+
+        initcinemachineCameraPlayerSize = cinemachineCameraPlayer.Lens.OrthographicSize;
     }
 
-    private void Update()
+    #region 줌 진입/줌 탈출
+    private Transform prevCamAnchor;
+    /// <summary>
+    /// 줌 진입/탈출 처리 중 처리하는 부분
+    /// </summary>
+    public void ZoomModeActive(Transform camAnchor)
     {
-        if (activeDirection != Vector2.zero)
+
+        prevCamAnchor = camAnchor;
+
+        areaCameraZoom.IsZoomModeChanged(true); //줌 모드 변경 또는 변경해제
+
+        areaCameraZoom.SetZoomTarget(zoomModeMaxSize); 
+
+        //1.camAnchor 기준으로 Bound 설정
+        zoomOutBound.size = maxZoneSize;
+        zoomOutBound.offset = Vector2.zero;
+       // zoomOutBound.gameObject.transform.position = camAnchor.position;
+
+        // Priority 변경 (높은 우선순위로 Zone 카메라 활성화)
+        cinemachineCameraPlayer.Priority = 10;
+        cinemachineCameraZone.Priority = 11;
+
+        cinemachineCameraPlayer.enabled = false;
+        cinemachineCameraZone.enabled = true;
+
+        brain.ResetState();
+
+        SetFollowTargetUpdate(camAnchor);
+    }
+
+    #endregion
+
+    #region Zoom 카메라 Target 설정
+    /// <summary>
+    /// Zoom 카메라의 Target 설정
+    /// </summary>
+    /// <param name="target"></param>
+    private void SetFollowTargetUpdate(Transform target)
+    {
+        StopCoroutine(nameof(SetFollowAndUpdateNextFrame));
+        StartCoroutine(SetFollowAndUpdateNextFrame(target));
+    }
+    private IEnumerator SetFollowAndUpdateNextFrame(Transform target)
+    {
+        // 1프레임 대기
+        yield return null;
+
+        if (cinemachineCameraZone != null  && target != null)
         {
-            PanCamera(activeDirection);
+            cinemachineCameraZone.Follow = target;
+            cinemachineCameraZone.LookAt = target;
+
+            cinemachineCameraZone.ForceCameraPosition(target.position, Quaternion.identity);
         }
     }
-    public void PanCamera(Vector2 direction)
-    {
-        cinemachineCamera.transform.position += (Vector3)(direction * panSpeed * Time.deltaTime);
-    }
-    #region ��ư Ŭ�� �̺�Ʈ(�����Ϳ��� ����)
-    public void StartPan(Vector2 direction) => activeDirection = direction;
-    public void StopPan() => activeDirection = Vector2.zero;
-    public void StartPanUp() => StartPan(Vector2.up);
-    public void StartPanDown() => StartPan(Vector2.down);
-    public void StartPanLeft() => StartPan(Vector2.left);
-    public void StartPanRight() => StartPan(Vector2.right);
     #endregion
+    #region Player 카메라 Target 설정
     /// <summary>
-    /// �� �ƿ� ���� �� ī�޶� ����
+    /// Player 카메라의 Target 설정
     /// </summary>
-    public void ZoomOutTerritory()
+    /// <param name="target"></param>
+    private void SetPlayerFollowTargetUpdate(Transform target)
     {
-        prevConfinerBound = (BoxCollider2D)cinemachineConfiner2D.BoundingShape2D;
+        StopCoroutine(nameof(SetPlayerFollowAndUpdateNextFrame));
+        StartCoroutine(SetPlayerFollowAndUpdateNextFrame(target));
+    }
+    private IEnumerator SetPlayerFollowAndUpdateNextFrame(Transform target)
+    {
+        // 1프레임 대기
+        yield return null;
 
-        cinemachineCamera.Lens.OrthographicSize = zoomoutOrthSize;
-        cinemachineConfiner2D.BoundingShape2D = zoomOutConfinerBound;
-        cinemachineCamera.Follow = null;
+        if (cinemachineCameraPlayer != null && target != null)
+        {
+            cinemachineCameraPlayer.Follow = target;
+            cinemachineCameraPlayer.LookAt = target;
 
-        SwipeBackButtons.SetActive(true);
+            cinemachineCameraPlayer.ForceCameraPosition(target.position, Quaternion.identity);
+        }
+    }
+    #endregion
+
+
+    #region 영역 선택시 버튼 클릭 이벤트
+    [SerializeField]
+    float boundOffset;
+    public void ZoneIconClicked(TerritoryZone approachZone,Action onComplete = null)
+    {
+        //TODO KJ - 플레이어 이동 UI 비활성화
+        SetFollowTargetUpdate(approachZone.GetComponent<TerritoryCamera>().TerritoryMiddleAnchor);
+
+        StopCoroutine(nameof(SmoothZoomBound));
+
+        TerritoryZone playerZone = PlayerZoneDetector.GetCurrentZone();
+
+        if (playerZone == null) return;
+
+        TerrirotyDirection dir = TerritoryManager.Instance.GetDirection(playerZone, approachZone);
+
+        Vector2 targetSize = zoomOutBound.size;
+        Vector2 targetOffset = Vector2.zero;
+
+        //상하좌우 방향에 따라 다름
+        switch (dir)
+        {
+            case TerrirotyDirection.Up:
+                targetSize = new Vector2(targetSize.x, targetSize.y + boundOffset);
+                targetOffset += new Vector2(0, boundOffset / 2);
+                break;
+            case TerrirotyDirection.Down:
+                targetSize = new Vector2(targetSize.x, targetSize.y + boundOffset);
+                targetOffset += new Vector2(0, -boundOffset / 2);
+                break;
+            case TerrirotyDirection.Left:
+                targetSize = new Vector2(targetSize.x + boundOffset, targetSize.y);
+                targetOffset += new Vector2(-boundOffset / 2, 0);
+                break;
+            case TerrirotyDirection.Right:
+                targetSize = new Vector2(targetSize.x + boundOffset, targetSize.y);
+                targetOffset += new Vector2(boundOffset / 2, 0);
+                break;
+        }
+
+        //Lerp 처리
+        StartCoroutine(SmoothZoomBound(targetSize, targetOffset, focusingduration , onComplete));
+    }
+
+    private IEnumerator SmoothZoomBound(Vector2 targetSize, Vector2 targetOffset, float duration, Action onComplete = null)
+    {
+        float elapsed = 0;
+        Vector2 startSize = zoomOutBound.size;
+        Vector2 startOffset = zoomOutBound.offset;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            zoomOutBound.size = Vector2.Lerp(startSize, targetSize, t);
+            zoomOutBound.offset = Vector2.Lerp(startOffset, targetOffset, t);
+
+            yield return null;
+        }
+
+        // 최종값 설정
+        zoomOutBound.size = targetSize;
+        zoomOutBound.offset = targetOffset;
+
+        onComplete?.Invoke();
+
+        areaCameraZoom.IsZoomModeChanged(false);
+    }
+    #endregion
+
+    #region 카메라 복귀 처리
+
+    /// <summary>
+    ///  구역 해금 후, 해당 구역의 밝기가 모두 밝아진 경우 시작 되는 카메라 연출         ||          뒤로가기 버튼 클릭 시
+    ///  shouldExpandDefaultBound : true  - 구역별 확장 진행 , shouldExpandDefaultBound : false - 구역별 확장 진행 x
+    /// </summary>
+    public void ResetBackClicked(TerritoryZone approachZone , bool shouldExpandDefaultBound)
+    {
+       // ZoomToPlayerCamera();
+
+        StartCoroutine(UnLockCoroutine(approachZone, shouldExpandDefaultBound));
     }
 
     /// <summary>
-    /// �� �ƿ� ����
+    /// 구역 해금 후, 해당 구역의 밝기가 모두 밝아진 경우 시작 되는 카메라 연출
     /// </summary>
-    public void ZoomOutClearTerritory()
+    /// <returns></returns>
+    private IEnumerator UnLockCoroutine(TerritoryZone approachZone,bool shouldExpandDefaultBound)
     {
-        cinemachineCamera.Lens.OrthographicSize = initOrthSize;
+        areaCameraZoom.IsZoomModeChanged(false);
+        areaCameraZoom.SetZoomTarget(initcinemachineCameraPlayerSize);
 
-        cinemachineConfiner2D.BoundingShape2D = prevConfinerBound;
+        zoomOutBound.size = maxZoneSize;
+        zoomOutBound.offset = Vector2.zero;
+        //zoomOutBound.gameObject.transform.position = prevCamAnchor.position;
 
-        cinemachineCamera.Follow = Player.transform;
+        cinemachineCameraZone.enabled = false;
+        cinemachineCameraPlayer.enabled = true;
 
-        SwipeBackButtons.SetActive(false);
+        if(shouldExpandDefaultBound)
+        {
+            TerritoryZone playerZone = PlayerZoneDetector.GetCurrentZone();
+            ExpandDefalutBoundByDirection(playerZone, approachZone);
+        }
+
+
+        yield return new WaitForSeconds(3.0f);
+
+        // 2. Priority 변경 (이때 Blend 시작)
+        cinemachineCameraZone.Priority = 10;
+        cinemachineCameraPlayer.Priority = 11;
+
+        brain.ResetState();
+
+        areaCameraZoom.SetLenSize(3);
+
+
     }
 
     /// <summary>
-    /// �رݵ��� �ʴ� ���信 �� �� ���� �� 
+    /// DefaultBound 방향별 확장
     /// </summary>
-    public void ZoomInTerritory(BoxCollider2D bound,Transform anchor)
+    /// <param name="approachZone"></param>
+    private void ExpandDefalutBoundByDirection(TerritoryZone playerZone, TerritoryZone approachZone)
     {
-        cinemachineCamera.Lens.OrthographicSize = initOrthSize;
-        cinemachineConfiner2D.BoundingShape2D = bound;
-        cinemachineCamera.Follow = anchor;
-    }
+        if (playerZone == null) return;
 
-    public void SwitchActiveBound(BoxCollider2D bound)
-    {
-        cinemachineConfiner2D.BoundingShape2D = bound;
+        TerrirotyDirection dir = TerritoryManager.Instance.GetDirection(playerZone, approachZone);
+
+        float expand = 5f;
+
+        switch (dir)
+        {
+            case TerrirotyDirection.Up:
+                defalutBound.size = new Vector2(defalutBound.size.x, defalutBound.size.y +
+    expand);
+                defalutBound.offset += new Vector2(0, expand / 2);
+                break;
+            case TerrirotyDirection.Down:
+                defalutBound.size = new Vector2(defalutBound.size.x, defalutBound.size.y +
+    expand);
+                defalutBound.offset += new Vector2(0, -expand / 2);
+                break;
+            case TerrirotyDirection.Left:
+                defalutBound.size = new Vector2(defalutBound.size.x + expand,
+    defalutBound.size.y);
+                defalutBound.offset += new Vector2(-expand / 2, 0);
+                break;
+            case TerrirotyDirection.Right:
+                defalutBound.size = new Vector2(defalutBound.size.x + expand,
+    defalutBound.size.y);
+                defalutBound.offset += new Vector2(expand / 2, 0);
+                break;
+        }
+
+        // Confiner 캐시 리셋 (변경된 Bound 적용)
+        cinemachineConfiner2DPlayer.InvalidateBoundingShapeCache();
+
+        //4. 닫기 투표하려던 인접 영역 포커싱 UI 제거
+        approachZone.TerritoryIcon.FocusingIconUI(false);
     }
+    #endregion
 }

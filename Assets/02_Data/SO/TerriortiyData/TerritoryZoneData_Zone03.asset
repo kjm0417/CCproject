@@ -23,3 +23,7 @@ MonoBehaviour:
     SpawnLongTime: 1
     MaxCount: 5
   NpcSlots: []
+  AdjacentZoneId_Up: 9
+  AdjacentZoneId_Down: 4
+  AdjacentZoneId_Left: 1
+  AdjacentZoneId_Right: -1

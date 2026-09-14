@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
-using Unity.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,32 +11,53 @@ public class TerritorySelectionUI : MonoBehaviour
     GameObject  zoomrightUI,zoomleftUI , zoomupUI,zoomdownUI;
 
     [SerializeField]
-    Button buyBtn, zoomRightBtn , zoomLeftBtn, zoomUpBtn, zoomDownBtn;
+    Button zoomRightBtn , zoomLeftBtn, zoomUpBtn, zoomDownBtn;
 
+    [SerializeField]
+    Button backBtn;
+    
     private GameObject prevZoomUI; //줌 아웃하기 전 활성화 였던 UI 저장
 
     private void OnEnable()
     {
-        if(TerritoryDirectionManager.Instance != null)
-        {
-            TerritoryDirectionManager.Instance.OnBackClick += OnBackCliked;
-        }
-
         TerritoryZone.OnZoneApproached += OnZoomOutViewed;
         TerritoryZone.OnZoneLeaved += OnLevaeZonUI;
-        TerritoryZone.OnZoneBuyClick += OnBuyUIViewd;
+
+        backBtn.onClick.AddListener(() =>
+        {
+            Dictionary<TerrirotyDirection, TerritoryZone> dic = TerritoryManager.Instance.GetAllAdjacentZones(playerZone);
+
+            TerritoryZone approachZone = TerritoryManager.Instance.GetAdjacentZone(playerZone, terrirotyDirection);
+
+            TerritoryDirectionManager.Instance.ResetBackClicked(approachZone, false);
+
+            foreach (var pair in dic)
+            {
+                TerritoryZone zone = pair.Value;
+
+                if (!zone.IsLocked) continue; //인접 구역이 잠겨있지 않으면, 즉, 해금 완료된 구역이라면 return
+
+                zone.TryUnLockedZoneSet();
+
+                if (zone == approachZone)
+                {
+                    zone.TerritoryIcon.FocusingIconUI(false);
+                }
+
+            }
+
+            backBtn.gameObject.SetActive(false);
+
+            playerZone = null;
+            terrirotyDirection = TerrirotyDirection.None;
+
+        });
     }
 
     private void OnDisable()
     {
-        if (TerritoryDirectionManager.Instance != null)
-        {
-            TerritoryDirectionManager.Instance.OnBackClick -= OnBackCliked;
-        }
-
         TerritoryZone.OnZoneApproached -= OnZoomOutViewed;
         TerritoryZone.OnZoneLeaved -= OnLevaeZonUI;
-        TerritoryZone.OnZoneBuyClick -= OnBuyUIViewd;
     }
 
     private void OnLevaeZonUI()
@@ -47,78 +68,105 @@ public class TerritorySelectionUI : MonoBehaviour
         zoomdownUI.SetActive(false);
 
         prevZoomUI.SetActive(false);
-        buyBtn.gameObject.SetActive(false);
     }
     private void OnBackCliked()
     {
         prevZoomUI.SetActive(true);
-        buyBtn.gameObject.SetActive(false);
-    }
-
-    private void OnZoomOutViewed(TerritoryZone territoryZone, TerrirotyDirection terrirotyDirection)
-    {
-        OnZoomOutUIView(terrirotyDirection);
     }
 
     /// <summary>
-    /// 줌 아웃 UI 활성화
+    /// territoryZone : 현재 구역 , TerrirotyDirection : 접근하려는 구역의 방향
     /// </summary>
+    /// <param name="playerZone"></param>
+    /// <param name="adjacentZone"></param>
     /// <param name="terrirotyDirection"></param>
-    private void OnZoomOutUIView(TerrirotyDirection terrirotyDirection)
+    private void OnZoomOutViewed(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection)
     {
         zoomLeftBtn.onClick.RemoveAllListeners();
         zoomRightBtn.onClick.RemoveAllListeners();
         zoomUpBtn.onClick.RemoveAllListeners();
         zoomDownBtn.onClick.RemoveAllListeners();
 
-        switch(terrirotyDirection)
+        switch (terrirotyDirection)
         {
             case TerrirotyDirection.Left:
                 zoomleftUI.SetActive(true);
                 prevZoomUI = zoomleftUI;
-                zoomLeftBtn.onClick.AddListener(() => ZoomOutViewed());
+                zoomLeftBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Right:
                 zoomrightUI.SetActive(true);
                 prevZoomUI = zoomrightUI;
-                zoomRightBtn.onClick.AddListener(() => ZoomOutViewed());
+                zoomRightBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Up:
                 zoomupUI.SetActive(true);
                 prevZoomUI = zoomupUI;
-                zoomUpBtn.onClick.AddListener(() => ZoomOutViewed());
+                zoomUpBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Down:
                 zoomdownUI.SetActive(true);
                 prevZoomUI = zoomdownUI;
-                zoomDownBtn.onClick.AddListener(() => ZoomOutViewed());
+                zoomDownBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
         }
 
     }
 
-    private void ZoomOutViewed()
+    TerritoryZone playerZone;
+    TerrirotyDirection terrirotyDirection;
+
+    private void ZoomOutViewed(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection)
     {
-        TerritoryDirectionManager.Instance.ZoomOutTerritory();
+        //현재 구역(territoryZone) 기준으로 인접한 구역들 딕셔너리로 가져옴
+        this.playerZone = playerZone;
+        this.terrirotyDirection = terrirotyDirection;
 
-        zoomleftUI.SetActive(false); zoomrightUI.SetActive(false); zoomupUI.SetActive(false); zoomdownUI.SetActive(false);
-    }
+        Dictionary<TerrirotyDirection, TerritoryZone> dic = TerritoryManager.Instance.GetAllAdjacentZones(playerZone);
 
+        TerritoryZone approachZone = TerritoryManager.Instance.GetAdjacentZone(playerZone, terrirotyDirection);
 
-    /// <summary>
-    /// 구매 의사 결정 UI 활성화
-    /// </summary>
-    /// <param name="territoryZone"></param>
-    private void OnBuyUIViewd(TerritoryZone territoryZone)
-    {
-        buyBtn.gameObject.SetActive(true);
-
-        buyBtn.onClick.RemoveAllListeners();
-
-        buyBtn.onClick.AddListener(() =>
+        foreach (var pair in dic) 
         {
-            TerritoryManager.Instance?.TryTerritoryUnlock(territoryZone);
-            buyBtn.gameObject.SetActive(false);
-        });
+            TerritoryZone zone = pair.Value;
+
+            if (!zone.IsLocked) continue; //인접 구역이 잠겨있지 않으면, 즉, 해금 완료된 구역이라면 return
+
+            zone.TryLockedZoneSet();
+
+            if (zone == approachZone)
+            {
+                zone.TerritoryIcon.FocusingIconUI(true);
+            }
+            
+        }
+
+        SetCameraAnchorByApproachZone(terrirotyDirection, approachZone);
+
+        backBtn.gameObject.SetActive(true);
+        zoomleftUI.SetActive(false); zoomrightUI.SetActive(false); zoomupUI.SetActive(false); zoomdownUI.SetActive(false);
+
     }
+
+    private void SetCameraAnchorByApproachZone(TerrirotyDirection dir, TerritoryZone approachZone)
+    {
+        switch(dir)
+        {
+            case TerrirotyDirection.Up:
+                TerritoryDirectionManager.Instance.ZoomModeActive(approachZone.GetComponent<TerritoryCamera>().TerritoryDownAnchor);
+                break;
+            case TerrirotyDirection.Down:
+                TerritoryDirectionManager.Instance.ZoomModeActive(approachZone.GetComponent<TerritoryCamera>().TerritoryUpAnchor);
+                break;
+            case TerrirotyDirection.Left:
+                TerritoryDirectionManager.Instance.ZoomModeActive(approachZone.GetComponent<TerritoryCamera>().TerritoryRightAnchor);
+                break;
+            case TerrirotyDirection.Right:
+                TerritoryDirectionManager.Instance.ZoomModeActive(approachZone.GetComponent<TerritoryCamera>().TerritoryLeftAnchor);
+                break;
+
+        }
+    }
+
+
 }

@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 
 /// <summary>
-/// ¿©·¯ TerritoryZoneÀ» °ü¸®ÇÏ°í, ÇØ±İ ¿äÃ»À» Ã³¸®ÇÏ´Â ¸Å´ÏÀú
+/// ê²Œì„ ë‚´ì˜ êµ¬ì—­ ê´€ë¦¬ ì‹œìŠ¤í…œ
 /// </summary>
 public class TerritoryManager : MonoBehaviour
 {
@@ -32,7 +32,6 @@ public class TerritoryManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //±¸¿ª µñ¼Å³Ê¸® ÃÊ±âÈ­ - ±¸¿ª id : ±¸¿ª °´Ã¼
         foreach (TerritoryZone zone in FindObjectsOfType<TerritoryZone>())
         {
             territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
@@ -43,7 +42,7 @@ public class TerritoryManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ±¸¿ª ÇØ±İ ½Ãµµ, true : ¼º°ø / false : ½ÇÆĞ
+    /// êµ¬ì—­ í•´ê¸ˆ ì‹œë„ : í”Œë ˆì´ì–´ ê³¨ë“œì™€ êµ¬ì—­ í•´ê¸ˆ ë¹„ìš© ë¹„êµ í›„ í•´ê¸ˆ ê°€ëŠ¥ ì‹œ í•´ê¸ˆ ì²˜ë¦¬
     /// </summary>
     /// <param name="territoryZone"></param>
     /// <returns></returns>
@@ -51,7 +50,7 @@ public class TerritoryManager : MonoBehaviour
     {
         if(!territoryZone.IsLocked)
         {
-            return true; //ÀÌ¹Ì ¿­·Á ÀÖ´Ù¸é true ¹İÈ¯(¼º°øÃ³¸®)
+            return true; 
         }
 
         if (currencyProvider.TrySpend(territoryZone.TerritoryZoneData.RequireGold))
@@ -64,4 +63,85 @@ public class TerritoryManager : MonoBehaviour
         return false;
     }
 
+    public TerritoryZone GetZone(int id)
+    {
+        if(territoryZonesDic.TryGetValue(id, out TerritoryZone zone))
+        {
+            return zone;
+        }
+        Debug.LogWarning("êµ¬ì—­ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ!");
+        return null;
+    }
+
+    /// <summary>
+    /// ì¸ì ‘í•œ Zone ê°€ì ¸ì˜¤ê¸°
+    /// </summary>
+    public TerritoryZone GetAdjacentZone(TerritoryZone currentZone, TerrirotyDirection direction)
+    {
+        int adjacentZoneId = -1;
+
+        switch (direction)
+        {
+            case TerrirotyDirection.Up:
+                adjacentZoneId = currentZone.TerritoryZoneData.AdjacentZoneId_Up;
+                break;
+            case TerrirotyDirection.Down:
+                adjacentZoneId = currentZone.TerritoryZoneData.AdjacentZoneId_Down;
+                break;
+            case TerrirotyDirection.Left:
+                adjacentZoneId = currentZone.TerritoryZoneData.AdjacentZoneId_Left;
+                break;
+            case TerrirotyDirection.Right:
+                adjacentZoneId = currentZone.TerritoryZoneData.AdjacentZoneId_Right;
+                break;
+        }
+
+        if (adjacentZoneId == -1)
+        {
+            return null;
+        }
+
+        return GetZone(adjacentZoneId);
+    }
+
+    /// <summary>
+    /// ëª¨ë“  ì¸ì ‘í•œ Zone ê°€ì ¸ì˜¤ê¸° (ìƒ/í•˜/ì¢Œ/ìš°)
+    /// </summary>
+    public Dictionary<TerrirotyDirection, TerritoryZone> GetAllAdjacentZones(TerritoryZone currentZone)
+    {
+        Dictionary<TerrirotyDirection, TerritoryZone> adjacentZones = new Dictionary<TerrirotyDirection, TerritoryZone>();
+
+        TerritoryZone upZone = GetAdjacentZone(currentZone, TerrirotyDirection.Up);
+        TerritoryZone downZone = GetAdjacentZone(currentZone, TerrirotyDirection.Down);
+        TerritoryZone leftZone = GetAdjacentZone(currentZone, TerrirotyDirection.Left);
+        TerritoryZone rightZone = GetAdjacentZone(currentZone, TerrirotyDirection.Right);
+
+        if (upZone != null)
+            adjacentZones.Add(TerrirotyDirection.Up, upZone);
+        if (downZone != null)
+            adjacentZones.Add(TerrirotyDirection.Down, downZone);
+        if (leftZone != null)
+            adjacentZones.Add(TerrirotyDirection.Left, leftZone);
+        if (rightZone != null)
+            adjacentZones.Add(TerrirotyDirection.Right, rightZone);
+
+        return adjacentZones;
+    }
+
+    public TerrirotyDirection GetDirection(TerritoryZone currentZone, TerritoryZone adjacentZone)
+    {
+        if (currentZone.TerritoryZoneData.AdjacentZoneId_Up == adjacentZone.TerritoryZoneData.ZoneId)
+            return TerrirotyDirection.Up;
+
+        if (currentZone.TerritoryZoneData.AdjacentZoneId_Down == adjacentZone.TerritoryZoneData.ZoneId)
+            return TerrirotyDirection.Down;
+
+        if (currentZone.TerritoryZoneData.AdjacentZoneId_Left == adjacentZone.TerritoryZoneData.ZoneId)
+            return TerrirotyDirection.Left;
+
+        if (currentZone.TerritoryZoneData.AdjacentZoneId_Right == adjacentZone.TerritoryZoneData.ZoneId)
+            return TerrirotyDirection.Right;
+
+        return TerrirotyDirection.Up; // ê¸°ë³¸ê°’
+    }
 }

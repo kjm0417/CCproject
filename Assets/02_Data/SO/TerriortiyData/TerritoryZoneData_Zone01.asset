@@ -18,4 +18,9 @@ MonoBehaviour:
   ResourceSpawnTable:
   - ResourcePrefab: {fileID: 0}
     SpawnLongTime: 0
+    MaxCount: 0
   NpcSlots: []
+  AdjacentZoneId_Up: 8
+  AdjacentZoneId_Down: 5
+  AdjacentZoneId_Left: 2
+  AdjacentZoneId_Right: 3
