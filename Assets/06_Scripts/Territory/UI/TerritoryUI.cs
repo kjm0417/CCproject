@@ -5,7 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TerritorySelectionUI : MonoBehaviour
+/// <summary>
+/// 영토확장시스템 - 월드
+/// </summary>
+public class TerritoryUI : TerritoryBaseUI
 {
     [SerializeField]
     GameObject  zoomrightUI,zoomleftUI , zoomupUI,zoomdownUI;
@@ -13,50 +16,17 @@ public class TerritorySelectionUI : MonoBehaviour
     [SerializeField]
     Button zoomRightBtn , zoomLeftBtn, zoomUpBtn, zoomDownBtn;
 
-    [SerializeField]
-    Button backBtn;
-    
-    private GameObject prevZoomUI; //줌 아웃하기 전 활성화 였던 UI 저장
-
     private void OnEnable()
     {
-        TerritoryZone.OnZoneApproached += OnZoomOutViewed;
+        //TerritoryZone.OnZoneApproached += OnZoomOutViewed;
         TerritoryZone.OnZoneLeaved += OnLevaeZonUI;
 
-        backBtn.onClick.AddListener(() =>
-        {
-            Dictionary<TerrirotyDirection, TerritoryZone> dic = TerritoryManager.Instance.GetAllAdjacentZones(playerZone);
-
-            TerritoryZone approachZone = TerritoryManager.Instance.GetAdjacentZone(playerZone, terrirotyDirection);
-
-            TerritoryDirectionManager.Instance.ResetBackClicked(approachZone, false);
-
-            foreach (var pair in dic)
-            {
-                TerritoryZone zone = pair.Value;
-
-                if (!zone.IsLocked) continue; //인접 구역이 잠겨있지 않으면, 즉, 해금 완료된 구역이라면 return
-
-                zone.TryUnLockedZoneSet();
-
-                if (zone == approachZone)
-                {
-                    zone.TerritoryIcon.FocusingIconUI(false);
-                }
-
-            }
-
-            backBtn.gameObject.SetActive(false);
-
-            playerZone = null;
-            terrirotyDirection = TerrirotyDirection.None;
-
-        });
+        OnLevaeZonUI();
     }
 
     private void OnDisable()
     {
-        TerritoryZone.OnZoneApproached -= OnZoomOutViewed;
+       // TerritoryZone.OnZoneApproached -= OnZoomOutViewed;
         TerritoryZone.OnZoneLeaved -= OnLevaeZonUI;
     }
 
@@ -66,12 +36,6 @@ public class TerritorySelectionUI : MonoBehaviour
         zoomrightUI.SetActive(false); 
         zoomupUI.SetActive(false); 
         zoomdownUI.SetActive(false);
-
-        prevZoomUI.SetActive(false);
-    }
-    private void OnBackCliked()
-    {
-        prevZoomUI.SetActive(true);
     }
 
     /// <summary>
@@ -80,7 +44,7 @@ public class TerritorySelectionUI : MonoBehaviour
     /// <param name="playerZone"></param>
     /// <param name="adjacentZone"></param>
     /// <param name="terrirotyDirection"></param>
-    private void OnZoomOutViewed(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection)
+    public void OnZoomOutViewed(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection)
     {
         zoomLeftBtn.onClick.RemoveAllListeners();
         zoomRightBtn.onClick.RemoveAllListeners();
@@ -91,36 +55,28 @@ public class TerritorySelectionUI : MonoBehaviour
         {
             case TerrirotyDirection.Left:
                 zoomleftUI.SetActive(true);
-                prevZoomUI = zoomleftUI;
                 zoomLeftBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Right:
                 zoomrightUI.SetActive(true);
-                prevZoomUI = zoomrightUI;
                 zoomRightBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Up:
                 zoomupUI.SetActive(true);
-                prevZoomUI = zoomupUI;
                 zoomUpBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Down:
                 zoomdownUI.SetActive(true);
-                prevZoomUI = zoomdownUI;
                 zoomDownBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
         }
 
     }
 
-    TerritoryZone playerZone;
-    TerrirotyDirection terrirotyDirection;
-
     private void ZoomOutViewed(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection)
     {
         //현재 구역(territoryZone) 기준으로 인접한 구역들 딕셔너리로 가져옴
-        this.playerZone = playerZone;
-        this.terrirotyDirection = terrirotyDirection;
+        TerritoryManager.Instance.SaveRuntimeTerritoryData(playerZone, terrirotyDirection);
 
         Dictionary<TerrirotyDirection, TerritoryZone> dic = TerritoryManager.Instance.GetAllAdjacentZones(playerZone);
 
@@ -143,7 +99,8 @@ public class TerritorySelectionUI : MonoBehaviour
 
         SetCameraAnchorByApproachZone(terrirotyDirection, approachZone);
 
-        backBtn.gameObject.SetActive(true);
+        BackBtn.gameObject.SetActive(true);
+
         zoomleftUI.SetActive(false); zoomrightUI.SetActive(false); zoomupUI.SetActive(false); zoomdownUI.SetActive(false);
 
     }

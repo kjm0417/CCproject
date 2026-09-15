@@ -74,9 +74,9 @@ public class TerritoryIcon : MonoBehaviour
                 }
             }
 
-            IsZoomInClicked = false;
-
         }
+
+        IsZoomInClicked = false;
     }
 
     public void FocusingIconUI(bool isAcitve)

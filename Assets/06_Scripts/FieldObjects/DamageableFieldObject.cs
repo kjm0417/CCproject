@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, IDropProvider, IToolInteractionTarget
+public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, IDropProvider, IToolInteractionTarget , IRespawnProvier
 {
+    public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
+    public event Action<GameObject,ResourceSpawnEntry, float> OnDestroyed;
+
+
     [Header("상호작용 테스트 값")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 받아오면 됩니다.")]
     [SerializeField]
@@ -34,6 +40,11 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         {
             dropper = GetComponent<FieldObjectDropper>();
         }
+    }
+
+    public void InfoResource(ResourceSpawnEntry entry)
+    {
+        this.ResourceEntry = entry;
     }
 
     public override void Configure(FieldObjData fieldObjData)
@@ -74,6 +85,9 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         {
             IsDepleted = true;
             OnDepleted();
+
+            float respawnTime = UnityEngine.Random.Range(Data.RespawnTimeMin, Data.RespawnTimeMax);
+            OnDestroyed?.Invoke(this.gameObject,ResourceEntry, respawnTime);
         }
     }
 

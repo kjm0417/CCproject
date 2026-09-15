@@ -3,6 +3,38 @@ using Unity.Cinemachine;
 using UnityEngine;
 
 /// <summary>
+/// 런타임에 따라 데이터가 달라지는 런타임용 아일랜드 데이터
+/// </summary>
+public class TerritoryRunTimeData
+{
+    public TerritoryZone PlayerZone { get; private set; }
+    public TerrirotyDirection TerrirotyDirection { get; private set; }
+
+    public TerritoryRunTimeData()
+    {
+    }
+
+    /// <summary>
+    /// 런타임 데이터 저장
+    /// </summary>
+    /// <param name="PlayerZone"></param>
+    /// <param name="TerrirotyDirection"></param>
+    public void SaveRunTimeData(TerritoryZone PlayerZone, TerrirotyDirection TerrirotyDirection)
+    {
+        this.PlayerZone = PlayerZone;
+        this.TerrirotyDirection = TerrirotyDirection;
+    }
+
+    /// <summary>
+    /// 런타임 데이터 초기화 
+    /// </summary>
+    public void InitRunTimeData()
+    {
+        PlayerZone = null;
+        TerrirotyDirection = TerrirotyDirection.None;
+    }
+}
+/// <summary>
 /// 게임 내의 구역 관리 시스템
 /// </summary>
 public class TerritoryManager : MonoBehaviour
@@ -19,7 +51,10 @@ public class TerritoryManager : MonoBehaviour
     private ICurrencyProvider currencyProvider;
 
     private Dictionary<int, TerritoryZone> territoryZonesDic = new Dictionary<int, TerritoryZone>();
-   
+
+    private TerritoryRunTimeData territoryRunTimeData;
+    public TerritoryRunTimeData TerritoryRunTimeData => territoryRunTimeData;
+
     private void Awake()
     {
         if (instance == null)
@@ -37,8 +72,10 @@ public class TerritoryManager : MonoBehaviour
             territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
         }
 
+        //테스트용
         currencyProvider = FindAnyObjectByType<CurrencyManager>();
 
+        territoryRunTimeData = new TerritoryRunTimeData();
     }
 
     /// <summary>
@@ -72,6 +109,10 @@ public class TerritoryManager : MonoBehaviour
         Debug.LogWarning("구역을 찾을 수 없음!");
         return null;
     }
+
+    public void SaveRuntimeTerritoryData(TerritoryZone currentZone, TerrirotyDirection direction)
+        => territoryRunTimeData.SaveRunTimeData(currentZone, direction);
+
 
     /// <summary>
     /// 인접한 Zone 가져오기

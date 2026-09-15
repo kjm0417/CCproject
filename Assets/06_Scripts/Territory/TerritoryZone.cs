@@ -17,7 +17,13 @@ public class TerritoryZone : MonoBehaviour
     public TerritoryIcon TerritoryIcon => territoryIcon;
 
     [SerializeField]
+    private TerritoryUI territoryUI;
+
+    [SerializeField]
     private Tilemap territoryTileMapGround,territoryTileMapWall; //구역에 대한 타일맵
+
+    public Tilemap TerritoryTileMapGround => territoryTileMapGround;
+    public Tilemap TerritoryTileMapWall=> territoryTileMapWall;
 
     [SerializeField]
     private bool isLocked = true; //구역이 잠겨 있는지 여부 (초기엔 잠겨 있음)
@@ -183,7 +189,7 @@ public class TerritoryZone : MonoBehaviour
         currentZoneDir = terrirotyDirection;
 
         //줌 아웃 UI 처리       
-        OnZoneApproached?.Invoke(playerZone, terrirotyDirection);
+        playerZone.territoryUI.OnZoomOutViewed(playerZone, terrirotyDirection);
     }
 
     /// <summary>
