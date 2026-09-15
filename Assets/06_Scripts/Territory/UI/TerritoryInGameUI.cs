@@ -34,6 +34,7 @@ public class TerritoryInGameUI : TerritoryBaseUI
                 if (zone == approachZone)
                 {
                     zone.TerritoryIcon.FocusingIconUI(false);
+                    zone.TerritoryIcon.SetZoomInClicked(false);
                 }
                 
             }

@@ -21,6 +21,11 @@ public class TerritoryIcon : MonoBehaviour
     GameObject focusingImages;
 
     private bool IsZoomInClicked = false; //줌인 버튼 클릭 여부
+
+    public void SetZoomInClicked(bool value)
+    {
+        IsZoomInClicked = value;
+    }
     private void OnEnable()
     {
         zoomInBtn.onClick.AddListener(() =>

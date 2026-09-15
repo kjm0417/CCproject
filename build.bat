@@ -5,7 +5,7 @@ set PROJECT_PATH=%~dp0
 :: ==========================================
 :: 1. 환경 변수 설정
 :: ==========================================
-set UNITY_EXE="C:\Program Files\Unity\Hub\Editor\6000.5.5f1\Editor\Unity.exe"
+set UNITY_EXE="D:\UnityEditor\6000.5.5f1\Editor\Unity.exe"
 set FIREBASE_APP_ID="1:165910021223:android:933ad4bebfb24e82bd00c2"
 set WEBHOOK_URL="https://discord.com/api/webhooks/1549406573892206632/RaaQlEbWBi5uipcyA3uiHVcFbZ7z4zEmj5dZfRkQEOTB5kRANIaY-xdhIdBkNjXswpwY"
 set DOWNLOAD_URL="https://appdistribution.firebase.google.com"

@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, IDropProvider, IToolInteractionTarget , IRespawnProvier
+public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
+    IDropProvider, IToolInteractionTarget , IRespawnProvier
 {
+    #region 자원 리스폰 ( IRespawnProvier )
     public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
     public event Action<GameObject,ResourceSpawnEntry, float> OnDestroyed;
+    #endregion
+
+    public event Action<float> OnDamaged;
+
 
 
     [Header("상호작용 테스트 값")]
@@ -81,6 +87,8 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         if (IsDepleted || amount <= 0) return;
 
         CurrentHp = Mathf.Max(0, CurrentHp - amount);
+        OnDamaged?.Invoke(CurrentHp);
+       
         if (CurrentHp <= 0)
         {
             IsDepleted = true;
