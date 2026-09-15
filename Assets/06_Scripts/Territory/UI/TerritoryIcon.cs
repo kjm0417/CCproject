@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 영토확장시스템 - 월드
+/// </summary>
 public class TerritoryIcon : MonoBehaviour
 {
     [SerializeField]
@@ -26,6 +29,7 @@ public class TerritoryIcon : MonoBehaviour
     {
         IsZoomInClicked = value;
     }
+
     private void OnEnable()
     {
         zoomInBtn.onClick.AddListener(() =>

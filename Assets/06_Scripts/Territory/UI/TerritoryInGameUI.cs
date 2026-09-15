@@ -39,6 +39,7 @@ public class TerritoryInGameUI : TerritoryBaseUI
                 
             }
 
+            playerZone.TerritoryUI.PrevZoomUIActive();
             BackBtn.gameObject.SetActive(false);
 
             TerritoryManager.Instance.TerritoryRunTimeData.InitRunTimeData();

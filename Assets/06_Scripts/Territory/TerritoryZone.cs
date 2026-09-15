@@ -18,6 +18,7 @@ public class TerritoryZone : MonoBehaviour
 
     [SerializeField]
     private TerritoryUI territoryUI;
+    public TerritoryUI TerritoryUI => territoryUI;
 
     [SerializeField]
     private Tilemap territoryTileMapGround,territoryTileMapWall; //구역에 대한 타일맵

@@ -16,6 +16,7 @@ public class TerritoryUI : TerritoryBaseUI
     [SerializeField]
     Button zoomRightBtn , zoomLeftBtn, zoomUpBtn, zoomDownBtn;
 
+    GameObject prevZoomUI;
     private void OnEnable()
     {
         //TerritoryZone.OnZoneApproached += OnZoomOutViewed;
@@ -39,6 +40,11 @@ public class TerritoryUI : TerritoryBaseUI
     }
 
     /// <summary>
+    /// 뒤로가기 버튼 눌렀을 때, 이전 줌 UI 활성화 유지
+    /// </summary>
+    public void PrevZoomUIActive() => prevZoomUI.SetActive(true);
+
+    /// <summary>
     /// territoryZone : 현재 구역 , TerrirotyDirection : 접근하려는 구역의 방향
     /// </summary>
     /// <param name="playerZone"></param>
@@ -54,18 +60,22 @@ public class TerritoryUI : TerritoryBaseUI
         switch (terrirotyDirection)
         {
             case TerrirotyDirection.Left:
+                prevZoomUI = zoomleftUI;
                 zoomleftUI.SetActive(true);
                 zoomLeftBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Right:
+                prevZoomUI = zoomrightUI;
                 zoomrightUI.SetActive(true);
                 zoomRightBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Up:
+                prevZoomUI = zoomupUI;
                 zoomupUI.SetActive(true);
                 zoomUpBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
             case TerrirotyDirection.Down:
+                prevZoomUI = zoomdownUI;
                 zoomdownUI.SetActive(true);
                 zoomDownBtn.onClick.AddListener(() => ZoomOutViewed(playerZone, terrirotyDirection));
                 break;
