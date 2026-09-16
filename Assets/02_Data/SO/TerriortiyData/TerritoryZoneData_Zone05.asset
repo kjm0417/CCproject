@@ -17,9 +17,13 @@ MonoBehaviour:
   IsSpecialZone: 0
   ResourceSpawnTable:
   - ResourcePrefab: {fileID: 0}
-    SpawnLongTime: 0
     MaxCount: 0
-  NpcSlots: []
+    GridHeight: 1
+    GridWidth: 1
+  NpcSlots:
+  - NpcPrefab: {fileID: 0}
+    NpcSpawnPos: {x: 0, y: 0}
+  StructSlots: []
   AdjacentZoneId_Up: 1
   AdjacentZoneId_Down: -1
   AdjacentZoneId_Left: 6

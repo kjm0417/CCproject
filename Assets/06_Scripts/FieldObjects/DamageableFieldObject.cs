@@ -12,7 +12,13 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
 
     public event Action<float> OnDamaged;
 
+    [SerializeField]
+    private ObjBaseData data;
 
+    public ObjBaseData Data => data;
+
+    protected int MaxHp => data != null ? data.HP : 0;
+    protected int DataDropGroupId => data != null ? data.DropGroupID : 0;
 
     [Header("상호작용 테스트 값")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 받아오면 됩니다.")]
@@ -34,9 +40,8 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
 
 
     private FieldObjectDropper fieldObjectDropper; //공통 Dropper 정의
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
         ResetRuntimeState();
     }
 
@@ -44,12 +49,6 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     public void InfoResource(ResourceSpawnEntry entry)
     {
         this.ResourceEntry = entry;
-    }
-
-    public override void Configure(FieldObjBaseData fieldObjData)
-    {
-        base.Configure(fieldObjData);
-        ResetRuntimeState();
     }
 
     public bool CanInteract(InteractionContext context)
