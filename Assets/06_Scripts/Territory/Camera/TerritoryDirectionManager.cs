@@ -327,7 +327,7 @@ public class TerritoryDirectionManager : MonoBehaviour
         cinemachineConfiner2DPlayer.InvalidateBoundingShapeCache();
 
         //4. 닫기 투표하려던 인접 영역 포커싱 UI 제거
-        approachZone.TerritoryIcon.FocusingIconUI(false);
+        approachZone.TerritoryZoneUIManager.HideFocusingIcon();
     }
     #endregion
 }

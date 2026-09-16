@@ -102,8 +102,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3463780027051643763}
   - component: {fileID: 1321729067170340925}
-  - component: {fileID: 1365081260556324562}
   - component: {fileID: 6870656001676774855}
+  - component: {fileID: -3598639442226300264}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -174,21 +174,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1365081260556324562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4801886088550710931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e584903f9f8f43928067eb0d034d29b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FieldObjectDropper
-  dropTable: {fileID: 11400000, guid: 40edc66f02390e84186931e9c6f5cfa1, type: 2}
-  pickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
-  scatterRadius: 0.35
 --- !u!114 &6870656001676774855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +190,22 @@ MonoBehaviour:
   preferredToolType: 2
   preferredToolMultiplier: 1.5
   fallbackDamage: 1
-  dropper: {fileID: 1365081260556324562}
+  dropper: {fileID: -3598639442226300264}
+--- !u!114 &-3598639442226300264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4801886088550710931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
+  deathDropTable: {fileID: 11400000, guid: 40edc66f02390e84186931e9c6f5cfa1, type: 2}
+  deathPickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
+  scatterRadius: 0.35
 --- !u!1001 &5671247218529686802
 PrefabInstance:
   m_ObjectHideFlags: 0

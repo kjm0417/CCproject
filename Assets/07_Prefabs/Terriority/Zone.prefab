@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 5569995287553925188}
   - component: {fileID: 4715709965461151656}
   - component: {fileID: 2465803228529970363}
+  - component: {fileID: 5293634082941442516}
   m_Layer: 0
   m_Name: Zone
   m_TagString: Untagged
@@ -114,8 +115,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerritoryZone
   territoryZoneData: {fileID: 11400000, guid: 8916b7c1394749949ad142d45cf3c7ad, type: 2}
-  territoryIcon: {fileID: 5996434585440156564}
-  territoryUI: {fileID: 6906390271786541688}
+  territoryZoneUIManager: {fileID: 5293634082941442516}
+  TerritoryZoneUIManager: {fileID: 0}
   territoryTileMapGround: {fileID: 0}
   territoryTileMapWall: {fileID: 0}
   isLocked: 0
@@ -209,6 +210,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
+--- !u!114 &5293634082941442516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4926919971455547305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e09b9b6d1d1f84146b1dac3c4b62909d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TerritoryZoneUIManager
+  territoryIcon: {fileID: 5996434585440156564}
+  territoryUI: {fileID: 6906390271786541688}
 --- !u!1 &6066048363592673543
 GameObject:
   m_ObjectHideFlags: 0

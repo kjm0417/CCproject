@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2051265747238199171}
   - component: {fileID: 7672621953354016798}
   m_Layer: 0
-  m_Name: DropItem_Apple
+  m_Name: DropItem_Plum
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009dcbdb20334f40994ca364ea209885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  item: {fileID: 11400000, guid: 9d60871ab9004ef4e91db1ee9b5bbc11, type: 2}
+  item: {fileID: 11400000, guid: 7564202441862c74e8cd0b46cc319a5c, type: 2}
   count: 1
 --- !u!1 &8768160785967591672
 GameObject:
@@ -173,9 +173,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 660640049
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7293598183456022363, guid: 4ce2fdc062f14e0488ec10916e45bb55, type: 3}
+  m_Sprite: {fileID: 3366512764809018327, guid: e74e28827a7f0024db21e51639667aa7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

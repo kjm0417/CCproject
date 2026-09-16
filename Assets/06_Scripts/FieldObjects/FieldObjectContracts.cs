@@ -33,7 +33,7 @@ public readonly struct InteractionContext
 // 모든 필드 오브젝트가 공통으로 가지는 최소 정보
 public interface IFieldObject
 {
-    FieldObjData Data { get; }
+    FieldObjBaseData Data { get; }
 }
 
 // 가까이 갔을 때 플레이어가 사용할 수 있는 오브젝트

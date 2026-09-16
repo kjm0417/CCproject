@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,13 +6,20 @@ using UnityEngine.UI;
 /// <summary>
 /// 영토확장시스템 - 전역
 /// </summary>
-public class TerritoryInGameUI : TerritoryBaseUI
+public class TerritoryInGameUI : MonoBehaviour
 {
+    [SerializeField]
+    private Button backBtn;
+
+    void ShowBackButton(bool value) => backBtn.gameObject.SetActive(value);
 
     private void OnEnable()
     {
+        TerritoryAdjacentZoneUI.OnZoomStarted += ShowBackButton;
 
-        BackBtn.onClick.AddListener(() =>
+        TerritoryZone.OnTerritoryUnlocked += ShowBackButton;
+
+        backBtn.onClick.AddListener(() =>
         {
 
             TerritoryZone playerZone = TerritoryManager.Instance.TerritoryRunTimeData.PlayerZone;
@@ -33,14 +41,15 @@ public class TerritoryInGameUI : TerritoryBaseUI
 
                 if (zone == approachZone)
                 {
-                    zone.TerritoryIcon.FocusingIconUI(false);
-                    zone.TerritoryIcon.SetZoomInClicked(false);
+                    zone.TerritoryZoneUIManager.HideFocusingIcon();
+                    zone.TerritoryZoneUIManager.SetZoomInClicked(false);
+                    zone.TerritoryZoneUIManager.BuyBtnAcitve(false);
                 }
                 
             }
 
-            playerZone.TerritoryUI.PrevZoomUIActive();
-            BackBtn.gameObject.SetActive(false);
+            playerZone.TerritoryZoneUIManager.PrevZoomUIActive();
+            backBtn.gameObject.SetActive(false);
 
             TerritoryManager.Instance.TerritoryRunTimeData.InitRunTimeData();
 
@@ -48,6 +57,9 @@ public class TerritoryInGameUI : TerritoryBaseUI
     }
     private void OnDisable()
     {
-        BackBtn.onClick.RemoveAllListeners();
+        TerritoryAdjacentZoneUI.OnZoomStarted -= ShowBackButton;
+        TerritoryZone.OnTerritoryUnlocked -= ShowBackButton;
+
+        backBtn.onClick.RemoveAllListeners();
     }
 }

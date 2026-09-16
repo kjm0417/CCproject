@@ -1,148 +1,157 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public interface IZoneState
+{
+    void OnEnter(TerritoryZone zone);
+    void OnExit(TerritoryZone zone);
+}
+
+public class LockedZoneState : IZoneState
+{
+    private TerritoryZoneUIManager uiManager;
+    public LockedZoneState(TerritoryZoneUIManager uiManager)
+    {
+        this.uiManager = uiManager;
+    }
+
+    public void OnEnter(TerritoryZone zone)
+    {
+        zone.TerritoryTileMapGround.gameObject.layer = 6;
+        zone.TerritoryTileMapWall.gameObject.layer = 6;
+        zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = true;
+        zone.TerritoryZoneUIManager.ApplyLockedState();
+    }
+
+    public void OnExit(TerritoryZone zone) { }
+}
+
+public class UnlockingZoneState : IZoneState
+{
+    private TerritoryZoneUIManager uiManager;
+    public UnlockingZoneState(TerritoryZoneUIManager uiManager)
+    {
+        this.uiManager = uiManager;
+    }
+    public void OnEnter(TerritoryZone zone)
+    {
+        zone.TerritoryTileMapGround.gameObject.layer = 8;
+        zone.TerritoryTileMapWall.gameObject.layer = 8;
+        zone.TerritoryZoneUIManager.ApplyUnlockingState();
+    }
+
+    public void OnExit(TerritoryZone zone)
+    {
+        zone.TerritoryZoneUIManager.HideFocusingImage();
+    }
+}
+
+public class UnlockedZoneState : IZoneState
+{
+    private TerritoryZoneUIManager uiManager;
+    public UnlockedZoneState(TerritoryZoneUIManager uiManager)
+    {
+        this.uiManager = uiManager;
+    }
+    public void OnEnter(TerritoryZone zone)
+    {
+        zone.TerritoryTileMapGround.gameObject.layer = 7;
+        zone.TerritoryTileMapWall.gameObject.layer = 7;
+        zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = false;
+        zone.TerritoryZoneUIManager.ApplyUnlockedState();
+    }
+
+    public void OnExit(TerritoryZone zone) { }
+}
+
 /// <summary>
-/// ±¸¿ª ÇÏ³ª¿¡ ´ëÇ¥ÇÏ´Â ÄÄÆ÷³ÍÆ®(±¸¿ªº°·Î ÇÏ³ª¾¿ Á¸Àç)
+/// ì˜ì—­ í•˜ë‚˜ë¥¼ ëŒ€í‘œí•˜ëŠ” ì»´í¬ë„ŒíŠ¸(ë°ì´í„°ì™€ ë¡œì§ ë‹´ë‹¹)
 /// </summary>
 public class TerritoryZone : MonoBehaviour
 {
-    #region ÇÊ¿ä º¯¼ö Á¤ÀÇ
+    private IZoneState currentState;
+    private IZoneState lockedState;
+    private IZoneState unlockingState;
+    private IZoneState unlockedState;
+
+    #region í•„ìš” ë°ì´í„° ì„ ì–¸
     [SerializeField]
-    private TerritoryZoneData territoryZoneData; //±¸¿ª¿¡ ´ëÇÑ µ¥ÀÌÅÍ
+    private TerritoryZoneData territoryZoneData;
 
     [SerializeField]
-    private TerritoryIcon territoryIcon;
-    public TerritoryIcon TerritoryIcon => territoryIcon;
+    TerritoryZoneUIManager territoryZoneUIManager;
+    public TerritoryZoneUIManager TerritoryZoneUIManager => territoryZoneUIManager;
 
     [SerializeField]
-    private TerritoryUI territoryUI;
-    public TerritoryUI TerritoryUI => territoryUI;
-
-    [SerializeField]
-    private Tilemap territoryTileMapGround,territoryTileMapWall; //±¸¿ª¿¡ ´ëÇÑ Å¸ÀÏ¸Ê
+    private Tilemap territoryTileMapGround, territoryTileMapWall;
 
     public Tilemap TerritoryTileMapGround => territoryTileMapGround;
-    public Tilemap TerritoryTileMapWall=> territoryTileMapWall;
+    public Tilemap TerritoryTileMapWall => territoryTileMapWall;
 
     [SerializeField]
-    private bool isLocked = true; //±¸¿ªÀÌ Àá°Ü ÀÖ´ÂÁö ¿©ºÎ (ÃÊ±â¿£ Àá°Ü ÀÖÀ½)
+    private bool isLocked = true;
 
     public static Action<TerritoryZone, TerrirotyDirection> OnZoneApproached;
     public static Action OnZoneLeaved;
-    public static Action<TerritoryZone> OnZoneBuyClick; //±¸¿ª ±¸¸Å ¹öÆ° Å¬¸¯ ÀÌº¥Æ®
+    public static Action<TerritoryZone> OnZoneBuyClick;
+    public static event Action<bool> OnTerritoryUnlocked;
 
-    //¿ÜºÎ ÀĞ±â Àü¿ë ÇÁ·ÎÆÛÆ¼
     public TerritoryZoneData TerritoryZoneData => territoryZoneData;
 
     public bool IsLocked => isLocked;
-
 
     #endregion
 
     private void Awake()
     {
-        if(isLocked) //Àá°Ü ÀÖ´Ù¸é
-        {
-            LockedZoneSet();
-        }
+        lockedState = new LockedZoneState(territoryZoneUIManager);
+        unlockingState = new UnlockingZoneState(territoryZoneUIManager);
+        unlockedState = new UnlockedZoneState(territoryZoneUIManager);
+
+        if (isLocked)
+            ChangeState(lockedState);
         else
-        {
-            UnLockedZoneSet();
-        }
-       
+            ChangeState(unlockedState);
+    }
+
+    private void ChangeState(IZoneState newState)
+    {
+        currentState?.OnExit(this);
+        currentState = newState;
+        currentState.OnEnter(this);
     }
 
     /// <summary>
-    /// ÀÎÁ¢ ±¸¿ª¿¡ ÇØ´çÇÏ´Â Å¸ÀÏ¸ÊÀÇ ·¹ÀÌ¾î¸¦ º¯°æ
+    /// ì¸ì ‘í•œ êµ¬ì—­ì˜ í•´ë‹¹í•˜ëŠ” íƒ€ì¼ë§µì˜ ë ˆì´ì–´ ë³€ê²½
     /// </summary>
     public void UpdateAdjacentZoneLayer()
     {
-        territoryTileMapGround.gameObject.layer = 6; //LockZone ·¹ÀÌ¾î·Î ¼³Á¤
+        territoryTileMapGround.gameObject.layer = 6;
         territoryTileMapWall.gameObject.layer = 6;
     }
 
-    /// <summary>
-    /// ±¸¿ªÀÌ Àá°ÜÀÖÀ» ¶§ ¼¼ÆÃ
-    /// </summary>
-    private void LockedZoneSet()
-    {
-        territoryTileMapGround.gameObject.layer = 6; //LockZone ·¹ÀÌ¾î·Î ¼³Á¤
-        territoryTileMapWall.gameObject.layer = 6;
-
-        territoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = true;
-
-    }
-    /// <summary>
-    /// ±¸¿ªÀÌ Àá°ÜÀÖÁö ¾ÊÀ» ¶§ ¼¼ÆÃ
-    /// </summary>
-    private void UnLockedZoneSet()
-    {
-        territoryTileMapGround.gameObject.layer = 7; //UnlockZone ·¹ÀÌ¾î·Î ¼³Á¤
-        territoryTileMapWall.gameObject.layer = 7;
-
-        territoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = false;
-    }
-
-    /// <summary>
-    /// Àá°ÜÀÖ´Â ±¸¿ª¿¡ ÇØ±İ ½Ãµµ °úÁ¤¿¡¼­ ±¸¿ª ¾ÆÀÌÄÜ Å¬¸¯ ÇßÀ» ¶§ 
-    /// </summary>
     public void TryLockedZoneSet()
     {
-        territoryTileMapGround.gameObject.layer = 8; //TrylockZone ·¹ÀÌ¾î·Î ¼³Á¤
-        territoryTileMapWall.gameObject.layer = 8; //TrylockZone ·¹ÀÌ¾î·Î ¼³Á¤
-
-        //±¸¸Å ¾ÆÀÌÄÜ ¹× ÅäÁö ±¸ÀÔ ºñ¿ë °ü·Ã Äµ¹ö½º È°¼ºÈ­
-        if(IsLocked)
-        {
-            territoryIcon.FocusingImageUI(true);
-            territoryIcon.LockUI(territoryZoneData.RequireGold);
-        }
-
-        //ÇöÀç ±¸¿ª ±âÁØ »ó/ÇÏ/ÁÂ/¿ì¿¡ ÇØ´çÇÏ´Â ±¸¿ªµéÀ» Ã£¾Æ¼­ , ±¸¿ª ºñ¿ë UI º¸¿©ÁÖ°í , Æ÷Ä¿½Ì ¼³Á¤
-
+        ChangeState(unlockingState);
     }
 
-    /// <summary>
-    /// Àá°ÜÀÖ´Â ±¸¿ª¿¡ ÇØ±İ ½Ãµµ °úÁ¤¿¡¼­ µÚ·Î°¡±â ¾ÆÀÌÄÜ Å¬¸¯ ÇßÀ» ¶§
-    /// </summary>
     public void TryUnLockedZoneSet()
     {
-        territoryTileMapGround.gameObject.layer = 6; 
-        territoryTileMapWall.gameObject.layer = 6; 
-
-        //±¸¸Å ¾ÆÀÌÄÜ ¹× ÅäÁö ±¸ÀÔ ºñ¿ë °ü·Ã Äµ¹ö½º È°¼ºÈ­
-        if (IsLocked)
-        {
-            territoryIcon.FocusingImageUI(false);
-            territoryIcon.ButtonUI(false);
-            territoryIcon.UnLockUI();
-        }
-
-        //ÇöÀç ±¸¿ª ±âÁØ »ó/ÇÏ/ÁÂ/¿ì¿¡ ÇØ´çÇÏ´Â ±¸¿ªµéÀ» Ã£¾Æ¼­ , ±¸¿ª ºñ¿ë UI º¸¿©ÁÖ°í , Æ÷Ä¿½Ì ¼³Á¤
-
+        ChangeState(lockedState);
     }
 
-
     /// <summary>
-    /// ±¸¿ª Àá±İ ÇØÁ¦ ¼º°ø ½Ã È£Ãâ µÇ´Â ¸Ş¼­µå
+    /// êµ¬ì—­ í•´ê¸ˆ í›„ ì§€ì—­ ìƒíƒœë¥¼ ë³€ê²½í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     public void UnLockZone()
     {
-        territoryIcon.FocusingIconUI(false);
-        territoryIcon.FocusingImageUI(false);
-
-        this.gameObject.layer = 7;
-
-        string[] objParts = this.gameObject.name.Split('_');
-        string number = objParts[1];
-
-        this.gameObject.name = "Zone_" + number;
-
         isLocked = false;
+        
+        string[] objParts = this.gameObject.name.Split('_');
+        this.gameObject.name = "Zone_" + objParts[1];
 
-        //±¸¿ªÀÌ ¹à¾ÆÁü
         StartCoroutine(TerritoryAlpha());
     }
 
@@ -165,40 +174,38 @@ public class TerritoryZone : MonoBehaviour
         }
 
         c1.a = 1f;
-        territoryTileMapGround.color = c1; //¸¶Áö¸·¿¡ Á¤È®È÷ 1·Î °íÁ¤ (Lerp ¿ÀÂ÷ ¹æÁö)
+        territoryTileMapGround.color = c1;
         c2.a = 1f;
-        territoryTileMapWall.color = c2; //¸¶Áö¸·¿¡ Á¤È®È÷ 1·Î °íÁ¤ (Lerp ¿ÀÂ÷ ¹æÁö)
+        territoryTileMapWall.color = c2;
 
-        territoryIcon.FocusingIconUI(false);
-        territoryIcon.FocusingImageUI(false);
-
-        UnLockedZoneSet();
+        ChangeState(unlockedState);
 
         GetComponent<ResourceSpawner>().SpawnInitial();
 
+        OnTerritoryUnlocked?.Invoke(false);
+
         yield return new WaitForSeconds(1.5f);
 
-        TerritoryDirectionManager.Instance.ResetBackClicked(this,true);
+        TerritoryDirectionManager.Instance.ResetBackClicked(this, true);
     }
 
-    TerrirotyDirection currentZoneDir; //ÇöÀç ÇÃ·¹ÀÌ¾î°¡ Á¢±ÙÇÑ ±¸¿ª ±âÁØÀ¸·Î »ó/ÇÏ/ÁÂ/¿ì ¾î´À ¹æÇâ¿¡¼­ Á¢±ÙÇß´ÂÁö ÀúÀå
+    TerrirotyDirection currentZoneDir;
+
     /// <summary>
-    /// ÇØ±İµÇÁö ¾Ê´Â ±¸¿ª¿¡ Á¢±Ù ½Ã Ã³¸®ÇÒ °Í
+    /// ì ‘ê·¼ë˜ì§€ ì•Šì€ ì˜ì—­ì— ì ‘ê·¼í•  ë•Œ ì²˜ë¦¬í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     public void ApproachZone(TerritoryZone playerZone, TerrirotyDirection terrirotyDirection) 
     {
         currentZoneDir = terrirotyDirection;
 
-        //ÁÜ ¾Æ¿ô UI Ã³¸®       
-        playerZone.territoryUI.OnZoomOutViewed(playerZone, terrirotyDirection);
+        playerZone.territoryZoneUIManager.OnZoomOutViewed(playerZone, terrirotyDirection);
     }
 
     /// <summary>
-    /// ÇØ±İµÇÁö ¾Ê´Â ±¸¿ª¿¡ Á¢±Ù ÈÄ ÀÌÅ» ½Ã Ã³¸®ÇÒ °Í
+    /// ì ‘ê·¼ë˜ì§€ ì•Šì€ ì˜ì—­ì„ ë– ë‚  ë•Œ ì²˜ë¦¬í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     public void LeaveZone()
     {
         OnZoneLeaved?.Invoke();
     }
-
 }

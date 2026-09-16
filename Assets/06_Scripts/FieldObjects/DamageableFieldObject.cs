@@ -27,33 +27,26 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     [SerializeField]
     private int fallbackDamage = 1;
 
-    [Header("선택 연결")]
-    [Tooltip("비워두면 같은 오브젝트에 붙어 있는 FieldObjectDropper를 자동으로 찾아서 사용합니다.")]
-    [SerializeField]
-    private FieldObjectDropper dropper;
-
     public int CurrentHp { get; private set; }
     public bool IsDepleted { get; private set; }
     public int DropGroupId => DataDropGroupId;
     public ToolType PreferredToolType => preferredToolType;
 
+
+    private FieldObjectDropper fieldObjectDropper; //공통 Dropper 정의
     protected override void Awake()
     {
         base.Awake();
         ResetRuntimeState();
-
-        if (dropper == null)
-        {
-            dropper = GetComponent<FieldObjectDropper>();
-        }
     }
+
 
     public void InfoResource(ResourceSpawnEntry entry)
     {
         this.ResourceEntry = entry;
     }
 
-    public override void Configure(FieldObjData fieldObjData)
+    public override void Configure(FieldObjBaseData fieldObjData)
     {
         base.Configure(fieldObjData);
         ResetRuntimeState();
@@ -71,7 +64,7 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         TakeDamage(context);
     }
 
-    public void TakeDamage(InteractionContext context)
+    public virtual void TakeDamage(InteractionContext context)
     {
         float baseDamage = context.Damage > 0f ? context.Damage : fallbackDamage;
         if (preferredToolType != ToolType.None && context.ToolType == preferredToolType)
@@ -99,11 +92,18 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         }
     }
 
+    /// <summary>
+    /// 공통 Dropper 1회 주입
+    /// </summary>
+    public void InitDropper(FieldObjectDropper fieldObjectDropper)
+    {
+        this.fieldObjectDropper = fieldObjectDropper;
+    }
     protected virtual void OnDepleted()
     {
-        if (dropper != null)
+        if (fieldObjectDropper != null)
         {
-            dropper.Drop(DropGroupId, transform.position);
+            fieldObjectDropper.DropOnDeath(DropGroupId, transform.position);
         }
 
         Destroy(gameObject);

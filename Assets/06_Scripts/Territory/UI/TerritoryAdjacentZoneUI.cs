@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 영토확장시스템 - 월드
+/// 영토확장시스템 - 인접 영역 방향 버튼 표시/선택  ( 로컬 )
 /// </summary>
-public class TerritoryUI : TerritoryBaseUI
+public class TerritoryAdjacentZoneUI : MonoBehaviour
 {
     [SerializeField]
     GameObject  zoomrightUI,zoomleftUI , zoomupUI,zoomdownUI;
@@ -17,10 +17,14 @@ public class TerritoryUI : TerritoryBaseUI
     Button zoomRightBtn , zoomLeftBtn, zoomUpBtn, zoomDownBtn;
 
     GameObject prevZoomUI;
+
+    public static event Action<bool> OnZoomStarted;
+
     private void OnEnable()
     {
         //TerritoryZone.OnZoneApproached += OnZoomOutViewed;
         TerritoryZone.OnZoneLeaved += OnLevaeZonUI;
+        
 
         OnLevaeZonUI();
     }
@@ -102,14 +106,14 @@ public class TerritoryUI : TerritoryBaseUI
 
             if (zone == approachZone)
             {
-                zone.TerritoryIcon.FocusingIconUI(true);
+                zone.TerritoryZoneUIManager.ShowFocusingIcon();
             }
             
         }
 
         SetCameraAnchorByApproachZone(terrirotyDirection, approachZone);
 
-        BackBtn.gameObject.SetActive(true);
+        OnZoomStarted?.Invoke(true);
 
         zoomleftUI.SetActive(false); zoomrightUI.SetActive(false); zoomupUI.SetActive(false); zoomdownUI.SetActive(false);
 

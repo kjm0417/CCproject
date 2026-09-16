@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 영토확장시스템 - 월드
+/// 영토확장시스템 - 개별 영역 잠금 상태 아이콘/줌 인 버튼  ( 로컬 )
 /// </summary>
-public class TerritoryIcon : MonoBehaviour
+public class TerritoryZoneLockUI : MonoBehaviour
 {
     [SerializeField]
     GameObject icon;
@@ -74,9 +74,7 @@ public class TerritoryIcon : MonoBehaviour
 
                 if (zone.IsLocked)
                 {
-                    zone.TerritoryIcon.FocusingIconUI(false);
-                    zone.TerritoryIcon.FocusingImageUI(false);
-                    zone.TerritoryIcon.UnLockUI();
+                    zone.TerritoryZoneUIManager.ApplyLockedState();
 
                     zone.UpdateAdjacentZoneLayer();
 
@@ -88,6 +86,10 @@ public class TerritoryIcon : MonoBehaviour
         IsZoomInClicked = false;
     }
 
+    public void BuyBtnAcitve(bool value)
+    {
+        buyBtn.gameObject.SetActive(value);
+    }
     public void FocusingIconUI(bool isAcitve)
     {
         if(isAcitve)
@@ -112,17 +114,6 @@ public class TerritoryIcon : MonoBehaviour
         }
     }
 
-    public void ButtonUI(bool isAcitve)
-    {
-        if (isAcitve)
-        {
-            buyBtn.gameObject.SetActive(true);
-        }
-        else
-        {
-            buyBtn.gameObject.SetActive(false);
-        }
-    }
     /// <summary>
     /// 구역 잠금 UI 처리 ( 아이콘 활성화 및 TMP 활성화 처리 등등 )
     /// </summary>

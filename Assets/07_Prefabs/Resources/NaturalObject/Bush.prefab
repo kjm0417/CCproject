@@ -102,8 +102,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2589099141673096503}
   - component: {fileID: 3672930736874133048}
-  - component: {fileID: 6800362867169723182}
-  - component: {fileID: 404209679924036306}
+  - component: {fileID: 2747311640391163061}
+  - component: {fileID: 3125478888184243569}
   m_Layer: 0
   m_Name: Bush
   m_TagString: Untagged
@@ -174,22 +174,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6800362867169723182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7417119400850013465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e584903f9f8f43928067eb0d034d29b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FieldObjectDropper
-  dropTable: {fileID: 0}
-  pickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
-  scatterRadius: 0.35
---- !u!114 &404209679924036306
+--- !u!114 &2747311640391163061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,12 +185,27 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43ff9676d5f440ee8da4d72724b5e7fc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NaturalResourceObject
+  m_EditorClassIdentifier: Assembly-CSharp::NaturalSimpleObject
   data: {fileID: 11400000, guid: eae710a4626151d4b94eab2c2f65bda0, type: 2}
-  preferredToolType: 2
+  preferredToolType: 1
   preferredToolMultiplier: 1.5
   fallbackDamage: 1
-  dropper: {fileID: 6800362867169723182}
+  dropper: {fileID: 3125478888184243569}
+--- !u!114 &3125478888184243569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417119400850013465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
+  deathDropTable: {fileID: 0}
+  deathPickupPrefab: {fileID: 0}
+  scatterRadius: 0.35
 --- !u!1001 &1146850723193627244
 PrefabInstance:
   m_ObjectHideFlags: 0
