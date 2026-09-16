@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
     [Header("입력")]
     [SerializeField]
     private VariableJoystick joystick; // UI 조이스틱. 인스펙터에서 연결한다.
+    public VariableJoystick JoyStick => joystick; //외부 접근 용도
 
     private Rigidbody2D rb;
     private PlayerStats stats;

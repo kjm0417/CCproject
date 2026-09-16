@@ -41,11 +41,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: GridTileMap
+    uniqueID: 1045803317
+    locked: 0
   - name: Resource
     uniqueID: 660640049
     locked: 0
-  - name: Character
-    uniqueID: 1045803317
+  - name: 'Character '
+    uniqueID: 3036556891
+    locked: 0
+  - name: UI
+    uniqueID: 3353983949
     locked: 0
   m_RenderingLayers:
   - Default

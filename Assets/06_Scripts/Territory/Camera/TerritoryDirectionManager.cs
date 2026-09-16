@@ -169,7 +169,9 @@ public class TerritoryDirectionManager : MonoBehaviour
     float boundOffset;
     public void ZoneIconClicked(TerritoryZone approachZone,Action onComplete = null)
     {
-        //TODO KJ - 플레이어 이동 UI 비활성화
+       
+        Player.GetComponent<PlayerMovement>().JoyStick.GetComponentInParent<Canvas>().enabled = false;
+
         SetFollowTargetUpdate(approachZone.GetComponent<TerritoryCamera>().TerritoryMiddleAnchor);
 
         StopCoroutine(nameof(SmoothZoomBound));
@@ -243,7 +245,8 @@ public class TerritoryDirectionManager : MonoBehaviour
     /// </summary>
     public void ResetBackClicked(TerritoryZone approachZone , bool shouldExpandDefaultBound)
     {
-       // ZoomToPlayerCamera();
+        // ZoomToPlayerCamera();
+        Player.GetComponent<PlayerMovement>().JoyStick.GetComponentInParent<Canvas>().enabled = true;
 
         StartCoroutine(UnLockCoroutine(approachZone, shouldExpandDefaultBound));
     }
@@ -324,7 +327,7 @@ public class TerritoryDirectionManager : MonoBehaviour
         cinemachineConfiner2DPlayer.InvalidateBoundingShapeCache();
 
         //4. 닫기 투표하려던 인접 영역 포커싱 UI 제거
-        approachZone.TerritoryIcon.FocusingIconUI(false);
+        approachZone.TerritoryZoneUIManager.HideFocusingIcon();
     }
     #endregion
 }

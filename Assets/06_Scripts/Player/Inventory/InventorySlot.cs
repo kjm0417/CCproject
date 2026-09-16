@@ -2,10 +2,10 @@
 // MonoBehaviour가 아니라 순수 데이터라 PlayerInventory 안에서 리스트로 다룬다.
 public class InventorySlot
 {
-    public ItemData Item;
+    public InvenItemData Item;
     public int Count;
 
-    public InventorySlot(ItemData item, int count)
+    public InventorySlot(InvenItemData item, int count)
     {
         Item = item;
         Count = count;

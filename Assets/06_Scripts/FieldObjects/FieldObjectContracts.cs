@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 // 사용하는 도구 종류
 public enum ToolType
@@ -30,7 +33,7 @@ public readonly struct InteractionContext
 // 모든 필드 오브젝트가 공통으로 가지는 최소 정보
 public interface IFieldObject
 {
-    FieldObjData Data { get; }
+    FieldObjBaseData Data { get; }
 }
 
 // 가까이 갔을 때 플레이어가 사용할 수 있는 오브젝트
@@ -52,6 +55,20 @@ public interface IDamageableFieldObject
 public interface IDropProvider
 {
     int DropGroupId { get; }
+}
+
+public interface IRespawnProvier
+{
+    /// <summary>
+    /// 자원 리스폰 하기 위한 정보 전달
+    /// </summary>
+    void InfoResource(ResourceSpawnEntry resourceSpawnEntry);
+
+    /// <summary>
+    /// Destroy 시 리스폰 시키기 위한 이벤트 
+    /// ( GameObject : 자원 객체 , ResourceSpawnEntry : 자원 리스폰 정보 , float : 자원 리스폰 시간 )
+    /// </summary>
+    public event Action<GameObject,ResourceSpawnEntry, float> OnDestroyed;
 }
 
 // 오브젝트가 기대하는 도구를 알려준다.

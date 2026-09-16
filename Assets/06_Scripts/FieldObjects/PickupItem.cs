@@ -6,13 +6,13 @@ public class PickupItem : MonoBehaviour
     [Header("런타임 아이템")]
     [Tooltip("보통 FieldObjectDropper가 실행 중에 넣어줍니다. 테스트할 때는 직접 넣어도 됩니다.")]
     [SerializeField]
-    private ItemData item;
+    private InvenItemData item;
 
     [Tooltip("보통 FieldObjectDropper가 실행 중에 넣어줍니다. 테스트할 때는 직접 넣어도 됩니다.")]
     [SerializeField]
     private int count = 1;
 
-    public void Initialize(ItemData itemData, int itemCount)
+    public void Initialize(InvenItemData itemData, int itemCount)
     {
         item = itemData;
         count = Mathf.Max(1, itemCount);

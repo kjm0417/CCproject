@@ -1,7 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, IDropProvider, IToolInteractionTarget
+public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
+    IDropProvider, IToolInteractionTarget , IRespawnProvier
 {
+    #region 자원 리스폰 ( IRespawnProvier )
+    public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
+    public event Action<GameObject,ResourceSpawnEntry, float> OnDestroyed;
+    #endregion
+
+    public event Action<float> OnDamaged;
+
+
+
     [Header("상호작용 테스트 값")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 받아오면 됩니다.")]
     [SerializeField]
@@ -15,28 +27,26 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     [SerializeField]
     private int fallbackDamage = 1;
 
-    [Header("선택 연결")]
-    [Tooltip("비워두면 같은 오브젝트에 붙어 있는 FieldObjectDropper를 자동으로 찾아서 사용합니다.")]
-    [SerializeField]
-    private FieldObjectDropper dropper;
-
     public int CurrentHp { get; private set; }
     public bool IsDepleted { get; private set; }
     public int DropGroupId => DataDropGroupId;
     public ToolType PreferredToolType => preferredToolType;
 
+
+    private FieldObjectDropper fieldObjectDropper; //공통 Dropper 정의
     protected override void Awake()
     {
         base.Awake();
         ResetRuntimeState();
-
-        if (dropper == null)
-        {
-            dropper = GetComponent<FieldObjectDropper>();
-        }
     }
 
-    public override void Configure(FieldObjData fieldObjData)
+
+    public void InfoResource(ResourceSpawnEntry entry)
+    {
+        this.ResourceEntry = entry;
+    }
+
+    public override void Configure(FieldObjBaseData fieldObjData)
     {
         base.Configure(fieldObjData);
         ResetRuntimeState();
@@ -54,7 +64,7 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         TakeDamage(context);
     }
 
-    public void TakeDamage(InteractionContext context)
+    public virtual void TakeDamage(InteractionContext context)
     {
         float baseDamage = context.Damage > 0f ? context.Damage : fallbackDamage;
         if (preferredToolType != ToolType.None && context.ToolType == preferredToolType)
@@ -70,18 +80,30 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
         if (IsDepleted || amount <= 0) return;
 
         CurrentHp = Mathf.Max(0, CurrentHp - amount);
+        OnDamaged?.Invoke(CurrentHp);
+       
         if (CurrentHp <= 0)
         {
             IsDepleted = true;
             OnDepleted();
+
+            float respawnTime = UnityEngine.Random.Range(Data.RespawnTimeMin, Data.RespawnTimeMax);
+            OnDestroyed?.Invoke(this.gameObject,ResourceEntry, respawnTime);
         }
     }
 
+    /// <summary>
+    /// 공통 Dropper 1회 주입
+    /// </summary>
+    public void InitDropper(FieldObjectDropper fieldObjectDropper)
+    {
+        this.fieldObjectDropper = fieldObjectDropper;
+    }
     protected virtual void OnDepleted()
     {
-        if (dropper != null)
+        if (fieldObjectDropper != null)
         {
-            dropper.Drop(DropGroupId, transform.position);
+            fieldObjectDropper.DropOnDeath(DropGroupId, transform.position);
         }
 
         Destroy(gameObject);

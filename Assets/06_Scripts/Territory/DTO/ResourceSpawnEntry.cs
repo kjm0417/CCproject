@@ -7,7 +7,9 @@ using UnityEngine;
 public class ResourceSpawnEntry
 {
     public GameObject ResourcePrefab; //뭘 스폰할지 프리펩
-    public float SpawnLongTime;//스폰 주기
 
     public int MaxCount; //자원을 최대 몇개 스폰할지.
+
+    public int GridHeight =     1;
+    public int GridWidth =      1;
 }
