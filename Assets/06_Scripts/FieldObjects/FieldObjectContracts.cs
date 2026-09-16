@@ -80,6 +80,6 @@ public interface IToolInteractionTarget
 // 시간이나 단계에 따라 성장하는 오브젝트
 public interface IGrowable
 {
-    int GrowthStage { get; }
+    int GrowthStage { get; set; }
     bool IsHarvestable { get; }
 }

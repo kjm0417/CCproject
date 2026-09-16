@@ -191,6 +191,12 @@ MonoBehaviour:
   preferredToolMultiplier: 1.5
   fallbackDamage: 1
   dropper: {fileID: -6701322306465851639}
+  farmObjDatas:
+  - {fileID: 11400000, guid: 3423b7b7555cebb4b9ed6dde2c478a8f, type: 2}
+  - {fileID: 11400000, guid: 6ec0768d4d6163b4780e1954e74f46b2, type: 2}
+  - {fileID: 11400000, guid: c7a806c1b8ab421478506ede4cb4b4bb, type: 2}
+  - {fileID: 11400000, guid: 19830795fd1adb74dbc0f60912b1f115, type: 2}
+  - {fileID: 11400000, guid: bbe36197656d779409aae997fb6fec07, type: 2}
 --- !u!114 &-6701322306465851639
 MonoBehaviour:
   m_ObjectHideFlags: 0

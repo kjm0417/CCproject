@@ -11,5 +11,5 @@ public class FieldComplexObjData : ObjBaseData
     public string ObjectType;
     public string Description;
     public string InteractionRange;
-    public int HitDropGroupID;
+    public int CropID;
 }

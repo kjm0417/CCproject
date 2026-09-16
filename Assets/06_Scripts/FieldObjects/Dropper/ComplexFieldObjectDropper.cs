@@ -17,6 +17,7 @@ public class ComplexFieldObjectDropper : FieldObjectDropper
 
         List<ItemDrop> drops = hitDropTable.Roll(dropGroupId);
 
+        Debug.Log(drops.Count);
         CreatePickUpItem(hitPickupPrefab, drops, origin);
     }
 }

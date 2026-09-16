@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
-    IDropProvider, IToolInteractionTarget , IRespawnProvier
+public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
+    IToolInteractionTarget , IRespawnProvier
 {
     #region 자원 리스폰 ( IRespawnProvier )
     public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
@@ -18,7 +18,6 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     public ObjBaseData Data => data;
 
     protected int MaxHp => data != null ? data.HP : 0;
-    protected int DataDropGroupId => data != null ? data.DropGroupID : 0;
 
     [Header("상호작용 테스트 값")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 받아오면 됩니다.")]
@@ -35,7 +34,6 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
 
     public int CurrentHp { get; private set; }
     public bool IsDepleted { get; private set; }
-    public int DropGroupId => DataDropGroupId;
     public ToolType PreferredToolType => preferredToolType;
 
 
@@ -98,15 +96,7 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     {
         this.fieldObjectDropper = fieldObjectDropper;
     }
-    protected virtual void OnDepleted()
-    {
-        if (fieldObjectDropper != null)
-        {
-            fieldObjectDropper.DropOnDeath(DropGroupId, transform.position);
-        }
-
-        Destroy(gameObject);
-    }
+    protected abstract void OnDepleted();
 
     private void ResetRuntimeState()
     {

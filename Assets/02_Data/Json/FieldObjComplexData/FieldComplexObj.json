@@ -8,7 +8,7 @@
     "RespawnTimeMin":45,
     "RespawnTimeMax":60,
     "InteractionRange":"1 * 2",
-    "DropGroupID":71001,
-    "HitDropGroupID":73002
+    "CropID":51102,
+    "":""
   }
 ]

@@ -9,10 +9,27 @@ public class NaturalSimpleObject : DamageableFieldObject
     [SerializeField]
     private SimpleFieldObjectDropper dropper;
 
+    private FieldObjData fieldSimpleObjData;
+
     protected override void Awake()
     {
         base.Awake();
 
         InitDropper(dropper);
+    }
+
+    private void Start()
+    {
+        fieldSimpleObjData = Data as FieldObjData;
+    }
+
+    protected override void OnDepleted()
+    {
+        if (dropper != null)
+        {
+            dropper.DropOnDeath(fieldSimpleObjData.DropGroupID, transform.position);
+        }
+
+        Destroy(gameObject);
     }
 }

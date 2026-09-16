@@ -10,5 +10,6 @@ public class FieldObjData : ObjBaseData
     public string ObjectName;
     public string ObjectType;
     public string Description;
+    public int DropGroupID;
     public string InteractionRange;
 }
