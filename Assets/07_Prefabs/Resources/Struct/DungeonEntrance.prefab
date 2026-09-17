@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4477422957402332141}
   - component: {fileID: 4768691631987294995}
   - component: {fileID: 8870758542004402842}
+  - component: {fileID: 8608418807362007684}
   m_Layer: 0
   m_Name: DungeonEntrance
   m_TagString: Untagged
@@ -167,3 +168,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348344e34c6c48a1b3383ff17d50bf0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractiveFixedStructureObject
+--- !u!114 &8608418807362007684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568179222172417323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe6f96928e8a6a42975351b7139498c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneHandlerUI
+  type: 0

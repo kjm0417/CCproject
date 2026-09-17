@@ -58,6 +58,16 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
         if (stats != null) stats.OnStatsChanged += HandleStatsChanged;
     }
 
+    /// <summary>
+    /// 저장된 데이터 로드
+    /// </summary>
+    /// <param name="HP"></param>
+    /// <param name="HungerValue"></param>
+    public void Load(float Hp , float HungerValue)
+    {
+        health.LoadSet(Hp);
+        hunger.LoadSet(HungerValue);
+    }
     private void OnDestroy()
     {
         if (stats != null) stats.OnStatsChanged -= HandleStatsChanged;

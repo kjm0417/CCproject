@@ -1,11 +1,12 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 /// <summary>
-/// ±¸Á¶¹° UI °øÅë
-/// ¸»Ç³¼± ´ë»ç È°¼ºÈ­ + »óÈ£ÀÛ¿ë ¹öÆ° ÀÌº¥Æ®¸¸ ´ã´ç
+/// ìƒí˜¸ì‘ìš© UI ê´€ë¦¬
+/// ë§í’ì„  í‘œì‹œ í™œì„±í™” + ë²„íŠ¼ ì½œë°± ì£¼ì…ë§Œ ë‹´ë‹¹
 /// </summary>
 public class InteractionStructureUI : MonoBehaviour
 {
@@ -16,38 +17,45 @@ public class InteractionStructureUI : MonoBehaviour
     [SerializeField]
     private Button interactionBtn;
 
+    public static event Action<PlayerContext> OnButtonClickCallback;
+
+
     private void OnEnable()
     {
-        InteractionStructureObject.OnInteractionStart += OnInteractionStarted;
-        InteractionStructureObject.OnInteractionEnd += OnInteractionEnd;
-
-        interactionBtn.onClick.AddListener(OnInteractionClick);
+        InteractionStructureObject.OnInteractionStart += OnInteraction;
+        InteractionStructureObject.OnUIShow += OnInteractionUIShow;
+        InteractionStructureObject.OnUIHide += OnInteractionUIHide;
     }
+
+    private void OnInteraction(PlayerContext context)
+    {
+        interactionBtn.onClick.AddListener(() =>
+        {
+            OnButtonClickCallback?.Invoke(context);
+
+            interactionBtn.onClick.RemoveAllListeners();
+        });
+    }
+
     private void OnDisable()
     {
-        InteractionStructureObject.OnInteractionStart -= OnInteractionStarted;
-        InteractionStructureObject.OnInteractionEnd -= OnInteractionEnd;
-
-        interactionBtn.onClick.RemoveAllListeners();
+        InteractionStructureObject.OnInteractionStart -= OnInteraction;
+        InteractionStructureObject.OnUIShow -= OnInteractionUIShow;
+        InteractionStructureObject.OnUIHide -= OnInteractionUIHide;
     }
 
-    private void OnInteractionStarted(string interactionDetail)
+    private void OnInteractionUIShow(string interactionDetail)
     {
+        interactionBtn.gameObject.SetActive(true);
         interactionImage.gameObject.SetActive(true);
         this.interactionDetail.text = interactionDetail;
+
     }
 
-    /// <summary>
-    /// »óÈ£ÀÛ¿ë ¹öÆ° Å¬¸¯ ÀÌº¥Æ®
-    /// </summary>
-    private void OnInteractionEnd()
+    private void OnInteractionUIHide()
     {
+        interactionBtn.gameObject.SetActive(false);
         interactionImage.gameObject.SetActive(false);
         this.interactionDetail.text = "";
-    }
-
-    private void OnInteractionClick()
-    {
-
     }
 }

@@ -30,6 +30,8 @@ public class PlayerContext : MonoBehaviour
     // 아직 안 만든 부품들 - 만들면 아래 주석과 Awake의 짝을 함께 푼다.
     public PlayerInteraction Interaction { get; private set; }
 
+    public SpriteRenderer SpriteRenderer { get; private set; }
+
     private void Awake()
     {
         //부품 참조를 먼저 모두 찾음
@@ -40,6 +42,7 @@ public class PlayerContext : MonoBehaviour
         Progression = GetComponent<PlayerProgression>();
         Wallet = GetComponent<PlayerWallet>();
         Interaction = GetComponent<PlayerInteraction>();
+        SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         //self + 자식에 있는 모든 IPlayerComponent 부품을 초기화
         InitializeComponents();

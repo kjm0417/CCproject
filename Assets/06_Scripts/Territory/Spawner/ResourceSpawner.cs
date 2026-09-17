@@ -92,7 +92,6 @@ public class ResourceSpawner : MonoBehaviour
                     spawnPos = (spawnPos + topCellCenter) / 2f;
                 }
 
-
                 GameObject resourceObj =  Instantiate(entry.ResourcePrefab, spawnPos, Quaternion.identity);
 
                 var damageable = resourceObj.GetComponent<IRespawnProvier>();
@@ -146,6 +145,15 @@ public class ResourceSpawner : MonoBehaviour
             {
                 // 리스폰 실행 (SpawnInitial처럼)
                 Vector3 spawnPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(pickedCell);
+
+                if (entry.GridHeight > 1)
+                {
+                    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
+                        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
+                    );
+                    spawnPos = (spawnPos + topCellCenter) / 2f;
+                }
+
                 GameObject resourceObj = Instantiate(entry.ResourcePrefab, spawnPos, Quaternion.identity);
 
                 var respawnProvider = resourceObj.GetComponent<IRespawnProvier>();

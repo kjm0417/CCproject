@@ -33,6 +33,19 @@ public class PlayerStats : MonoBehaviour, IPlayerComponent
         OnStatsChanged?.Invoke();
     }
 
+    /// <summary>
+    /// 저장된 데이터 로드
+    /// </summary>
+    /// <param name="HP"></param>
+    /// <param name="HungerValue"></param>
+    public void Load(float moveSpeed, float attackPower, float attackRange, float maxHp)
+    {
+        calculator.SetBase(StatType.MoveSpeed, moveSpeed);
+        calculator.SetBase(StatType.AttackPower, attackPower);
+        calculator.SetBase(StatType.AttackRange, attackRange);
+        calculator.SetBase(StatType.MaxHp, maxHp);
+        OnStatsChanged?.Invoke();
+    }
     public void AddModifier(StatModifier modifier)
     {
         calculator.AddModifier(modifier);
@@ -44,4 +57,5 @@ public class PlayerStats : MonoBehaviour, IPlayerComponent
         calculator.RemoveModifier(modifier);
         OnStatsChanged?.Invoke();
     }
+
 }
