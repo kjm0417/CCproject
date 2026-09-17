@@ -88,6 +88,7 @@ public class TerritoryDirectionManager : MonoBehaviour
     /// </summary>
     public void ZoomModeActive(Transform camAnchor)
     {
+        Player.GetComponent<PlayerMovement>().JoyStick.GetComponentInParent<Canvas>().enabled = false;
 
         prevCamAnchor = camAnchor;
 

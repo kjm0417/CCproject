@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &482614018051535786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6411507071214626212}
+  - component: {fileID: 2377366966827817808}
+  m_Layer: 0
+  m_Name: Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6411507071214626212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482614018051535786}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2589099141673096503}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2377366966827817808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482614018051535786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9b4924bd1b14bb4cbb443de0797f558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridCenterPoint
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &5888009270946095575
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +149,7 @@ GameObject:
   - component: {fileID: 3672930736874133048}
   - component: {fileID: 6697348905516864284}
   - component: {fileID: -6701322306465851639}
+  - component: {fileID: 7053681603230536301}
   m_Layer: 0
   m_Name: PlumTree
   m_TagString: Untagged
@@ -120,12 +166,13 @@ Transform:
   m_GameObject: {fileID: 7417119400850013465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.51, y: -0.186, z: 0}
+  m_LocalPosition: {x: 0.494, y: -0.204, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 98894151175829087}
   - {fileID: 5425383247808904286}
+  - {fileID: 6411507071214626212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &3672930736874133048
@@ -197,6 +244,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c7a806c1b8ab421478506ede4cb4b4bb, type: 2}
   - {fileID: 11400000, guid: 19830795fd1adb74dbc0f60912b1f115, type: 2}
   - {fileID: 11400000, guid: bbe36197656d779409aae997fb6fec07, type: 2}
+  maxGrowthStage: 5
+  resetStage: 3
 --- !u!114 &-6701322306465851639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +272,19 @@ MonoBehaviour:
     prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
   - dropTable: {fileID: 11400000, guid: 47d945fd805f74544a24209680dab8e7, type: 2}
     prefab: {fileID: 7672621953354016798, guid: f30fb90aabb9dd049abb5de593817e3e, type: 3}
+--- !u!114 &7053681603230536301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417119400850013465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9b4924bd1b14bb4cbb443de0797f558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridCenterPoint
+  offset: {x: 0, y: 0.3, z: 0}
 --- !u!1001 &3086999159825943892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,7 +375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7034037888209383690, guid: 107dd3475acca0d42b6231573f463c41, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.171
       objectReference: {fileID: 0}
     - target: {fileID: 7034037888209383690, guid: 107dd3475acca0d42b6231573f463c41, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

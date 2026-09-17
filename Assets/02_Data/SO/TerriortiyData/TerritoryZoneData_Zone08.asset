@@ -23,7 +23,7 @@ MonoBehaviour:
   NpcSlots: []
   StructSlots:
   - StructPrefab: {fileID: 0}
-    StructSpawnPos: {x: 0, y: 0}
+    StructSpawnPos: {x: 2.2875, y: 1.338}
   AdjacentZoneId_Up: -1
   AdjacentZoneId_Down: 1
   AdjacentZoneId_Left: 7

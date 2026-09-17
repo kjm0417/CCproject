@@ -46,7 +46,11 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     /// <param name="growIndex"></param>
     private void StartGrowthForStage(int growIndex)
     {
-        foreach(FarmObjData farmObj in farmObjDatas)
+        if (growIndex > maxGrowthStage)
+            return;
+
+
+        foreach (FarmObjData farmObj in farmObjDatas)
         {
             string[] cropID = farmObj.CropID.Split('_');
 
@@ -69,21 +73,17 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         yield return new WaitForSeconds(farmObj.TimePerStageSec);
        
         dropper.DropOnHit(farmObj.DropGroupID, transform.position);
-        //마지막 단계 도달 시
+
         if (GrowthStage >= maxGrowthStage)
-        {
-            yield return new WaitForSeconds(0.1f);
-            GrowthStage = resetStage;
-        }
-        else
-        {
-            GrowthStage++;
-        }
+           yield break;
+
+        GrowthStage++;
 
         yield return new WaitForSeconds(0.1f);
 
         StartGrowthForStage(GrowthStage);
     }
+    private bool IsTakeDamageSeedDrop;
 
     public override void TakeDamage(InteractionContext context)
     {
@@ -91,11 +91,18 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
         if (IsDepleted) return;
 
+        if(GrowthStage == maxGrowthStage)
+        {
+            IsTakeDamageSeedDrop = true;
+            GrowthStage = resetStage;
+            StartGrowthForStage(GrowthStage); // 성장 재시작
+        }
+        
     }
     protected override void OnDepleted()
     {
         //TODO KJ 
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }

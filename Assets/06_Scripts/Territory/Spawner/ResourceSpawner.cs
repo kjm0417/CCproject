@@ -84,15 +84,27 @@ public class ResourceSpawner : MonoBehaviour
                 //GetCellCenterWorld(pickedCell) :  좌표값(칸)에 정중앙에 해당하는 실제
                 //월드 좌표로 바꿔주는 함수
 
-                if (entry.GridHeight > 1)
+                //if (entry.GridHeight > 1)
+                //{
+                //    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
+                //        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
+                //    );
+                //    spawnPos = (spawnPos + topCellCenter) / 2f;
+                //}
+
+                GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+
+                GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
+                if (centerPoint != null)
                 {
-                    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
-                        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
-                    );
-                    spawnPos = (spawnPos + topCellCenter) / 2f;
+                    Debug.Log($"spawnPos: {spawnPos}, offset: {centerPoint.offset}, final: {spawnPos - centerPoint.offset}");
+                    resourceObj.transform.position = spawnPos + centerPoint.offset; 
+                }
+                else
+                {
+                    resourceObj.transform.position = spawnPos;
                 }
 
-                GameObject resourceObj =  Instantiate(entry.ResourcePrefab, spawnPos, Quaternion.identity);
 
                 var damageable = resourceObj.GetComponent<IRespawnProvier>();
                 if (damageable != null)
@@ -146,15 +158,25 @@ public class ResourceSpawner : MonoBehaviour
                 // 리스폰 실행 (SpawnInitial처럼)
                 Vector3 spawnPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(pickedCell);
 
-                if (entry.GridHeight > 1)
-                {
-                    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
-                        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
-                    );
-                    spawnPos = (spawnPos + topCellCenter) / 2f;
-                }
+                //if (entry.GridHeight > 1)
+                //{
+                //    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
+                //        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
+                //    );
+                //    spawnPos = (spawnPos + topCellCenter) / 2f;
+                //}
 
-                GameObject resourceObj = Instantiate(entry.ResourcePrefab, spawnPos, Quaternion.identity);
+                GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+
+                GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
+                if (centerPoint != null)
+                {
+                    resourceObj.transform.position = spawnPos - centerPoint.offset;
+                }
+                else
+                {
+                    resourceObj.transform.position = spawnPos;
+                }
 
                 var respawnProvider = resourceObj.GetComponent<IRespawnProvier>();
                 if (respawnProvider != null)
@@ -217,6 +239,19 @@ public class ResourceSpawner : MonoBehaviour
                 // 이미 점유됐으면 불가
                 if (occupiedCells.ContainsKey(checkCell))
                     return false;
+
+                // 구조물과 충돌하면 불가
+                Vector3 cellWorldPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(checkCell);
+                foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
+                {
+                    float distance = Vector2.Distance(structSlot.StructSpawnPos, cellWorldPos);
+                    Debug.Log($"Struct at {structSlot.StructSpawnPos}, Cell at {cellWorldPos}, Distance: {distance}");
+                    if (distance < 4.0f)
+                    {
+                        Debug.Log($"Too close to struct! Blocked.");
+                        return false;
+                    }
+                }
             }
         }
         return true;
