@@ -212,8 +212,17 @@ MonoBehaviour:
   deathDropTable: {fileID: 11400000, guid: d5d1adfbabf9b0f49a12f7403cd90167, type: 2}
   deathPickupPrefab: {fileID: 7672621953354016798, guid: e003435437af64d4290bb8b1ee2693f2, type: 3}
   scatterRadius: 0.35
-  hitDropTable: {fileID: 11400000, guid: 47d945fd805f74544a24209680dab8e7, type: 2}
-  hitPickupPrefab: {fileID: 7672621953354016798, guid: f30fb90aabb9dd049abb5de593817e3e, type: 3}
+  dropMappings:
+  - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}
+    prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}
+    prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}
+    prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}
+    prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  - dropTable: {fileID: 11400000, guid: 47d945fd805f74544a24209680dab8e7, type: 2}
+    prefab: {fileID: 7672621953354016798, guid: f30fb90aabb9dd049abb5de593817e3e, type: 3}
 --- !u!1001 &3086999159825943892
 PrefabInstance:
   m_ObjectHideFlags: 0

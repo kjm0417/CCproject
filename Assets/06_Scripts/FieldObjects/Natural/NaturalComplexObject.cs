@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,11 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     [SerializeField]
     List<FarmObjData> farmObjDatas = new();
 
+    [SerializeField] 
+    private int maxGrowthStage = 5;    //마지막 단계
+   
+    [SerializeField] 
+    private int resetStage = 1;        //리셋할 단계
     protected override void Awake()
     {
         base.Awake();
@@ -31,25 +37,25 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     {
         fieldComplexObjData = Data as FieldComplexObjData;
 
-        Init(GrowthStage);
+        StartGrowthForStage(GrowthStage);
     }
 
     /// <summary>
     /// 현재 농작물의 성장 단계 찾기
     /// </summary>
     /// <param name="growIndex"></param>
-    private void Init(int growIndex)
+    private void StartGrowthForStage(int growIndex)
     {
         foreach(FarmObjData farmObj in farmObjDatas)
         {
-            string cropID = farmObj.CropID;
+            string[] cropID = farmObj.CropID.Split('_');
 
-            if(cropID.Contains(growIndex.ToString())) //growIndex에 해당하는 농작물 찾음
-            { 
-                StartCoroutine(GrowCorutine(farmObj)); //해당 농작물 성장 시작
-
+            if (cropID.Length > 1 && cropID[1] == growIndex.ToString())
+            {
+                StartCoroutine(GrowCorutine(farmObj));
                 break;
             }
+
         }
     }
 
@@ -60,17 +66,23 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     /// <returns></returns>
     private IEnumerator GrowCorutine(FarmObjData farmObj)
     {
-        Debug.Log("성장 중..");
         yield return new WaitForSeconds(farmObj.TimePerStageSec);
-        Debug.Log("성장 끝! 드랍!");
-        //다음 단계
-        GrowthStage++;
-        //드랍
+       
         dropper.DropOnHit(farmObj.DropGroupID, transform.position);
+        //마지막 단계 도달 시
+        if (GrowthStage >= maxGrowthStage)
+        {
+            yield return new WaitForSeconds(0.1f);
+            GrowthStage = resetStage;
+        }
+        else
+        {
+            GrowthStage++;
+        }
 
         yield return new WaitForSeconds(0.1f);
 
-        Init(GrowthStage);
+        StartGrowthForStage(GrowthStage);
     }
 
     public override void TakeDamage(InteractionContext context)
