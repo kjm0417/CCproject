@@ -101,8 +101,6 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     }
     protected override void OnDepleted()
     {
-        //TODO KJ 
-
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

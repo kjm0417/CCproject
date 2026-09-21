@@ -2,37 +2,37 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
-#region ÇÃ·¹ÀÌ¾î ÀúÀå µ¥ÀÌÅÍ ( ½ºÅÈ / À§Ä¡ / ÀçÈ­ )
+#region í”Œë ˆì´ì–´ ì €ì¥ ë°ì´í„° ( ì²´ë ¥ / ë°°ê³ í”” / ë ˆë²¨ )
 /// <summary>
-/// ¾À ÀüÈ¯ ¶Ç´Â °ÔÀÓ ÀúÀå ½Ã ÀúÀåÇÒ ÇÃ·¹ÀÌ¾î ÀúÀå µ¥ÀÌÅÍ ( ÇÃ·¹ÀÌ¾î ½ºÅÈ / À§Ä¡ / ÀçÈ­¸¸ ´ã´çÇÏ°í, ÀÎº¥Åä¸®´Â µû·Î )
+/// ì”¬ ì´ë™ ë˜ëŠ” ê²Œì„ ì¢…ë£Œ ì‹œ ì‚¬ë¼ì§€ëŠ” í”Œë ˆì´ì–´ ì €ì¥ ë°ì´í„° ( í”Œë ˆì´ì–´ ìƒíƒœ / ë°°ê³ í”” / ë ˆë²¨ìµœê³  í•˜ê³ , ì¸ë²¤í† ë¦¬ëŠ” ì œì™¸ )
 /// </summary>
 [System.Serializable]
 public class PlayerSaveData
 {
-    //PlayerVitals Å¬·¡½º
-    public float HP; //Ã¼·Â
-    public float HungerValue; //Çã±â
+    //PlayerVitals í´ë˜ìŠ¤
+    public float HP; //ì²´ë ¥
+    public float HungerValue; //ë°°ê³ í””
 
-    //PlayerProgression Å¬·¡½º
-    public int PlayerLevel; //ÇÃ·¹ÀÌ¾î ·¹º§
-    public int ExpLevel; //°æÇèÄ¡ ·¹º§ ¶Ç´Â °ª
-    public int SkillPoints; //ÇÃ·¹ÀÌ¾î ½ºÅ³ Æ÷ÀÎÆ®
+    //PlayerProgression í´ë˜ìŠ¤
+    public int PlayerLevel; //í”Œë ˆì´ì–´ ë ˆë²¨
+    public int ExpLevel; //ê²½í—˜ì¹˜ ë ˆë²¨ ë˜ëŠ” ëŸ‰
+    public int SkillPoints; //í”Œë ˆì´ì–´ ìŠ¤í‚¬ í¬ì¸íŠ¸
 
-    //PlayerMovement Å¬·¡½º
-    public Vector2 Position; //ÇÃ·¹ÀÌ¾î À§Ä¡
-    public bool FlipX; //ÇÃ·¹ÀÌ¾î ¹æÇâ
+    //PlayerMovement í´ë˜ìŠ¤
+    public Vector2 Position; //í”Œë ˆì´ì–´ ìœ„ì¹˜
+    public bool FlipX; //í”Œë ˆì´ì–´ ë°©í–¥
 
-    //PlayerBaseStatsData Å¬·¡½º
-    public float MoveSpeed;   // ÀÌµ¿ ¼Óµµ
-    public float AttackPower; // °ø°İ·Â
-    public float AttackRange;  // °ø°İ ¹üÀ§
-    public float MaxHp;      // ÃÖ´ë Ã¼·Â
+    //PlayerBaseStatsData í´ë˜ìŠ¤
+    public float MoveSpeed;   // ì´ë™ ì†ë„
+    public float AttackPower; // ê³µê²©ë ¥
+    public float AttackRange;  // ê³µê²© ë²”ìœ„
+    public float MaxHp;      // ìµœëŒ€ ì²´ë ¥
 
-    //PlayerWallet Å¬·¡½º
+    //PlayerWallet í´ë˜ìŠ¤
     public List<CurrencyAmount> currencies = new();
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ÀúÀå
+    /// í”Œë ˆì´ì–´ ë°ì´í„° ì €ì¥
     /// </summary>
     /// <param name="playerContext"></param>
     /// <returns></returns>
@@ -69,25 +69,62 @@ public class PlayerSaveData
     }
 
     /// <summary>
-    /// ´øÀü ÀÔÀå ½Ã µ¥ÀÌÅÍ ·Îµå ( À§Ä¡¿Í ¹æÇâÀº ·ÎµåÇÏÁö ¾Ê´Â´Ù )
+    /// ê²Œì„ ë¡œë“œ ì‹œ ë°ì´í„°ë¥¼ ë¡œë“œ ( ìœ„ì¹˜ëŠ” ì œì™¸í•œë‹¤ê³  ë¡œë“œì•ŠëŠ”ë‹¤ )
     /// </summary>
     /// <param name="data"></param>
     /// <param name="playerContext"></param>
     public static void Load(PlayerSaveData data , PlayerContext playerContext)
     {
-        //PlayerVitals ·Îµå
+        //PlayerVitals ë¡œë“œ
         playerContext.Vitals.Load(data.HP, data.HungerValue);
-        
-        //PlayerProgression ·Îµå
+
+        //PlayerProgression ë¡œë“œ
         playerContext.Progression.Load(data.PlayerLevel, data.ExpLevel, data.SkillPoints);
 
-        //PlayerMovement ·Îµå´Â ÀÌ ¸Ş¼­µå¿¡¼­´Â ÇÏÁö ¾Ê´Â´Ù. 
+        //PlayerMovement ë¡œë“œëŠ” ì”¬ ë¡œë“œ ì´í›„ì— ë”°ë¡œ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 
-        //PlayerBaseStatsData ·Îµå
+        //PlayerBaseStatsData ë¡œë“œ
         playerContext.Stats.Load(data.MoveSpeed,data.AttackPower,data.AttackRange,data.MaxHp);
 
-        //PlayerWallet ·Îµå
+        //PlayerWallet ë¡œë“œ
         playerContext.Wallet.Load(data.currencies);
     }
 }
 #endregion
+
+[System.Serializable]
+public class TerritorySaveData
+{
+    public List<int> UnlockedZoneIds;
+    public List<FieldObjectStateData> fieldObjects;
+    public List<RespawningResourceData> respawningResources = new List<RespawningResourceData>();
+}
+
+[System.Serializable]
+public class FieldObjectStateData
+{
+    public int ZoneId;
+    public int ResourceEntryIndex;
+    public int CurrentHp;
+    public bool IsDepleted;
+    public int GrowthStage;
+    public Vector2 Position;
+    public string ResourcePrefabName;
+}
+
+[System.Serializable]
+public class RespawningResourceData
+{
+    public int ZoneId;
+    public string ResourcePrefabName;
+    public float RemainingTime;
+}
+
+[System.Serializable]
+public class RespawningResourceState
+{
+    public int ZoneId;
+    public string ResourcePrefabName;
+    public Vector2 Position;
+    public float RemainingTime;
+}

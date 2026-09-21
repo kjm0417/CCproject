@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ¿µÅäÈ®Àå½Ã½ºÅÛ - °³º° ¿µ¿ª Àá±İ »óÅÂ ¾ÆÀÌÄÜ/ÁÜ ÀÎ ¹öÆ°  ( ·ÎÄÃ )
+/// ì˜í† í™•ì¥ì‹œìŠ¤í…œ - í•´ê¸ˆ ìƒíƒœ í‘œì‹œ ë²„íŠ¼ ìƒì„±/í•´ì œ ë²„íŠ¼ ( ì ê¸ˆ )
 /// </summary>
 public class TerritoryZoneLockUI : MonoBehaviour
 {
@@ -23,7 +23,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
     [SerializeField]
     GameObject focusingImages;
 
-    private bool IsZoomInClicked = false; //ÁÜÀÎ ¹öÆ° Å¬¸¯ ¿©ºÎ
+    private bool IsZoomInClicked = false; // ì¤Œì¸ ë²„íŠ¼ í´ë¦­ ì—¬ë¶€
 
     public void SetZoomInClicked(bool value)
     {
@@ -35,7 +35,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
         zoomInBtn.onClick.AddListener(() =>
         {
             if (IsZoomInClicked) return;
-           
+
             IsZoomInClicked = true;
 
             TerritoryDirectionManager.Instance.ZoneIconClicked(this.GetComponentInParent<TerritoryZone>(),
@@ -59,14 +59,14 @@ public class TerritoryZoneLockUI : MonoBehaviour
     {
         bool result = TerritoryManager.Instance.TryTerritoryUnlock(this.GetComponentInParent<TerritoryZone>());
 
-        if (result) //ÇØ±İ ¼º°ø ½Ã
+        if (result) // í•´ê¸ˆ ì„±ê³µ ì‹œ
         {
             buyBtn.gameObject.SetActive(false);
 
             FocusingIconUI(false);
             UnLockUI();
 
-            //ÇØ±İ ¼º°ø ½Ã, ÇöÀç ÇÃ·¹ÀÌ¾î ±¸¿ª ±âÁØÀ¸·Î ÀÎÁ¢ÇÑ ±¸¿ªµéÀÇ Äµ¹ö½º¸¦ ºñÈ°¼ºÈ­ ½ÃÅ²´Ù.
+            // í•´ê¸ˆ ì„±ê³µ ì‹œ, í˜„ì¬ í”Œë ˆì´ì–´ ì£¼ë³€ êµ¬ì—­ë“¤ì˜ ì¸ì ‘ êµ¬ì—­ë“¤ì„ í™œì„±í™” ìƒíƒœë¡œ ë³€ê²½
             var dic = TerritoryManager.Instance.GetAllAdjacentZones(PlayerZoneDetector.GetCurrentZone());
             foreach (var pair in dic)
             {
@@ -75,9 +75,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
                 if (zone.IsLocked)
                 {
                     zone.TerritoryZoneUIManager.ApplyLockedState();
-
                     zone.UpdateAdjacentZoneLayer();
-
                 }
             }
 
@@ -90,6 +88,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
     {
         buyBtn.gameObject.SetActive(value);
     }
+
     public void FocusingIconUI(bool isAcitve)
     {
         if(isAcitve)
@@ -115,22 +114,30 @@ public class TerritoryZoneLockUI : MonoBehaviour
     }
 
     /// <summary>
-    /// ±¸¿ª Àá±İ UI Ã³¸® ( ¾ÆÀÌÄÜ È°¼ºÈ­ ¹× TMP È°¼ºÈ­ Ã³¸® µîµî )
+    /// ì ê¸ˆ ìƒíƒœ UI ì²˜ë¦¬ ( ì•„ì´ì½˜ í™œì„±í™” ë° TMP í™œì„±í™” ì²˜ë¦¬ )
     /// </summary>
     public void LockUI(float price)
     {
-        icon.gameObject.SetActive(true);
-        priceTMP.gameObject.SetActive(true);
-        priceTMP.text = $"ÇÊ¿ä °ñµå: {price}";
+        if (icon != null)
+            icon.gameObject.SetActive(true);
+        if (priceTMP != null)
+        {
+            priceTMP.gameObject.SetActive(true);
+            priceTMP.text = $"í•„ìš” ê³¨ë“œ: {price}";
+        }
     }
 
     /// <summary>
-    /// ±¸¿ª ÇØ±İ UI Ã³¸® ( ¾ÆÀÌÄÜ ºñÈ°¼ºÈ­ ¹× TMP ºñÈ°¼ºÈ­ Ã³¸® µîµî )
+    /// ì ê¸ˆ í•´ì œ UI ì²˜ë¦¬ ( ì•„ì´ì½˜ ë¹„í™œì„±í™” ë° TMP ë¹„í™œì„±í™” ì²˜ë¦¬ )
     /// </summary>
     public void UnLockUI()
     {
-        icon.gameObject.SetActive(false);
-        priceTMP.gameObject.SetActive(false);
-        priceTMP.text = "";
+        if (icon != null)
+            icon.gameObject.SetActive(false);
+        if (priceTMP != null)
+        {
+            priceTMP.gameObject.SetActive(false);
+            priceTMP.text = "";
+        }
     }
 }

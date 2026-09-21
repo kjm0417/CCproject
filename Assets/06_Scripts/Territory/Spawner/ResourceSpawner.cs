@@ -24,6 +24,9 @@ public class ResourceSpawner : MonoBehaviour
     private Dictionary<Vector3Int, GameObject> occupiedCells = new Dictionary<Vector3Int, GameObject>();
     private Dictionary<GameObject, List<Vector3Int>> occupiedCellsByObject = new Dictionary<GameObject, List<Vector3Int>>();
 
+    // 재생성 예정 자원: (entry, 시작시간, 대기시간)
+    private List<(ResourceSpawnEntry entry, float startTime, float delay)> respawningResources = new List<(ResourceSpawnEntry, float, float)>();
+
     private void Awake()
     {
         territoryZone = GetComponent<TerritoryZone>();
@@ -53,6 +56,69 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// 현재 스폰된 모든 오브젝트 반환
+    /// </summary>
+    public List<GameObject> GetSpawnedObjects()
+    {
+        return new List<GameObject>(occupiedCells.Values);
+    }
+
+    /// <summary>
+    /// 자원 생성 및 위치 설정
+    /// </summary>
+    private GameObject CreateResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition)
+    {
+        GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+
+        GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
+        if (centerPoint != null)
+        {
+            resourceObj.transform.position = worldPosition + centerPoint.offset;
+        }
+        else
+        {
+            resourceObj.transform.position = worldPosition;
+        }
+
+        return resourceObj;
+    }
+
+    /// <summary>
+    /// 자원 구독 및 셀 등록
+    /// </summary>
+    private void RegisterResource(GameObject resourceObj, ResourceSpawnEntry entry, Vector3Int cellPos)
+    {
+        var provider = resourceObj.GetComponent<IRespawnProvier>();
+        if (provider != null)
+        {
+            provider.InfoResource(entry);
+            provider.OnDestroyed += OnResourceDestroyed;
+        }
+
+        var cellsList = new List<Vector3Int> { cellPos };
+        occupiedCells.Add(cellPos, resourceObj);
+
+        BoundsInt bounds = territoryZone.TerritoryTileMapGround.cellBounds;
+        for (int x = 0; x < entry.GridWidth; x++)
+        {
+            for (int y = 0; y < entry.GridHeight; y++)
+            {
+                if (x == 0 && y == 0) continue;
+
+                Vector3Int adjacentCell = cellPos + new Vector3Int(x, y, 0);
+                if (!bounds.Contains(adjacentCell)) continue;
+                if (!occupiedCells.ContainsKey(adjacentCell))
+                {
+                    occupiedCells.Add(adjacentCell, resourceObj);
+                    cellsList.Add(adjacentCell);
+                }
+            }
+        }
+
+        occupiedCellsByObject.Add(resourceObj, cellsList);
+    }
+
+    /// <summary>
     /// 구역이 해금된 직후 한 번 호출되는, 실제로 자원을 배치하는 메서드
     /// </summary>
     public void SpawnInitial()
@@ -60,6 +126,25 @@ public class ResourceSpawner : MonoBehaviour
         List<ResourceSpawnEntry> table = territoryZone.TerritoryZoneData.ResourceSpawnTable;
 
         List<Vector3Int> availableCells = GetVaildSpawnCells();
+
+        // 추가: StructSlots 생성
+        if (territoryZone.TerritoryZoneData.StructSlots.Count > 0)
+        {
+            foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
+            {
+                Instantiate(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+            }
+        }
+
+        // 추가: NpcSlots 생성
+        if (territoryZone.TerritoryZoneData.NpcSlots.Count > 0)
+        {
+            foreach (var npcSlot in territoryZone.TerritoryZoneData.NpcSlots)
+            {
+                // NpcSlotData 구조 확인 필요
+                Instantiate(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+            }
+        }
 
         foreach (ResourceSpawnEntry entry in table)
         {
@@ -81,61 +166,19 @@ public class ResourceSpawner : MonoBehaviour
                 }
 
                 Vector3 spawnPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(pickedCell);
-                //GetCellCenterWorld(pickedCell) :  좌표값(칸)에 정중앙에 해당하는 실제
-                //월드 좌표로 바꿔주는 함수
+                GameObject resourceObj = CreateResourceAtPosition(entry, spawnPos);
+                RegisterResource(resourceObj, entry, pickedCell);
 
-                //if (entry.GridHeight > 1)
-                //{
-                //    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
-                //        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
-                //    );
-                //    spawnPos = (spawnPos + topCellCenter) / 2f;
-                //}
-
-                GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
-
-                GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
-                if (centerPoint != null)
-                {
-                    Debug.Log($"spawnPos: {spawnPos}, offset: {centerPoint.offset}, final: {spawnPos - centerPoint.offset}");
-                    resourceObj.transform.position = spawnPos + centerPoint.offset; 
-                }
-                else
-                {
-                    resourceObj.transform.position = spawnPos;
-                }
-
-
-                var damageable = resourceObj.GetComponent<IRespawnProvier>();
-                if (damageable != null)
-                {
-                    damageable.InfoResource(entry);
-                    damageable.OnDestroyed += OnResourceDestroyed; //자원 재생성 이벤트 구독
-                }
-
-                var cellsList = new List<Vector3Int>();
-                occupiedCells.Add(pickedCell, resourceObj);
-                cellsList.Add(pickedCell);
                 availableCells.Remove(pickedCell);
-
                 for (int x = 0; x < entry.GridWidth; x++)
                 {
                     for (int y = 0; y < entry.GridHeight; y++)
                     {
-                        if (x == 0 && y == 0) continue; //이미 pickedCell 등록됨
-
+                        if (x == 0 && y == 0) continue;
                         Vector3Int adjacentCell = pickedCell + new Vector3Int(x, y, 0);
-
-                        if (!occupiedCells.ContainsKey(adjacentCell))
-                        {
-                            occupiedCells.Add(adjacentCell, resourceObj);
-                            cellsList.Add(adjacentCell);
-                            availableCells.Remove(adjacentCell);
-                        }
+                        availableCells.Remove(adjacentCell);
                     }
                 }
-
-                occupiedCellsByObject.Add(resourceObj, cellsList);
             }
         }
     }
@@ -155,57 +198,9 @@ public class ResourceSpawner : MonoBehaviour
 
             if (CanSpawnAt(pickedCell, entry.GridWidth, entry.GridHeight))
             {
-                // 리스폰 실행 (SpawnInitial처럼)
                 Vector3 spawnPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(pickedCell);
-
-                //if (entry.GridHeight > 1)
-                //{
-                //    Vector3 topCellCenter = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(
-                //        pickedCell + new Vector3Int(0, entry.GridHeight - 1, 0)
-                //    );
-                //    spawnPos = (spawnPos + topCellCenter) / 2f;
-                //}
-
-                GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
-
-                GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
-                if (centerPoint != null)
-                {
-                    resourceObj.transform.position = spawnPos - centerPoint.offset;
-                }
-                else
-                {
-                    resourceObj.transform.position = spawnPos;
-                }
-
-                var respawnProvider = resourceObj.GetComponent<IRespawnProvier>();
-                if (respawnProvider != null)
-                {
-                    respawnProvider.InfoResource(entry);
-                    respawnProvider.OnDestroyed += OnResourceDestroyed;
-                }
-
-                var cellsList = new List<Vector3Int>();
-                occupiedCells.Add(pickedCell, resourceObj);
-                cellsList.Add(pickedCell);
-
-                for (int x = 0; x < entry.GridWidth; x++)
-                {
-                    for (int y = 0; y < entry.GridHeight; y++)
-                    {
-                        if (x == 0 && y == 0) continue;
-
-                        Vector3Int adjacentCell = pickedCell + new Vector3Int(x, y, 0);
-
-                        if (!occupiedCells.ContainsKey(adjacentCell))
-                        {
-                            occupiedCells.Add(adjacentCell, resourceObj);
-                            cellsList.Add(adjacentCell);
-                        }
-                    }
-                }
-
-                occupiedCellsByObject.Add(resourceObj, cellsList);
+                GameObject resourceObj = CreateResourceAtPosition(entry, spawnPos);
+                RegisterResource(resourceObj, entry, pickedCell);
                 return;
             }
 
@@ -245,7 +240,6 @@ public class ResourceSpawner : MonoBehaviour
                 foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
                 {
                     float distance = Vector2.Distance(structSlot.StructSpawnPos, cellWorldPos);
-                    Debug.Log($"Struct at {structSlot.StructSpawnPos}, Cell at {cellWorldPos}, Distance: {distance}");
                     if (distance < 4.0f)
                     {
                         Debug.Log($"Too close to struct! Blocked.");
@@ -266,7 +260,17 @@ public class ResourceSpawner : MonoBehaviour
 
             occupiedCellsByObject.Remove(destroyedObj);
         }
-        // occupiedCells에서 제거
+
+        // 구독 해제
+        var damageable = destroyedObj.GetComponent<IRespawnProvier>();
+        if (damageable != null)
+        {
+            damageable.OnDestroyed -= OnResourceDestroyed;
+        }
+
+        // 재생성 예정 자원 기록
+        respawningResources.Add((entry, Time.time, respawnTime));
+
         StartCoroutine(RespawnAfterDelay(entry, respawnTime));
     }
 
@@ -279,6 +283,91 @@ public class ResourceSpawner : MonoBehaviour
     IEnumerator RespawnAfterDelay(ResourceSpawnEntry entry, float delay)
     {
         yield return new WaitForSeconds(delay);
+        var index = respawningResources.FindIndex(r => r.entry == entry);
+        if (index >= 0)
+        {
+            respawningResources.RemoveAt(index);
+        }
         RespawnResource(entry);
+    }
+
+    /// <summary>
+    /// 로드 시 occupiedCells 초기화
+    /// </summary>
+    public void ClearSpawnedResources()
+    {
+        occupiedCells.Clear();
+        occupiedCellsByObject.Clear();
+    }
+
+    /// <summary>
+    /// 재생성 예정 자원 모두 반환 (각 자원별)
+    /// </summary>
+    public List<(ResourceSpawnEntry entry, float remainingTime)> GetAllRespawningResources()
+    {
+        var result = new List<(ResourceSpawnEntry, float)>();
+        foreach (var item in respawningResources)
+        {
+            float remainingTime = (item.startTime + item.delay) - Time.time;
+            if (remainingTime > 0)
+            {
+                result.Add((item.entry, remainingTime));
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 재생성 예정 자원 남은 시간 반환 (entry별 최소값)
+    /// </summary>
+    public Dictionary<ResourceSpawnEntry, float> GetRespawningResources()
+    {
+        var allResources = GetAllRespawningResources();
+        var result = new Dictionary<ResourceSpawnEntry, float>();
+
+        foreach (var (entry, remainingTime) in allResources)
+        {
+            if (!result.ContainsKey(entry) || result[entry] > remainingTime)
+            {
+                result[entry] = remainingTime;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 재생성 코루틴 재시작 (남은시간으로)
+    /// </summary>
+    public void RestartRespawnCoroutines(List<(ResourceSpawnEntry entry, float remainingTime)> respawningData)
+    {
+        if (respawningData == null) return;
+
+        foreach (var (entry, remainingTime) in respawningData)
+        {
+            respawningResources.Add((entry, Time.time, remainingTime));
+            StartCoroutine(RespawnAfterDelay(entry, remainingTime));
+        }
+    }
+
+    /// <summary>
+    /// 로드 시 저장된 위치에 자원 생성
+    /// </summary>
+    public GameObject SpawnResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition)
+    {
+        GameObject resourceObj = CreateResourceAtPosition(entry, worldPosition);
+
+        Vector3Int cellPos = territoryZone.TerritoryTileMapGround.WorldToCell(worldPosition);
+
+        // 범위 체크
+        BoundsInt bounds = territoryZone.TerritoryTileMapGround.cellBounds;
+        if (!bounds.Contains(cellPos))
+        {
+            Debug.LogWarning($"Cell position {cellPos} outside bounds {bounds}");
+            return resourceObj;
+        }
+
+        RegisterResource(resourceObj, entry, cellPos);
+        return resourceObj;
     }
 }

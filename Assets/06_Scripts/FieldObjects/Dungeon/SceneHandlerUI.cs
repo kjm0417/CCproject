@@ -35,8 +35,12 @@ public class SceneHandlerUI : MonoBehaviour
     private void OnInteractionClick(PlayerContext playerContext)
     {
         PlayerSaveData saveData = PlayerSaveData.Save(playerContext);
+
         SaveManager.Instance.Save(saveData);
-        
+
+        TerritorySaveData territorySaveData = TerritoryManager.Instance.Save();
+        SaveManager.Instance.SaveTerritory(territorySaveData);
+
         switch (type)
         {
             case SceneMoveStrucutreType.Dungeon:

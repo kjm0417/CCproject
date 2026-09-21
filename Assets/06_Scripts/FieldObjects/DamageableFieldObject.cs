@@ -96,6 +96,16 @@ public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, ID
     {
         this.fieldObjectDropper = fieldObjectDropper;
     }
+
+    /// <summary>
+    /// 저장된 데이터 로드
+    /// </summary>
+    public void Load(int hp, bool isDepleted)
+    {
+        CurrentHp = hp;
+        IsDepleted = isDepleted;
+    }
+
     protected abstract void OnDepleted();
 
     private void ResetRuntimeState()
