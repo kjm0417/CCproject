@@ -66,12 +66,12 @@ public class ResourceSpawner : MonoBehaviour
     /// <summary>
     /// 자원 생성 및 위치 설정
     /// </summary>
-    private GameObject CreateResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition)
+    private GameObject CreateResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition, bool applyOffset = true)
     {
         GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
 
         GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
-        if (centerPoint != null)
+        if (centerPoint != null && applyOffset)
         {
             resourceObj.transform.position = worldPosition + centerPoint.offset;
         }
@@ -355,7 +355,7 @@ public class ResourceSpawner : MonoBehaviour
     /// </summary>
     public GameObject SpawnResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition)
     {
-        GameObject resourceObj = CreateResourceAtPosition(entry, worldPosition);
+        GameObject resourceObj = CreateResourceAtPosition(entry, worldPosition,false);
 
         Vector3Int cellPos = territoryZone.TerritoryTileMapGround.WorldToCell(worldPosition);
 
