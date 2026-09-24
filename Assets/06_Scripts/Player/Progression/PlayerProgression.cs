@@ -31,6 +31,14 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
     public float ExpPercent01 => Mathf.Clamp01((float)expInLevel / RequiredExp(level));
     public int SkillPoints => skillPoints;
 
+    private void OnEnable()
+    {
+        EnemyBase.OnEnemyDieExpEvent += AddExp;
+    }
+    private void OnDisable()
+    {
+        EnemyBase.OnEnemyDieExpEvent -= AddExp;
+    }
     public void Initialize(PlayerContext context)
     {
         // 시작 레벨은 기본 지급 데이터(SO)에서 가져온다. 세이브가 생기면 여기서 불러오기.
@@ -52,11 +60,15 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
         this.skillPoints = skillPoints;
     }
     // 경험치 획득 (몬스터 처치/수확/제작 등이 호출 - 문서 2.3). 한 번에 여러 레벨도 처리.
-    public void AddExp(int amount)
+    public void AddExp(float amount)
     {
         if (amount <= 0) return;
 
-        expInLevel += amount;
+        Debug.Log("경험치 획득 전" + expInLevel);
+
+        expInLevel += (int)amount;
+
+        Debug.Log("경험치 획득 후" + expInLevel);
 
         int need = RequiredExp(level);
         while (need > 0 && expInLevel >= need)

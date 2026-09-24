@@ -147,10 +147,10 @@ TextureImporter:
       name: spawn_0
       rect:
         serializedVersion: 2
-        x: 390
+        x: 351
         y: 0
-        width: 233
-        height: 96
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,10 +169,10 @@ TextureImporter:
       name: spawn_1
       rect:
         serializedVersion: 2
-        x: 108
+        x: 52
         y: 0
-        width: 233
-        height: 96
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,10 +191,10 @@ TextureImporter:
       name: spawn_2
       rect:
         serializedVersion: 2
-        x: 734
+        x: 687
         y: 0
-        width: 233
-        height: 159
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: spawn_3
       rect:
         serializedVersion: 2
-        x: 1102
+        x: 1046
         y: 0
-        width: 233
-        height: 214
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,10 +235,10 @@ TextureImporter:
       name: spawn_4
       rect:
         serializedVersion: 2
-        x: 1472
+        x: 1463
         y: 0
-        width: 319
-        height: 260
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +257,10 @@ TextureImporter:
       name: spawn_5
       rect:
         serializedVersion: 2
-        x: 1879
+        x: 1908
         y: 0
-        width: 403
-        height: 355
+        width: 338
+        height: 258
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -279,12 +279,12 @@ TextureImporter:
       name: spawn_6
       rect:
         serializedVersion: 2
-        x: 2337
+        x: 2367
         y: 0
-        width: 403
-        height: 355
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        width: 338
+        height: 312
+      alignment: 9
+      pivot: {x: 0.49264833, y: 0.4482281}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

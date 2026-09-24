@@ -26,10 +26,10 @@ public class EnemyHelath
     {
         CurrentHealth -= damage;
 
-        if (CurrentHealth < 0f)
+        if (CurrentHealth <= 0f)
         {
-            OnDie?.Invoke();
             IsDie = true;
+            OnDie?.Invoke();
         }
     }
 

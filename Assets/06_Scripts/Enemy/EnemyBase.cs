@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.VersionControl.Asset;
@@ -19,13 +20,38 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
     protected EnemyFSM enemyFSM;
     protected EnemySkillManager skillManager;
 
+    public static Action<float> OnEnemyDieExpEvent; 
+
+    [SerializeField]
+    protected MonsterData monsterData;
+    public MonsterData MonsterData => monsterData;
+
+    private void OnGUI()
+    {
+        if (enemyContext == null) return;
+
+        GUILayout.BeginArea(new Rect(10, 10, 220, 150), GUI.skin.box);
+
+        GUILayout.Label($"{name}");
+        GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
+        GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
+
+        if (GUILayout.Button("TakeDamage 10"))
+            TakeDamage(10);
+
+        if (GUILayout.Button("TakeDamage 100"))
+            TakeDamage(100);
+
+        GUILayout.EndArea();
+    }
     protected virtual void Awake()
     {
         enemyContext = CreateCTX();
-        
-        enemyFSM = CreateFSM();
+        enemyContext.Animator.SetBool(EnemyAnimHash.IsSpawn, true);
 
         skillManager = CreateSkillManager();
+
+        enemyFSM = CreateFSM();
     }
 
     protected virtual void OnEnable()
@@ -67,16 +93,48 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
     /// <param name="damage"></param>
     public virtual void TakeDamage(int damage)
     {
-        if (enemyContext.EnemyHelath.IsDie) 
+        if (enemyContext.EnemyHelath.IsDie)
             return;
 
         enemyContext.EnemyHelath.ApplyDamaged(damage);
+
+        if (enemyContext.EnemyHelath.IsDie) 
+            return;
+
+        enemyContext.Animator.Play(EnemyAnimHash.Hit, 0, 0f);
     }
 
     /// <summary>
     /// 적 사망
     /// </summary>
-    public abstract void OnDied();
+    public virtual void OnDied()
+    {
+        //진행 중인 상태(공격/스킬 코루틴) 정리 - 코루틴이 Die 애니를 덮어쓰지 않게
+        enemyFSM.Stop();
+        StopAllCoroutines();
+
+        ResetAnimParams();
+
+        enemyContext.Animator.SetTrigger(EnemyAnimHash.DieTrigger);
+
+        OnEnemyDieExpEvent?.Invoke(monsterData.EXP);
+    }
+
+    /// <summary>
+    /// 남아있는 트리거/Bool 초기화 - 사망 후 다른 상태로 전환 방지
+    /// </summary>
+    protected virtual void ResetAnimParams()
+    {
+        Animator animator = enemyContext.Animator;
+
+        animator.ResetTrigger(EnemyAnimHash.IdleTrigger);
+        animator.ResetTrigger(EnemyAnimHash.BaseAttackTrigger);
+        animator.ResetTrigger(EnemyAnimHash.SkillTrigger);
+
+        animator.SetBool(EnemyAnimHash.IsWalk, false);
+        animator.SetBool(EnemyAnimHash.IsCharge, false);
+        animator.SetBool(EnemyAnimHash.IsStun, false);
+    }
 
 
 }
@@ -85,13 +143,17 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
 /// </summary>
 public abstract class EnemyState
 {
+    protected EnemyFSM fsm;
     protected EnemyContext ctx;
     protected EnemySkillManager skillManager;
 
-    public virtual void SetContext(EnemyContext context, EnemySkillManager manager)
+    protected MonoBehaviour mono;
+    public EnemyState(EnemyContext ctx, EnemySkillManager skillManager, EnemyFSM fsm,MonoBehaviour mono)
     {
-        ctx = context;
-        skillManager = manager;
+        this.ctx = ctx;
+        this.skillManager = skillManager;
+        this.fsm = fsm;
+        this.mono = mono;
     }
 
     public abstract void Enter();
@@ -122,6 +184,20 @@ public class EnemyFSM
         states[state.GetType()] = state; //딕셔너리에 각 상태 클래스의 타입를 Key로 하여, 각 상태 클래스 자체를 구독
     }
 
+    public T GetState<T>() where T : EnemyState
+    {
+        return states.TryGetValue(typeof(T), out var state) ? (T)state : null;
+    }
+
+    /// <summary>
+    /// FSM 정지 ( 사망 시 ) - 현재 상태 Exit 호출 후 비움
+    /// </summary>
+    public void Stop()
+    {
+        currentState?.Exit();
+        currentState = null;
+    }
+
     public void ChangeState<T>() where T : EnemyState
     {
         if (states.TryGetValue(typeof(T), out var newState))
@@ -130,48 +206,5 @@ public class EnemyFSM
             currentState = newState;
             currentState.Enter();
         }
-    }
-}
-/// <summary>
-/// 적 공통 - 스킬 실행 및 쿨타임 
-/// </summary>
-public abstract class EnemySkill
-{
-    protected EnemyContext ctx;
-    protected MonoBehaviour owner; //모노에서 지원하는 메서드나 기능들 사용하기 위함
-
-    public EnemySkill(EnemyContext ctx, MonoBehaviour owner)
-    {
-        this.ctx = ctx;
-        this.owner = owner;
-    }
-
-    /// <summary>
-    /// 스킬 Tick 실행
-    /// </summary>
-    public abstract void Execute();
-
-    /// <summary>
-    /// 스킬 쿨타임 설정 ( 각 스킬 클래스가 재정의 )
-    /// </summary>
-    /// <returns></returns>
-    public virtual float GetCooldown() => 1f;
-}
-/// <summary>
-/// 적 스킬 저장소
-/// </summary>
-public class EnemySkillManager
-{
-    private Dictionary<string, EnemySkill> skills = new();
-
-    public void RegisterSkill(string name, EnemySkill skill)
-    {
-        skills[name] = skill;
-    }
-
-    public void Execute(string skillName)
-    {
-        if (skills.TryGetValue(skillName, out var skill))
-            skill.Execute();
     }
 }

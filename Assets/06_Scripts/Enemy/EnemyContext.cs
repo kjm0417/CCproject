@@ -13,12 +13,17 @@ public class EnemyContext
 
     public EnemyDetector EnemyDetector { get; private set; }
 
-    public EnemyContext(EnemyHelath enemyHealth,SpriteRenderer spriteRenderer,Animator animator , EnemyDetector enemyDetector)
+    public MonsterData MonsterData { get; private set; }
+
+
+    public EnemyContext(EnemyHelath enemyHealth,SpriteRenderer spriteRenderer,Animator animator , EnemyDetector enemyDetector,
+        MonsterData monsterData)
     {
         this.EnemyHelath = enemyHealth;
         this.SpriteRenderer = spriteRenderer;
         this.Animator = animator;
         this.EnemyDetector = enemyDetector;
+        this.MonsterData = monsterData;
     }
 }
 
@@ -30,7 +35,8 @@ public class EnemySlimeContext : EnemyContext
     public Rigidbody2D Rigidbody2D { get; private set; }
 
     public EnemySlimeContext(EnemyHelath enemyHealth, SpriteRenderer spriteRenderer,Rigidbody2D rigidbody2D,
-        Animator animator,EnemyDetector enemyDetector) : base(enemyHealth, spriteRenderer, animator, enemyDetector)
+        Animator animator,EnemyDetector enemyDetector,MonsterData monsterData) 
+        : base(enemyHealth, spriteRenderer, animator, enemyDetector, monsterData)
     {
         this.Rigidbody2D = rigidbody2D;
     }
