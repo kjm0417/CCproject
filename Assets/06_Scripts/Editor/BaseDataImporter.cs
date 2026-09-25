@@ -41,7 +41,7 @@ public abstract class BaseDataImporter<TDTO,TSO> where TSO : ScriptableObject
         foreach (TDTO dto in data.items)
         {
             TSO so = ScriptableObject.CreateInstance<TSO>();
-           
+            Debug.Log($"DTO: {dto != null}");
             MapDTOToSO(dto, so);
 
             string dtoID = GetDTOID(dto);

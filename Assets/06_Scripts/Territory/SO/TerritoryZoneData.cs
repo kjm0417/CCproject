@@ -13,6 +13,7 @@ public class TerritoryZoneData : ScriptableObject
 
     public List<ResourceSpawnEntry> ResourceSpawnTable; //자원 스폰 테이블
     public List<NpcSlotData> NpcSlots; //NPC 스폰 테이블
+    public List<StructSlotData> StructSlots; //구조물 스폰 테이블
 
     // 인접 Zone ID (-1 = 없음)
     public int AdjacentZoneId_Up = -1;

@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc5a1caf7398e64d98ea53771a18fb0, type: 3}
   m_Name: 42003
   m_EditorClassIdentifier: Assembly-CSharp::FieldComplexObjData
+  HP: 5
+  RespawnTimeMin: 45
+  RespawnTimeMax: 60
   ObjectID: 42003
   ObjectName: "\uB9E4\uC2E4 \uB098\uBB34"
   ObjectType: tree
-  HP: 5
   Description: 
-  RespawnTimeMin: 45
-  RespawnTimeMax: 60
   InteractionRange: 1 * 2
-  DropGroupID: 71001
-  HitDropGroupID: 73002
+  CropID: 51102

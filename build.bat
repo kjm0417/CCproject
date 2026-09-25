@@ -14,7 +14,18 @@ echo ===================================================
 echo [1/3] 유니티 안드로이드 APK 백그라운드 빌드 시작...
 echo ===================================================
 
-%UNITY_EXE% -quit -batchmode -projectPath "%PROJECT_PATH%" -executeMethod BuildAutomation.BuildAndroidAPK -logFile build_log.txt
+set BUILD_LOG_PATH=%PROJECT_PATH%build_log.txt
+
+%UNITY_EXE% -quit -batchmode -projectPath "%PROJECT_PATH%" -executeMethod BuildAutomation.BuildAndroidAPK -logFile "%BUILD_LOG_PATH%"
+
+echo Build ERRORLEVEL: %ERRORLEVEL%
+echo Build log path: %BUILD_LOG_PATH%
+if exist "%BUILD_LOG_PATH%" (
+    echo Build log exists. Last 50 lines:
+    powershell -NoProfile -Command "Get-Content '%BUILD_LOG_PATH%' -Tail 50"
+) else (
+    echo Build log does not exist!
+)
 
 if %ERRORLEVEL% NEQ 0 (
     echo [에러] 유니티 빌드가 실패했습니다. build_log.txt를 확인하세요.

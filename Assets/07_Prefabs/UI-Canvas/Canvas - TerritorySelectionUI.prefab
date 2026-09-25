@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ccda9cbc3cd6f747bc530fe10ef8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerritoryInGameUI
-  backBtn: {fileID: 0}
+  backBtn: {fileID: 8858444571091387537}
 --- !u!1 &4113951296248788681
 GameObject:
   m_ObjectHideFlags: 0

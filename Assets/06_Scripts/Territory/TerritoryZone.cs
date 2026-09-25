@@ -19,9 +19,14 @@ public class LockedZoneState : IZoneState
 
     public void OnEnter(TerritoryZone zone)
     {
-        zone.TerritoryTileMapGround.gameObject.layer = 6;
-        zone.TerritoryTileMapWall.gameObject.layer = 6;
-        zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = true;
+        if (zone.TerritoryTileMapGround != null)
+            zone.TerritoryTileMapGround.gameObject.layer = 6;
+
+        if (zone.TerritoryTileMapWall != null)
+        {
+            zone.TerritoryTileMapWall.gameObject.layer = 6;
+            zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = true;
+        }
         zone.TerritoryZoneUIManager.ApplyLockedState();
     }
 
@@ -37,8 +42,12 @@ public class UnlockingZoneState : IZoneState
     }
     public void OnEnter(TerritoryZone zone)
     {
-        zone.TerritoryTileMapGround.gameObject.layer = 8;
-        zone.TerritoryTileMapWall.gameObject.layer = 8;
+        if (zone.TerritoryTileMapGround != null)
+            zone.TerritoryTileMapGround.gameObject.layer = 8;
+
+        if (zone.TerritoryTileMapWall != null)
+            zone.TerritoryTileMapWall.gameObject.layer = 8;
+
         zone.TerritoryZoneUIManager.ApplyUnlockingState();
     }
 
@@ -57,9 +66,14 @@ public class UnlockedZoneState : IZoneState
     }
     public void OnEnter(TerritoryZone zone)
     {
-        zone.TerritoryTileMapGround.gameObject.layer = 7;
-        zone.TerritoryTileMapWall.gameObject.layer = 7;
-        zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = false;
+        if (zone.TerritoryTileMapGround != null)
+            zone.TerritoryTileMapGround.gameObject.layer = 7;
+
+        if (zone.TerritoryTileMapWall != null)
+        {
+            zone.TerritoryTileMapWall.gameObject.layer = 7;
+            zone.TerritoryTileMapWall.GetComponent<TilemapCollider2D>().enabled = false;
+        }
         zone.TerritoryZoneUIManager.ApplyUnlockedState();
     }
 
@@ -122,7 +136,6 @@ public class TerritoryZone : MonoBehaviour
         currentState = newState;
         currentState.OnEnter(this);
     }
-
     /// <summary>
     /// 인접한 구역의 해당하는 타일맵의 레이어 변경
     /// </summary>
@@ -145,17 +158,18 @@ public class TerritoryZone : MonoBehaviour
     /// <summary>
     /// 구역 해금 후 지역 상태를 변경하는 메서드
     /// </summary>
-    public void UnLockZone()
+    public void UnLockZone(bool shouldSpawnResources = true)
     {
         isLocked = false;
-        
+        ChangeState(unlockedState);
+
         string[] objParts = this.gameObject.name.Split('_');
         this.gameObject.name = "Zone_" + objParts[1];
 
-        StartCoroutine(TerritoryAlpha());
+        StartCoroutine(TerritoryAlpha(shouldSpawnResources));
     }
 
-    IEnumerator TerritoryAlpha()
+    IEnumerator TerritoryAlpha(bool shouldSpawnResources = true)
     {
         Color c1 = territoryTileMapGround.color;
         Color c2 = territoryTileMapWall.color;
@@ -180,7 +194,10 @@ public class TerritoryZone : MonoBehaviour
 
         ChangeState(unlockedState);
 
-        GetComponent<ResourceSpawner>().SpawnInitial();
+        if (shouldSpawnResources)
+        {
+            GetComponent<ResourceSpawner>().SpawnInitial();
+        }
 
         OnTerritoryUnlocked?.Invoke(false);
 

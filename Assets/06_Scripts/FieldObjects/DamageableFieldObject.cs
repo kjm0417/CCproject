@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
-    IDropProvider, IToolInteractionTarget , IRespawnProvier
+public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
+    IToolInteractionTarget , IRespawnProvier
 {
     #region 자원 리스폰 ( IRespawnProvier )
     public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
@@ -12,7 +12,12 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
 
     public event Action<float> OnDamaged;
 
+    [SerializeField]
+    private ObjBaseData data;
 
+    public ObjBaseData Data => data;
+
+    protected int MaxHp => data != null ? data.HP : 0;
 
     [Header("상호작용 테스트 값")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 받아오면 됩니다.")]
@@ -29,14 +34,12 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
 
     public int CurrentHp { get; private set; }
     public bool IsDepleted { get; private set; }
-    public int DropGroupId => DataDropGroupId;
     public ToolType PreferredToolType => preferredToolType;
 
 
     private FieldObjectDropper fieldObjectDropper; //공통 Dropper 정의
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
         ResetRuntimeState();
     }
 
@@ -44,12 +47,6 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     public void InfoResource(ResourceSpawnEntry entry)
     {
         this.ResourceEntry = entry;
-    }
-
-    public override void Configure(FieldObjBaseData fieldObjData)
-    {
-        base.Configure(fieldObjData);
-        ResetRuntimeState();
     }
 
     public bool CanInteract(InteractionContext context)
@@ -99,15 +96,17 @@ public class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageable
     {
         this.fieldObjectDropper = fieldObjectDropper;
     }
-    protected virtual void OnDepleted()
-    {
-        if (fieldObjectDropper != null)
-        {
-            fieldObjectDropper.DropOnDeath(DropGroupId, transform.position);
-        }
 
-        Destroy(gameObject);
+    /// <summary>
+    /// 저장된 데이터 로드
+    /// </summary>
+    public void Load(int hp, bool isDepleted)
+    {
+        CurrentHp = hp;
+        IsDepleted = isDepleted;
     }
+
+    protected abstract void OnDepleted();
 
     private void ResetRuntimeState()
     {

@@ -12,8 +12,7 @@ public class FieldComplexObjDTO
     public int RespawnTimeMin;
     public int RespawnTimeMax;
     public string InteractionRange;
-    public int DropGroupID;
-    public int HitDropGroupID;
+    public int CropID;
 }
 public class FieldComplexObjImporter : BaseDataImporter<FieldComplexObjDTO, FieldComplexObjData>
 {
@@ -30,8 +29,7 @@ public class FieldComplexObjImporter : BaseDataImporter<FieldComplexObjDTO, Fiel
         so.RespawnTimeMin = dto.RespawnTimeMin;
         so.RespawnTimeMax = dto.RespawnTimeMax;
         so.InteractionRange = dto.InteractionRange;
-        so.DropGroupID = dto.DropGroupID;
-        so.HitDropGroupID = dto.HitDropGroupID;
+        so.CropID = dto.CropID;
     }
 
     protected override string GetDTOID(FieldComplexObjDTO dto)

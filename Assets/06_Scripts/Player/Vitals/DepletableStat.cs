@@ -27,6 +27,13 @@ public class DepletableStat
         else if (current > max) current = max;
     }
 
+    /// <summary>
+    /// 데이터 불러왔을 때, HP 덮어쓰는 용도
+    /// </summary>
+    public void LoadSet(float current)
+    {
+        this.current = current;
+    }
     // 감소 (0 밑으로 내려가지 않음). 음수/0은 무시.
     public void Reduce(float amount)
     {

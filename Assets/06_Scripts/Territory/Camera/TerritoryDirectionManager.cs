@@ -55,7 +55,7 @@ public class TerritoryDirectionManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -88,6 +88,7 @@ public class TerritoryDirectionManager : MonoBehaviour
     /// </summary>
     public void ZoomModeActive(Transform camAnchor)
     {
+        Player.GetComponent<PlayerMovement>().JoyStick.GetComponentInParent<Canvas>().enabled = false;
 
         prevCamAnchor = camAnchor;
 

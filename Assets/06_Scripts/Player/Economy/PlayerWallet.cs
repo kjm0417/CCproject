@@ -10,6 +10,7 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
     public event Action<CurrencyType> OnChanged;
 
     private readonly Dictionary<CurrencyType, int> balances = new Dictionary<CurrencyType, int>();
+    public Dictionary<CurrencyType, int> Balances => balances;
 
     public void Initialize(PlayerContext context)
     {
@@ -21,6 +22,14 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
             {
                 balances[c.Type] = c.Amount; // 시작 지급
             }
+        }
+    }
+    public void Load(List<CurrencyAmount> currencies)
+    {
+        balances.Clear();
+        foreach (var c in currencies)
+        {
+            balances[c.Type] = c.Amount;
         }
     }
 
