@@ -2805,6 +2805,7 @@ GameObject:
   - component: {fileID: 1643184871}
   - component: {fileID: 1643184870}
   - component: {fileID: 1643184874}
+  - component: {fileID: 1643184875}
   m_Layer: 5
   m_Name: Canvas - HUDUI
   m_TagString: Untagged
@@ -2911,6 +2912,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be6e2b96e67050c459d81d0672d7b993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDUI
+--- !u!114 &1643184875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643184869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87de830f4273be439dcb72719dc7e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHUD
+  topPanel: {fileID: 0}
+  leftPanel: {fileID: 0}
+  rightPanel: {fileID: 0}
+  bottomPanel: {fileID: 0}
 --- !u!1 &1712381812
 GameObject:
   m_ObjectHideFlags: 0
