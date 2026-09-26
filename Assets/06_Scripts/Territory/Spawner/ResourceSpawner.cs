@@ -56,6 +56,14 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// 해당 칸에 자원이 올라가 있는지 확인
+    /// </summary>
+    public bool IsOccupied(Vector3Int cell)
+    {
+        return occupiedCells.ContainsKey(cell);
+    }
+
+    /// <summary>
     /// 현재 스폰된 모든 오브젝트 반환
     /// </summary>
     public List<GameObject> GetSpawnedObjects()
@@ -233,6 +241,11 @@ public class ResourceSpawner : MonoBehaviour
 
                 // 이미 점유됐으면 불가
                 if (occupiedCells.ContainsKey(checkCell))
+                    return false;
+
+                // 도구로 변환한 타일(파낸 흙 등)이면 불가
+                GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+                if (tileModifier != null && tileModifier.IsModified(territoryZone, checkCell))
                     return false;
 
                 // 구조물과 충돌하면 불가

@@ -20,6 +20,9 @@ public class SceneHandlerUI : MonoBehaviour
     [SerializeField]
     SceneMoveStrucutreType type;
 
+    [SerializeField]
+    DungeonData dungeonData; //입장할 던전 ( type == Dungeon 일 때 )
+
     private void OnEnable()
     {
         InteractionStructureUI.OnButtonClickCallback += OnInteractionClick;
@@ -34,17 +37,31 @@ public class SceneHandlerUI : MonoBehaviour
 
     private void OnInteractionClick(PlayerContext playerContext)
     {
-        PlayerSaveData saveData = PlayerSaveData.Save(playerContext);
+        //던전 입장 아이템 체크 및 소모 - 부족하면 입장 불가
+        if (type == SceneMoveStrucutreType.Dungeon && dungeonData != null)
+        {
+            PlayerInventory inventory = playerContext.GetComponentInChildren<PlayerInventory>();
+            if (!DungeonSession.TryEnter(dungeonData, inventory))
+            {
+                Debug.Log($"던전 입장 불가 - 입장 아이템 부족 : {dungeonData.DungeonName}");
+                return;
+            }
+        }
 
+        //플레이어 데이터 저장
+        PlayerSaveData saveData = PlayerSaveData.Save(playerContext);
         SaveManager.Instance.Save(saveData);
 
+        //해금된 영토 및 생성된 자원 저장
         TerritorySaveData territorySaveData = TerritoryManager.Instance.Save();
         SaveManager.Instance.SaveTerritory(territorySaveData);
 
         switch (type)
         {
             case SceneMoveStrucutreType.Dungeon:
-                SceneManager.LoadSceneAsync("KJ_DungeonScene");
+                string sceneName = dungeonData != null && !string.IsNullOrEmpty(dungeonData.SceneName)
+                    ? dungeonData.SceneName : "KJ_DungeonScene";
+                SceneManager.LoadSceneAsync(sceneName);
                 break;
             
         }

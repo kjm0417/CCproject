@@ -15,7 +15,7 @@ MonoBehaviour:
   MoveSpeed: 5
   AttackPower: 1
   AttackRange: 2
-  MaxHp: 100
+  MaxHp: 1
   StartingLevel: 1
   StartingCurrencies:
   - Type: 0

@@ -21,6 +21,7 @@ public class SaveManager : MonoBehaviour
 
     private string playerSavePath;
     private string territorySavePath;
+    private string dungeonSavePath;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class SaveManager : MonoBehaviour
 
         playerSavePath = Path.Combine(Application.persistentDataPath, "PlayerSave.json");
         territorySavePath = Path.Combine(Application.persistentDataPath, "TerritorySave.json");
+        dungeonSavePath = Path.Combine(Application.persistentDataPath, "DungeonSave.json");
 
         // 현재 씬 확인
         Scene currentScene = SceneManager.GetActiveScene();
@@ -64,9 +66,31 @@ public class SaveManager : MonoBehaviour
         {
             LoadGameState();
         }
+        else if (DungeonSession.IsInDungeon || scene.name == "KJ_DungeonScene")
+        {
+            //던전에서도 영지에서 가져온 플레이어 상태(레벨/재화 등) 유지
+            LoadPlayerState();
+        }
     }
 
     private void LoadGameState()
+    {
+        LoadPlayerState();
+
+        TerritoryManager territoryManager = TerritoryManager.Instance;
+        if (territoryManager != null)
+        {
+            Debug.Log("영토 데이터 로드");
+            TerritorySaveData territoryData = LoadTerritory();
+            if (territoryData != null)
+            {
+                Debug.Log("영토 데이터 로드1");
+                territoryManager.Load(territoryData);
+            }
+        }
+    }
+
+    private void LoadPlayerState()
     {
         //플레이어 데이터 실제 로드
         PlayerContext playerContext = FindAnyObjectByType<PlayerContext>();
@@ -78,18 +102,6 @@ public class SaveManager : MonoBehaviour
             {
                 Debug.Log("플레이어 데이터 로드1");
                 PlayerSaveData.Load(playerData, playerContext);
-            }
-        }
-
-        TerritoryManager territoryManager = TerritoryManager.Instance;
-        if (territoryManager != null)
-        {
-            Debug.Log("영토 데이터 로드");
-            TerritorySaveData territoryData = LoadTerritory();
-            if (territoryData != null)
-            {
-                Debug.Log("영토 데이터 로드1");
-                territoryManager.Load(territoryData);
             }
         }
     }
@@ -128,6 +140,22 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"영토 데이터 로드 완료: {territorySavePath}");
         return data;
     }
+    /// <summary>
+    /// 던전 기록 역직렬화 - 파일 없으면 빈 기록
+    /// </summary>
+    /// <returns></returns>
+    public DungeonSaveData LoadDungeon()
+    {
+        if (!File.Exists(dungeonSavePath))
+        {
+            return new DungeonSaveData();
+        }
+
+        string json = File.ReadAllText(dungeonSavePath);
+        DungeonSaveData data = JsonConvert.DeserializeObject<DungeonSaveData>(json) ?? new DungeonSaveData();
+        Debug.Log($"던전 데이터 로드 완료: {dungeonSavePath}");
+        return data;
+    }
     #endregion
     #region Json 데이터 직렬화
     /// <summary>
@@ -158,6 +186,17 @@ public class SaveManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(territorySaveData, Formatting.Indented, settings);
         File.WriteAllText(territorySavePath, json);
         Debug.Log($"영토 데이터 저장 완료: {territorySavePath}");
+    }
+
+    /// <summary>
+    /// 던전 기록 직렬화
+    /// </summary>
+    /// <param name="dungeonSaveData"></param>
+    public void SaveDungeon(DungeonSaveData dungeonSaveData)
+    {
+        string json = JsonConvert.SerializeObject(dungeonSaveData, Formatting.Indented);
+        File.WriteAllText(dungeonSavePath, json);
+        Debug.Log($"던전 데이터 저장 완료: {dungeonSavePath}");
     }
     #endregion
 }

@@ -49,6 +49,11 @@ public class TerritoryManager : MonoBehaviour
     private TerritoryRunTimeData territoryRunTimeData;
     public TerritoryRunTimeData TerritoryRunTimeData => territoryRunTimeData;
 
+    public IEnumerable<TerritoryZone> Zones => territoryZonesDic.Values;
+
+    // 도구로 Ground 타일 변환 (같은 오브젝트에 붙어 있을 때만)
+    public GroundTileModifier TileModifier { get; private set; }
+
     private Dictionary<int, Dictionary<ResourceSpawnEntry, float>> savedRespawningResources = new Dictionary<int, Dictionary<ResourceSpawnEntry, float>>();
 
     private void Awake()
@@ -72,6 +77,8 @@ public class TerritoryManager : MonoBehaviour
         currencyProvider = FindAnyObjectByType<CurrencyManager>();
 
         territoryRunTimeData = new TerritoryRunTimeData();
+
+        TileModifier = GetComponent<GroundTileModifier>();
     }
 
     #region 영토 저장 및 불러오기
@@ -144,6 +151,7 @@ public class TerritoryManager : MonoBehaviour
                     if (complexObj != null)
                     {
                         objState.GrowthStage = complexObj.GrowthStage;
+                        objState.IsGrowthComplete = complexObj.IsGrowthComplete;
                     }
 
                     Debug.Log("자원 생성물 저장" + obj.gameObject.name);
@@ -171,6 +179,25 @@ public class TerritoryManager : MonoBehaviour
                     });
                 }
             }
+        }
+
+        // 도구로 변환한 타일 저장
+        if (TileModifier != null)
+        {
+            territorySaveData.modifiedTiles = TileModifier.Save();
+        }
+
+        // 바닥에 떨어진 드랍 아이템 저장
+        foreach (PickupItem pickup in FindObjectsByType<PickupItem>(FindObjectsSortMode.None))
+        {
+            if (string.IsNullOrEmpty(pickup.PrefabName)) continue;
+
+            territorySaveData.droppedItems.Add(new DroppedItemData
+            {
+                PrefabName = pickup.PrefabName,
+                Count = pickup.Count,
+                Position = pickup.transform.position
+            });
         }
 
         return territorySaveData;
@@ -239,6 +266,12 @@ public class TerritoryManager : MonoBehaviour
             }
         }
 
+        // 도구로 변환한 타일 복원
+        if (TileModifier != null)
+        {
+            TileModifier.Load(data.modifiedTiles);
+        }
+
         foreach(var objState in data.fieldObjects)
         {
             TerritoryZone zone = GetZone(objState.ZoneId);
@@ -272,6 +305,7 @@ public class TerritoryManager : MonoBehaviour
                 if (complexObj != null && objState.GrowthStage > 0)
                 {
                     complexObj.GrowthStage = objState.GrowthStage;
+                    complexObj.IsGrowthComplete = objState.IsGrowthComplete;
                 }
             }
         }
@@ -308,6 +342,24 @@ public class TerritoryManager : MonoBehaviour
             if (respawningData.Count > 0)
             {
                 spawner.RestartRespawnCoroutines(respawningData);
+            }
+        }
+
+        // 드랍 아이템 복원
+        if (data.droppedItems != null)
+        {
+            foreach (var dropped in data.droppedItems)
+            {
+                PickupItem prefab = Resources.Load<PickupItem>($"DropItem/{dropped.PrefabName}");
+                if (prefab == null)
+                {
+                    Debug.LogWarning($"드랍 아이템 프리팹을 찾을 수 없음: {dropped.PrefabName}");
+                    continue;
+                }
+
+                PickupItem pickup = Instantiate(prefab, dropped.Position, Quaternion.identity);
+                pickup.Initialize(pickup.Item, dropped.Count);
+                pickup.PrefabName = dropped.PrefabName;
             }
         }
     }

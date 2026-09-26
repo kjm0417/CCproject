@@ -22,6 +22,13 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
 
     public static Action<float> OnEnemyDieExpEvent; 
 
+    /// <summary>
+    /// 개별 적 사망 이벤트 ( 던전 진행 관리자 등이 구독 )
+    /// </summary>
+    public event Action<EnemyBase> OnEnemyDied;
+
+    public bool IsDie => enemyContext != null && enemyContext.EnemyHelath.IsDie;
+
     [SerializeField]
     protected MonsterData monsterData;
     public MonsterData MonsterData => monsterData;
@@ -118,6 +125,7 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
         enemyContext.Animator.SetTrigger(EnemyAnimHash.DieTrigger);
 
         OnEnemyDieExpEvent?.Invoke(monsterData.EXP);
+        OnEnemyDied?.Invoke(this);
     }
 
     /// <summary>

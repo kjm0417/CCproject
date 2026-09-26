@@ -12,6 +12,11 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     public virtual int GrowthStage { get; set; } = 1;
     public virtual bool IsHarvestable => false;
 
+    /// <summary>
+    /// 최대 단계 드랍까지 끝났는지 여부 - 저장/로드 시 최대 단계 중복 드랍 방지
+    /// </summary>
+    public bool IsGrowthComplete { get; set; }
+
     private FieldComplexObjData fieldComplexObjData;
 
     [SerializeField]
@@ -46,7 +51,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     /// <param name="growIndex"></param>
     private void StartGrowthForStage(int growIndex)
     {
-        if (growIndex > maxGrowthStage)
+        if (growIndex > maxGrowthStage || IsGrowthComplete)
             return;
 
 
@@ -75,7 +80,10 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         dropper.DropOnHit(farmObj.DropGroupID, transform.position);
 
         if (GrowthStage >= maxGrowthStage)
-           yield break;
+        {
+            IsGrowthComplete = true;
+            yield break;
+        }
 
         GrowthStage++;
 
@@ -95,6 +103,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         {
             IsTakeDamageSeedDrop = true;
             GrowthStage = resetStage;
+            IsGrowthComplete = false;
             StartGrowthForStage(GrowthStage); // 성장 재시작
         }
         

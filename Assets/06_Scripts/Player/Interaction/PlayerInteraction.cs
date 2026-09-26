@@ -10,6 +10,11 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     [SerializeField]
     private LayerMask interactableLayers = ~0;
 
+    [Header("타일 상호작용")]
+    [Tooltip("삽질 등 타일 상호작용 기준 위치(발밑). 비워두면 플레이어 위치 사용.")]
+    [SerializeField]
+    private Transform tileCheckOrigin;
+
     [Header("임시 도구 테스트")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 자동으로 설정되게 하면 됨.")]
     [SerializeField]
@@ -31,6 +36,11 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         {
             interactionOrigin = transform;
         }
+
+        if (tileCheckOrigin == null)
+        {
+            tileCheckOrigin = transform;
+        }
     }
 
     public void SetCurrentTool(ToolType toolType)
@@ -45,6 +55,9 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
     public bool TryInteract()
     {
+        // 삽을 들고 있으면 발밑 타일 먼저 시도, 실패하면 오브젝트 상호작용
+        if (currentToolType == ToolType.Shovel && TryInteractTile(currentToolType)) return true;
+
         IInteractable target = FindNearestInteractable();
         if (target == null) return false;
 
@@ -54,6 +67,16 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
         context.Animation?.PlayToolInteraction(toolType);
         target.Interact(interactionContext);
+        return true;
+    }
+
+    private bool TryInteractTile(ToolType toolType)
+    {
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier == null) return false;
+        if (!tileModifier.TryConvertTile(tileCheckOrigin.position, toolType)) return false;
+
+        context.Animation?.PlayToolInteraction(toolType);
         return true;
     }
 

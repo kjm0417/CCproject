@@ -98,6 +98,19 @@ public class TerritorySaveData
     public List<int> UnlockedZoneIds;
     public List<FieldObjectStateData> fieldObjects;
     public List<RespawningResourceData> respawningResources = new List<RespawningResourceData>();
+    public List<ModifiedTileData> modifiedTiles = new List<ModifiedTileData>();
+    public List<DroppedItemData> droppedItems = new List<DroppedItemData>();
+}
+
+/// <summary>
+/// 바닥에 떨어져 있는 드랍 아이템 저장 데이터
+/// </summary>
+[System.Serializable]
+public class DroppedItemData
+{
+    public string PrefabName; //Resources/DropItem 프리팹 이름
+    public int Count;
+    public Vector2 Position;
 }
 
 [System.Serializable]
@@ -108,8 +121,18 @@ public class FieldObjectStateData
     public int CurrentHp;
     public bool IsDepleted;
     public int GrowthStage;
+    public bool IsGrowthComplete; //최대 단계 드랍 완료 여부
     public Vector2 Position;
     public string ResourcePrefabName;
+}
+
+[System.Serializable]
+public class ModifiedTileData
+{
+    public int ZoneId;
+    public int CellX;
+    public int CellY;
+    public string TileName; //바뀐 후 타일 이름
 }
 
 [System.Serializable]
@@ -128,3 +151,36 @@ public class RespawningResourceState
     public Vector2 Position;
     public float RemainingTime;
 }
+
+#region 던전 기록 저장 데이터 ( 클리어 횟수 / 최초 보상 지급 여부 )
+[System.Serializable]
+public class DungeonSaveData
+{
+    public List<DungeonRecordData> Records = new List<DungeonRecordData>();
+
+    /// <summary>
+    /// 던전 기록 조회 - 없으면 새로 생성
+    /// </summary>
+    public DungeonRecordData GetOrCreate(string dungeonId)
+    {
+        DungeonRecordData record = Records.Find(r => r.DungeonID == dungeonId);
+        if (record == null)
+        {
+            record = new DungeonRecordData { DungeonID = dungeonId };
+            Records.Add(record);
+        }
+        return record;
+    }
+}
+
+[System.Serializable]
+public class DungeonRecordData
+{
+    public string DungeonID;
+    public int ClearCount; //클리어 횟수
+    public bool FirstRewardClaimed; //최초 클리어 보상 지급 여부
+
+    [JsonIgnore]
+    public bool HasCleared => ClearCount > 0;
+}
+#endregion
