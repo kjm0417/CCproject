@@ -1,54 +1,57 @@
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ºÎÇ°µéÀ» ÇÑ °÷¿¡¼­ Ã£¾Æ ¼­·Î ¿¬°áÇØÁÖ´Â ÁöÈÖÀÚ
-// ºÎÇ°³¢¸® Á÷Á¢ GetComponent ÇÏÁö ¾Ê°í, Ç×»ó ÀÌ Context¸¦ ÅëÇØ Á¢±Ù
+// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ GetComponent ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½, ï¿½×»ï¿½ ï¿½ï¿½ Contextï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 public class PlayerContext : MonoBehaviour
 {
-    [Header("±âº» Áö±Þ µ¥ÀÌÅÍ (SO) - ÇÑ °÷¿¡¼­ ¹°°í ¸ðµÎ°¡ °øÀ¯")]
+    [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (SO) - ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField]
     private PlayerBaseData baseData;
     public PlayerBaseData BaseData => baseData;
 
-    // ÇÃ·¹ÀÌ¾î ½ºÅÈ(ÀÌ¼Ó, °ø°Ý·Â, °ø°Ý¹üÀ§ µî ÃÖÁ¾ °è»ê°ª)
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ì¼ï¿½, ï¿½ï¿½ï¿½Ý·ï¿½, ï¿½ï¿½ï¿½Ý¹ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ê°ª)
     public PlayerStats Stats { get; private set; }
 
-    // ÀÌµ¿ ºÎÇ°(Á¶ÀÌ½ºÆ½ ÀÔ·Â -> ÀÌµ¿) - ·çÆ®
+    // ï¿½Ìµï¿½ ï¿½ï¿½Ç°(ï¿½ï¿½ï¿½Ì½ï¿½Æ½ ï¿½Ô·ï¿½ -> ï¿½Ìµï¿½) - ï¿½ï¿½Æ®
     public PlayerMovement Movement { get; private set; }
 
-    // ¾Ö´Ï¸ÞÀÌ¼Ç ºÎÇ°(ÀÌµ¿ »óÅÂ -> ¾Ö´Ï¸ÞÀÌÅÍ/¹æÇâ) - º¸Åë ÀÚ½Ä(PlayerAnim)
+    // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½Ç°(ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ -> ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½) - ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½(PlayerAnim)
     public PlayerAnimation Animation { get; private set; }
 
-    // ¹ÙÀÌÅ» ºÎÇ°(Ã¼·Â + Çã±â) - ·çÆ®
+    // ï¿½ï¿½ï¿½ï¿½Å» ï¿½ï¿½Ç°(Ã¼ï¿½ï¿½ + ï¿½ï¿½ï¿½) - ï¿½ï¿½Æ®
     public PlayerVitals Vitals { get; private set; }
 
-    // À°¼º ºÎÇ°(°æÇèÄ¡/·¹º§/½ºÅ³Æ÷ÀÎÆ®) - ·çÆ®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°(ï¿½ï¿½ï¿½ï¿½Ä¡/ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Å³ï¿½ï¿½ï¿½ï¿½Æ®) - ï¿½ï¿½Æ®
     public PlayerProgression Progression { get; private set; }
 
-    // ÀçÈ­ ºÎÇ°(ÇÃ·¹ÀÌ¾î ¼ÒÀ¯, ¿©·¯ ÀçÈ­) - ·çÆ®
+    // ï¿½ï¿½È­ ï¿½ï¿½Ç°(ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­) - ï¿½ï¿½Æ®
     public PlayerWallet Wallet { get; private set; }
 
-    // ¾ÆÁ÷ ¾È ¸¸µç ºÎÇ°µé - ¸¸µé¸é ¾Æ·¡ ÁÖ¼®°ú AwakeÀÇ Â¦À» ÇÔ²² Ç¬´Ù.
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ Awakeï¿½ï¿½ Â¦ï¿½ï¿½ ï¿½Ô²ï¿½ Ç¬ï¿½ï¿½.
     public PlayerInteraction Interaction { get; private set; }
+
+    public PlayerInventory Inventory { get; private set; }
 
     public SpriteRenderer SpriteRenderer { get; private set; }
 
     private void Awake()
     {
-        //ºÎÇ° ÂüÁ¶¸¦ ¸ÕÀú ¸ðµÎ Ã£À½
+        //ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
         Stats = GetComponent<PlayerStats>();
         Movement = GetComponent<PlayerMovement>();
-        Animation = GetComponentInChildren<PlayerAnimation>(true); // ÀÚ½Ä±îÁö Å½»ö
+        Animation = GetComponentInChildren<PlayerAnimation>(true); // ï¿½Ú½Ä±ï¿½ï¿½ï¿½ Å½ï¿½ï¿½
         Vitals = GetComponent<PlayerVitals>();
         Progression = GetComponent<PlayerProgression>();
         Wallet = GetComponent<PlayerWallet>();
         Interaction = GetComponent<PlayerInteraction>();
+        Inventory = GetComponent<PlayerInventory>();
         SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-        //self + ÀÚ½Ä¿¡ ÀÖ´Â ¸ðµç IPlayerComponent ºÎÇ°À» ÃÊ±âÈ­
+        //self + ï¿½Ú½Ä¿ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ IPlayerComponent ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½Ê±ï¿½È­
         InitializeComponents();
     }
 
-    // self¿Í ÀÚ½Ä¿¡ ºÙÀº ¸ðµç IPlayerComponent ºÎÇ°¿¡ ÀÚ±â ÀÚ½ÅÀ» ³Ñ°Ü ÃÊ±âÈ­
+    // selfï¿½ï¿½ ï¿½Ú½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ IPlayerComponent ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ ï¿½Ê±ï¿½È­
     private void InitializeComponents()
     {
         foreach (IPlayerComponent component in GetComponentsInChildren<IPlayerComponent>(true))

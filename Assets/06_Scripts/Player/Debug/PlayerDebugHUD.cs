@@ -1,16 +1,33 @@
 using UnityEngine;
 
-// °³¹ß¿ë Å×½ºÆ® HUD. ÇÃ·¹ÀÌ¾î ÇöÀç »óÅÂ¸¦ È­¸é¿¡ Ç¥½ÃÇÏ°í, ¹öÆ°À¸·Î ÀçÈ­/°æÇèÄ¡¸¦ ³Ö¾îº»´Ù.
-// ½ÇÁ¦ ºôµå¿ëÀÌ ¾Æ´Ï¶ó Å×½ºÆ®¿ë. PlayerContext¿Í °°Àº ¿ÀºêÁ§Æ®(Player)¿¡ ºÙ¿©¼­ Play.
-// (Input System ¼³Á¤°ú ¹«°üÇÏ°Ô µ¿ÀÛÇÏµµ·Ï Å° ´ë½Å OnGUI ¹öÆ°À» ¾´´Ù.)
+// ê°œë°œìš© í…ŒìŠ¤íŠ¸ HUD. í”Œë ˆì´ì–´ í˜„ì¬ ìƒíƒœë¥¼ í™”ë©´ì— í‘œì‹œí•˜ê³ , ë²„íŠ¼ìœ¼ë¡œ ì¬í™”/ê²½í—˜ì¹˜ë¥¼ ë„£ì–´ë³¸ë‹¤.
+// ì‹¤ì œ ë¹Œë“œìš©ì´ ì•„ë‹ˆë¼ í…ŒìŠ¤íŠ¸ìš©. PlayerContextì™€ ê°™ì€ ì˜¤ë¸Œì íŠ¸(Player)ì— ë¶™ì—¬ì„œ Play.
+// (Input System ì„¤ì •ê³¼ ë¬´ê´€í•˜ê²Œ ë™ì‘í•˜ë„ë¡ í‚¤ ëŒ€ì‹  OnGUI ë²„íŠ¼ì„ ì“´ë‹¤.)
 [RequireComponent(typeof(PlayerContext))]
 public class PlayerDebugHUD : MonoBehaviour
 {
+    private const string AxeItemId = "22101";
+    private const string PickaxeItemId = "21101";
+
+    [Header("Test Tools")]
+    [SerializeField]
+    private bool grantTestToolsOnStart = true;
+
     private PlayerContext context;
+    private InvenItemData runtimeAxe;
+    private InvenItemData runtimePickaxe;
 
     private void Awake()
     {
         context = GetComponent<PlayerContext>();
+    }
+
+    private void Start()
+    {
+        if (grantTestToolsOnStart)
+        {
+            GrantTestTools();
+        }
     }
 
     private void OnGUI()
@@ -29,13 +46,18 @@ public class PlayerDebugHUD : MonoBehaviour
         if (context.Vitals != null)
         {
             var v = context.Vitals;
-            GUILayout.Label($"HP {v.Hp:F0} / {v.MaxHp:F0}      Çã±â {v.HungerValue:F0} / {v.MaxHunger:F0}  ({v.HungerTier})");
+            GUILayout.Label($"HP {v.Hp:F0} / {v.MaxHp:F0}      í—ˆê¸° {v.HungerValue:F0} / {v.MaxHunger:F0}  ({v.HungerTier})");
         }
 
         if (context.Wallet != null)
         {
             var w = context.Wallet;
             GUILayout.Label($"Gold {w.GetBalance(CurrencyType.Gold)}    Gem {w.GetBalance(CurrencyType.Gem)}");
+        }
+
+        if (context.Inventory != null)
+        {
+            GUILayout.Label($"Test Tools  Axe: {HasItem(AxeItemId)}    Pickaxe: {HasItem(PickaxeItemId)}");
         }
 
         GUILayout.Space(6);
@@ -56,7 +78,61 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             context.Vitals.TakeDamage(10);
         }
+        if (context.Inventory != null && GUILayout.Button("Give Axe + Pickaxe"))
+        {
+            GrantTestTools();
+        }
 
         GUILayout.EndArea();
+    }
+
+    private void GrantTestTools()
+    {
+        if (context == null || context.Inventory == null) return;
+
+        if (!HasItem(AxeItemId))
+        {
+            runtimeAxe = CreateTestTool(AxeItemId, "ë„ë¼");
+            context.Inventory.Add(runtimeAxe, 1);
+        }
+
+        if (!HasItem(PickaxeItemId))
+        {
+            runtimePickaxe = CreateTestTool(PickaxeItemId, "ê³¡ê´­ì´");
+            context.Inventory.Add(runtimePickaxe, 1);
+        }
+    }
+
+    private bool HasItem(string itemId)
+    {
+        if (context == null || context.Inventory == null) return false;
+
+        for (int i = 0; i < context.Inventory.Slots.Count; i++)
+        {
+            InvenItemData item = context.Inventory.Slots[i].Item;
+            if (item != null && item.ItemID == itemId) return true;
+        }
+
+        return false;
+    }
+
+    private static InvenItemData CreateTestTool(string itemId, string itemName)
+    {
+        InvenItemData item = ScriptableObject.CreateInstance<InvenItemData>();
+        item.name = $"RuntimeTest_{itemName}";
+        item.hideFlags = HideFlags.DontSave;
+        item.ItemID = itemId;
+        item.ItemName = itemName;
+        item.ItemType = "ì¥ë¹„ ì•„ì´í…œ";
+        item.SubType = "ë„êµ¬ ì•„ì´í…œ";
+        item.Description = "í…ŒìŠ¤íŠ¸ìš© ìë™ ì¥ì°© ë„êµ¬";
+        item.MaxStack = 1;
+        return item;
+    }
+
+    private void OnDestroy()
+    {
+        if (runtimeAxe != null) Destroy(runtimeAxe);
+        if (runtimePickaxe != null) Destroy(runtimePickaxe);
     }
 }

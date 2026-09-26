@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7311711126981847499}
   - component: {fileID: 8884953281375746627}
   - component: {fileID: 8096854602463115757}
+  - component: {fileID: 6723317453672984012}
   m_Layer: 5
   m_Name: Btn_QuickSlot
   m_TagString: Untagged
@@ -58,7 +59,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.7058824, g: 0.7058824, b: 0.7058824, a: 1}
@@ -137,6 +138,22 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &6723317453672984012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4256574098507788875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b2f53bb4e2b4a86a1d594bf7e5d8c27, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::HUDQuickSlot
+  imgIcon: {fileID: 7686833666517415700}
+  txtCount: {fileID: 0}
+  txtNumber: {fileID: 0}
+  button: {fileID: 8884953281375746627}
 --- !u!1 &4546638851815692272
 GameObject:
   m_ObjectHideFlags: 0

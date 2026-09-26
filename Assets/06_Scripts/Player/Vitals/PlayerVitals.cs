@@ -1,32 +1,34 @@
 using System;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾îÀÇ "´â´Â ¼öÄ¡" ½Ã½ºÅÛ - Ã¼·Â°ú Çã±â¸¦ ÇÔ²² °ü¸®ÇÑ´Ù.
-// µÑ ´Ù DepletableStat(¼ø¼ö C#)ÀÌ¶ó °ª ·ÎÁ÷Àº °øÀ¯ÇÏ°í, ¿©±â¼± °ÔÀÓ ±ÔÄ¢(°¨¼Ò Á¶°Ç/´Ü°è/»ç¸Á)¸¸ ¾ñ´Â´Ù.
-// Ã¼·Â+Çã±â¸¦ ÇÑ ÄÄÆ÷³ÍÆ®¿¡ µÐ ÀÌÀ¯: ¼­·Î Á÷Á¢ »óÈ£ÀÛ¿ëÇÏ±â ¶§¹®(Çã±â 0 -> Ã¼·Â °¨¼Ò, ¹®¼­ 2.1/2.2).
+// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ "ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡" ï¿½Ã½ï¿½ï¿½ï¿½ - Ã¼ï¿½Â°ï¿½ ï¿½ï¿½â¸¦ ï¿½Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+// ï¿½ï¿½ ï¿½ï¿½ DepletableStat(ï¿½ï¿½ï¿½ï¿½ C#)ï¿½Ì¶ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½, ï¿½ï¿½ï¿½â¼± ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¢(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½Ü°ï¿½/ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½Â´ï¿½.
+// Ã¼ï¿½ï¿½+ï¿½ï¿½â¸¦ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ 0 -> Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ 2.1/2.2).
 public class PlayerVitals : MonoBehaviour, IPlayerComponent
 {
-    [Header("Çã±â (¹®¼­ 2.2: 0~100)")]
+    [Header("ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ 2.2: 0~100)")]
     [SerializeField]
     private float maxHunger = 100f;
     [SerializeField]
-    private float hungerDrainPerSecond = 0.5f; // ´ë±â Æ÷ÇÔ ½Ã°£´ç ±âº» ¼Ò¸ð
+    private float hungerDrainPerSecond = 0.5f; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½âº» ï¿½Ò¸ï¿½
     [SerializeField]
-    private float lowThreshold = 20f;  // ¹Ì¸¸ÀÌ¸é ÀúÇÏ(´Þ¸®±â Á¦ÇÑ µî)
+    private float lowThreshold = 20f;  // ï¿½Ì¸ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Þ¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
     [SerializeField]
-    private float fullThreshold = 80f; // ÀÌ»óÀÌ¸é Æ÷¸¸(º¸³Ê½º)
+    private float fullThreshold = 80f; // ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½Ê½ï¿½)
 
-    [Header("°í°¥(Çã±â 0) Æä³ÎÆ¼ (¹®¼­ 2.2)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ 0) ï¿½ï¿½ï¿½Æ¼ (ï¿½ï¿½ï¿½ï¿½ 2.2)")]
     [SerializeField]
-    private float starveInterval = 1f;  // ¸î ÃÊ¸¶´Ù Ã¼·ÂÀ» ±ðÀ»Áö
+    private float starveInterval = 1f;  // ï¿½ï¿½ ï¿½Ê¸ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [SerializeField]
-    private float starveDamage = 1f;    // Æ½´ç Ã¼·Â °¨¼Ò·®
+    private float starveDamage = 1f;    // Æ½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½Ò·ï¿½
 
-    // Ã¼·Â ÃÖ´ñ°ªÀº PlayerStats(StatType.MaxHp)¿¡¼­ °¡Á®¿Â´Ù. ¿©±â¼± ÇöÀç°ª¸¸ °ü¸®.
+    // Ã¼ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ PlayerStats(StatType.MaxHp)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½. ï¿½ï¿½ï¿½â¼± ï¿½ï¿½ï¿½ç°ªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
-    // »ç¸Á (Á¶ÀÛ ÁßÁö/¿¬Ãâ/ºÎÈ°Àº ´Ù¸¥ ½Ã½ºÅÛÀÌ ±¸µ¶ÇØ Ã³¸® - ¹®¼­ 2.1)
+    // ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½È°ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ 2.1)
     public event Action OnDied;
-    // Çã±â ´Ü°è º¯È­ (HUD »ö/´Þ¸®±â Á¦ÇÑ µîÀÌ ±¸µ¶)
+    public event Action OnHealthChanged;
+    public event Action OnHungerChanged;
+    // ï¿½ï¿½ï¿½ ï¿½Ü°ï¿½ ï¿½ï¿½È­ (HUD ï¿½ï¿½/ï¿½Þ¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     public event Action<HungerTier> OnHungerTierChanged;
 
     private readonly DepletableStat health = new DepletableStat(0f);
@@ -36,7 +38,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
     private float starveTimer;
     private bool isDead;
 
-    // HUD/¿ÜºÎ ³ëÃâ
+    // HUD/ï¿½Üºï¿½ ï¿½ï¿½ï¿½ï¿½
     public float Hp => health.Current;
     public float MaxHp => health.Max;
     public float HpPercent01 => health.Percent01;
@@ -54,12 +56,16 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
         health.SetMax(stats != null ? stats.MaxHp : 100f, true);
         hungerTier = CalculateHungerTier();
 
-        // ½ºÅ³/Àåºñ·Î ÃÖ´ë Ã¼·ÂÀÌ ¹Ù²î¸é »óÇÑÀ» µû¶ó°£´Ù.
+        // ï¿½ï¿½Å³/ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ó°£´ï¿½.
         if (stats != null) stats.OnStatsChanged += HandleStatsChanged;
+
+        OnHealthChanged?.Invoke();
+        OnHungerChanged?.Invoke();
+        OnHungerTierChanged?.Invoke(hungerTier);
     }
 
     /// <summary>
-    /// ÀúÀåµÈ µ¥ÀÌÅÍ ·Îµå
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
     /// </summary>
     /// <param name="HP"></param>
     /// <param name="HungerValue"></param>
@@ -67,6 +73,10 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
     {
         health.LoadSet(Hp);
         hunger.LoadSet(HungerValue);
+        hungerTier = CalculateHungerTier();
+        OnHealthChanged?.Invoke();
+        OnHungerChanged?.Invoke();
+        OnHungerTierChanged?.Invoke(hungerTier);
     }
     private void OnDestroy()
     {
@@ -75,37 +85,71 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
 
     private void HandleStatsChanged()
     {
-        health.SetMax(stats.MaxHp, false); // »óÇÑ¸¸ °»½Å, ÇöÀç Ã¼·Â À¯Áö
+        health.SetMax(stats.MaxHp, false); // ï¿½ï¿½ï¿½Ñ¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        OnHealthChanged?.Invoke();
     }
 
     private void Update()
     {
         if (isDead) return;
 
-        // Çã±â: ½Ã°£¿¡ µû¸¥ ±âº» ¼Ò¸ð (´ë±â Æ÷ÇÔ). deltaTime °öÇØ ÇÁ·¹ÀÓ µ¶¸³.
+        // ï¿½ï¿½ï¿½: ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½Ò¸ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½). deltaTime ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        float hungerBefore = hunger.Current;
         hunger.Reduce(hungerDrainPerSecond * Time.deltaTime);
+        if (!Mathf.Approximately(hungerBefore, hunger.Current))
+        {
+            OnHungerChanged?.Invoke();
+        }
         UpdateHungerTier();
         UpdateStarve();
     }
 
-    // --- Çã±â API ---
-    // Çàµ¿(ÀÌµ¿/´Þ¸®±â/µµ±¸/ÀüÅõ)¿¡ µû¸¥ Ãß°¡ ¼Ò¸ð. ÇØ´ç ºÎÇ°ÀÌ È£Ãâ. (¹®¼­ 2.2)
-    public void ConsumeHunger(float amount) { hunger.Reduce(amount); UpdateHungerTier(); }
-    // À½½Ä µîÀ¸·Î È¸º¹. (¹®¼­ 2.3)
-    public void RecoverHunger(float amount) { hunger.Add(amount); UpdateHungerTier(); }
+    // --- ï¿½ï¿½ï¿½ API ---
+    // ï¿½àµ¿(ï¿½Ìµï¿½/ï¿½Þ¸ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ò¸ï¿½. ï¿½Ø´ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ È£ï¿½ï¿½. (ï¿½ï¿½ï¿½ï¿½ 2.2)
+    public void ConsumeHunger(float amount)
+    {
+        float before = hunger.Current;
+        hunger.Reduce(amount);
+        if (!Mathf.Approximately(before, hunger.Current))
+        {
+            OnHungerChanged?.Invoke();
+        }
+        UpdateHungerTier();
+    }
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½. (ï¿½ï¿½ï¿½ï¿½ 2.3)
+    public void RecoverHunger(float amount)
+    {
+        float before = hunger.Current;
+        hunger.Add(amount);
+        if (!Mathf.Approximately(before, hunger.Current))
+        {
+            OnHungerChanged?.Invoke();
+        }
+        UpdateHungerTier();
+    }
 
-    // --- Ã¼·Â API (¹®¼­ 2.1) ---
+    // --- Ã¼ï¿½ï¿½ API (ï¿½ï¿½ï¿½ï¿½ 2.1) ---
     public void TakeDamage(float amount)
     {
         if (isDead) return;
+        float before = health.Current;
         health.Reduce(amount);
+        if (!Mathf.Approximately(before, health.Current))
+        {
+            OnHealthChanged?.Invoke();
+        }
         if (health.IsEmpty) Die();
     }
 
     public void Heal(float amount)
     {
         if (isDead) return;
+        float before = health.Current;
         health.Add(amount);
+        if (!Mathf.Approximately(before, health.Current))
+        {
+            OnHealthChanged?.Invoke();
+        }
     }
 
     private void Die()
@@ -115,7 +159,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
         OnDied?.Invoke();
     }
 
-    // Çã±â 0ÀÌ¸é ÁÖ±âÀûÀ¸·Î Ã¼·Â °¨¼Ò (¹®¼­ 2.2). °°Àº ÄÄÆ÷³ÍÆ®¶ó ³»ºÎ¿¡¼­ ¹Ù·Î Ã³¸®.
+    // ï¿½ï¿½ï¿½ 0ï¿½Ì¸ï¿½ ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ 2.2). ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ Ã³ï¿½ï¿½.
     private void UpdateStarve()
     {
         if (hungerTier != HungerTier.Empty)
@@ -127,7 +171,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
         starveTimer += Time.deltaTime;
         if (starveTimer >= starveInterval)
         {
-            starveTimer -= starveInterval; // ³²´Â ½Ã°£ º¸Á¸(Æ½ ´©¶ô ¹æÁö)
+            starveTimer -= starveInterval; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½(Æ½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             TakeDamage(starveDamage);
         }
     }
@@ -142,7 +186,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
         }
     }
 
-    // °ª ±¸°£ -> ´Ü°è (¹®¼­ 2.2)
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -> ï¿½Ü°ï¿½ (ï¿½ï¿½ï¿½ï¿½ 2.2)
     private HungerTier CalculateHungerTier()
     {
         if (hunger.IsEmpty) return HungerTier.Empty;          // 0

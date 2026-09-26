@@ -4,8 +4,6 @@ public class UIHUD : MonoBehaviour
 {
     [Header("HUD Panels")]
     [SerializeField] private HUDTopPanel topPanel;
-    [SerializeField] private HUDLeftPanel leftPanel;
-    [SerializeField] private HUDRightPanel rightPanel;
     [SerializeField] private HUDBottomPanel bottomPanel;
 
     public PlayerContext Context { get; private set; }
@@ -15,11 +13,43 @@ public class UIHUD : MonoBehaviour
 
     private void Awake()
     {
+        ResolvePanels();
+        BuildPanelList();
+    }
+
+    private void Start()
+    {
+        if (IsInitialized) return;
+
+        PlayerContext playerContext = FindFirstObjectByType<PlayerContext>();
+        if (playerContext == null)
+        {
+            Debug.LogError("UIHUD: PlayerContext was not found in the scene.", this);
+            return;
+        }
+
+        Initialize(playerContext);
+        Show();
+    }
+
+    private void ResolvePanels()
+    {
+        if (topPanel == null)
+        {
+            topPanel = GetComponentInChildren<HUDTopPanel>(true);
+        }
+
+        if (bottomPanel == null)
+        {
+            bottomPanel = GetComponentInChildren<HUDBottomPanel>(true);
+        }
+    }
+
+    private void BuildPanelList()
+    {
         panels = new IHUDPanel[]
         {
             topPanel,
-            leftPanel,
-            rightPanel,
             bottomPanel
         };
     }
@@ -32,6 +62,8 @@ public class UIHUD : MonoBehaviour
             return;
         }
 
+        ResolvePanels();
+        BuildPanelList();
         Context = context;
 
         foreach (IHUDPanel panel in panels)

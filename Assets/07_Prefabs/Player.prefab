@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 4625084435417044547}
   - component: {fileID: 1190626846925551634}
   - component: {fileID: 2546596406338274135}
+  - component: {fileID: 7112345678901234567}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -241,6 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34d1e7255872f64aad397c7f9d73ebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDebugHUD
+  grantTestToolsOnStart: 1
 --- !u!114 &2546596406338274135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,8 +259,27 @@ MonoBehaviour:
   interactableLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  scanInterval: 0.15
   currentToolType: 0
   assumeCorrectToolInRange: 1
+  requireToolInInventory: 1
+  swordItemId: 25101
+  axeItemId: 22101
+  pickaxeItemId: 21101
+  shovelItemId: 23101
+--- !u!114 &7112345678901234567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3392514085708701532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323c0e89ece9b4d4bba09536bc23c6a5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
+  maxSlots: 0
 --- !u!1 &6127395052949784845
 GameObject:
   m_ObjectHideFlags: 0

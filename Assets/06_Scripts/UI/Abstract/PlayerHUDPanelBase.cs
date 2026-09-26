@@ -62,6 +62,8 @@ public abstract class PlayerHUDPanelBase : MonoBehaviour, IHUDPanel
         Context = null;
     }
 
+    
+
     protected virtual void OnInitialize() { }
     protected virtual void SubscribeEvents() { }
     protected virtual void UnsubscribeEvents() { }
