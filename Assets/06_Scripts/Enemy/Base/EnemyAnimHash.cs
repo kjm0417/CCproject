@@ -28,7 +28,7 @@ public class EnemyAnimHash
     /// <summary>
     /// Spawn 초기 애니메이션  (초기에 true 시키고, Idle 상태 진행 시 false )
     /// </summary>
-    public static int IsSpawn = Animator.StringToHash("IsSpawn");
+    public static int Spawn = Animator.StringToHash("Spawn");
 
 
     /// <summary>

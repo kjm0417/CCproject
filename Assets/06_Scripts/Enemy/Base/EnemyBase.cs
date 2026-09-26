@@ -33,28 +33,10 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
     protected MonsterData monsterData;
     public MonsterData MonsterData => monsterData;
 
-    private void OnGUI()
-    {
-        if (enemyContext == null) return;
-
-        GUILayout.BeginArea(new Rect(10, 10, 220, 150), GUI.skin.box);
-
-        GUILayout.Label($"{name}");
-        GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
-        GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
-
-        if (GUILayout.Button("TakeDamage 10"))
-            TakeDamage(10);
-
-        if (GUILayout.Button("TakeDamage 100"))
-            TakeDamage(100);
-
-        GUILayout.EndArea();
-    }
     protected virtual void Awake()
     {
         enemyContext = CreateCTX();
-        enemyContext.Animator.SetBool(EnemyAnimHash.IsSpawn, true);
+        enemyContext.Animator.Play(EnemyAnimHash.Spawn);
 
         skillManager = CreateSkillManager();
 

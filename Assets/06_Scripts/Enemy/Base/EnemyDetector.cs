@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 적 공통 - 플레이어 감지
 /// </summary>
-public class EnemyDetector : MonoBehaviour
+public abstract class EnemyDetector : MonoBehaviour
 {
     protected ContactFilter2D contactFilter2D;
     protected List<Collider2D> colliders = new();
