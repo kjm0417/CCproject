@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e88e99a7c82ba1b46928b91c946d07c1, type: 3}
+  m_Name: DungeonData
+  m_EditorClassIdentifier: Assembly-CSharp::DungeonData
+  DungeonID: 9000
+  DungeonName: "\uBD04_\uB358\uC804"
+  SceneName: KJ_DungeonScene
+  EntryCosts:
+  - Item: {fileID: 0}
+    Count: 0
+  FailRefundRatio: 0.5
+  FirstClearReward:
+    Currencies:
+    - Type: 0
+      Amount: 100
+    Exp: 50
+    Items:
+    - Item: {fileID: 0}
+      Count: 0
+    DropTable: {fileID: 0}
+    DropGroupID: 0
+  RepeatClearReward:
+    Currencies:
+    - Type: 0
+      Amount: 10
+    Exp: 5
+    Items: []
+    DropTable: {fileID: 0}
+    DropGroupID: 0

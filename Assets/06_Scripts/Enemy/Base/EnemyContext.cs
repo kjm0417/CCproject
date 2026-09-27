@@ -41,3 +41,17 @@ public class EnemySlimeContext : EnemyContext
         this.Rigidbody2D = rigidbody2D;
     }
 }
+/// <summary>
+/// 슬라임 전용 - 물리 기반 움직임 필요
+/// </summary>
+public class EnemySkeltetonContext : EnemyContext
+{
+    public Rigidbody2D Rigidbody2D { get; private set; }
+
+    public EnemySkeltetonContext(EnemyHelath enemyHealth, SpriteRenderer spriteRenderer, Rigidbody2D rigidbody2D,
+        Animator animator, EnemyDetector enemyDetector, MonsterData monsterData)
+        : base(enemyHealth, spriteRenderer, animator, enemyDetector, monsterData)
+    {
+        this.Rigidbody2D = rigidbody2D;
+    }
+}

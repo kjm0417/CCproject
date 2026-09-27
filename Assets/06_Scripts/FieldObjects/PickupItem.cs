@@ -12,6 +12,13 @@ public class PickupItem : MonoBehaviour
     [SerializeField]
     private int count = 1;
 
+    /// <summary>
+    /// 드랍 시 사용된 프리팹 이름 (Resources/DropItem 기준) - 비어있으면 씬 배치 아이템이라 저장 안 함
+    /// </summary>
+    public string PrefabName { get; set; }
+    public int Count => count;
+    public InvenItemData Item => item;
+
     public void Initialize(InvenItemData itemData, int itemCount)
     {
         item = itemData;

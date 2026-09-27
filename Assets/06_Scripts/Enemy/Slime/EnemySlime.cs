@@ -3,8 +3,30 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// 적 개별 - 슬라임
+/// </summary>
 public class EnemySlime : EnemyBase
 {
+    private void OnGUI()
+    {
+        if (enemyContext == null) return;
+
+        GUILayout.BeginArea(new Rect(10, 10, 220, 150), GUI.skin.box);
+
+        GUILayout.Label($"{name}");
+        GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
+        GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
+
+        if (GUILayout.Button("TakeDamage 10"))
+            TakeDamage(10);
+
+        if (GUILayout.Button("TakeDamage 100"))
+            TakeDamage(100);
+
+        GUILayout.EndArea();
+    }
+
     private EnemySlimeContext slimeContext;
 
     [SerializeField]
@@ -108,7 +130,7 @@ public class SlimeIdleState : EnemyState
         MonoBehaviour mono, MonsterSlimeData monsterSlimeData)
        : base(ctx, skillManager, fsm, mono)
     {
-        ctx.Animator.SetBool(EnemyAnimHash.IsSpawn, false);
+        //ctx.Animator.SetBool(EnemyAnimHash.IsSpawn, false);
 
         idleDuration = monsterSlimeData.IdleDuration;
     }

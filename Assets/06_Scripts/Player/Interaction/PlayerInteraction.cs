@@ -11,10 +11,17 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     [SerializeField]
     private LayerMask interactableLayers = ~0;
 
+
     [Header("타겟 감지")]
     [Tooltip("타겟 탐색 주기(초). 0이면 매 프레임.")]
     [SerializeField]
     private float scanInterval = 0.15f;
+
+    [Header("타일 상호작용")]
+    [Tooltip("삽질 등 타일 상호작용 기준 위치(발밑). 비워두면 플레이어 위치 사용.")]
+    [SerializeField]
+    private Transform tileCheckOrigin;
+
 
     [Header("임시 도구 테스트")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 자동으로 설정되게 하면 됨.")]
@@ -55,6 +62,11 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         {
             interactionOrigin = transform;
         }
+
+        if (tileCheckOrigin == null)
+        {
+            tileCheckOrigin = transform;
+        }
     }
 
     private void Update()
@@ -88,7 +100,15 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
     public bool TryInteract()
     {
+
         if (CurrentTarget == null) return false;
+
+        // 삽을 들고 있으면 발밑 타일 먼저 시도, 실패하면 오브젝트 상호작용
+        if (currentToolType == ToolType.Shovel && TryInteractTile(currentToolType)) return true;
+
+        IInteractable target = FindNearestInteractable();
+        if (target == null) return false;
+
 
         ToolType toolType = ResolveToolType(CurrentTarget);
         InteractionContext interactionContext = CreateInteractionContext(toolType);
@@ -96,6 +116,16 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
         context.Animation?.PlayToolInteraction(toolType);
         CurrentTarget.Interact(interactionContext);
+        return true;
+    }
+
+    private bool TryInteractTile(ToolType toolType)
+    {
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier == null) return false;
+        if (!tileModifier.TryConvertTile(tileCheckOrigin.position, toolType)) return false;
+
+        context.Animation?.PlayToolInteraction(toolType);
         return true;
     }
 

@@ -26,6 +26,7 @@ public abstract class FieldObjectDropper : MonoBehaviour
             Vector2 offset = Random.insideUnitCircle * scatterRadius;
             PickupItem pickup = Instantiate(item, origin + (Vector3)offset, Quaternion.identity);
             pickup.Initialize(drops[i].Item, drops[i].Count);
+            pickup.PrefabName = item.name;
         }
     }
 

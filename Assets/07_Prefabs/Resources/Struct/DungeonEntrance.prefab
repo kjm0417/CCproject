@@ -181,3 +181,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneHandlerUI
   type: 0
+  dungeonData: {fileID: 11400000, guid: f09d1892a66266941ac657026d74e5eb, type: 2}
