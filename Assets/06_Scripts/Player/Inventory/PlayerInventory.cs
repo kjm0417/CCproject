@@ -10,11 +10,14 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
     [Header("슬롯 상한 (0 = 무제한)")]
     [SerializeField]
     private int maxSlots = 0;
+    [SerializeField]
+    private ItemDatabase itemDatabase;
 
     // 보유 변경 시 방송 (인벤토리 UI 갱신용)
     public event Action OnInventoryChanged;
 
     private readonly List<InventorySlot> slots = new List<InventorySlot>();
+    private readonly List<InvenItemData> runtimeLoadedItems = new List<InvenItemData>();
 
     // UI가 읽을 수 있게 슬롯 목록을 읽기 전용으로 노출
     public IReadOnlyList<InventorySlot> Slots => slots;
@@ -26,6 +29,11 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
 
     // 아이템 획득. 넣지 못하고 남은 개수를 반환한다(0이면 전부 들어감 - 문서 3.1 꽉 참 처리).
     public int Add(InvenItemData item, int count)
+    {
+        return AddInternal(item, count, true);
+    }
+
+    private int AddInternal(InvenItemData item, int count, bool notify)
     {
         if (item == null || count <= 0) return count;
         int remaining = count;
@@ -52,8 +60,84 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
             remaining -= put;
         }
 
-        if (remaining != count) OnInventoryChanged?.Invoke();
+        if (notify && remaining != count) OnInventoryChanged?.Invoke();
         return remaining; // 못 넣은 수량 (필드에 유지할 몫)
+    }
+
+    public List<InventoryItemSaveData> CreateSaveData()
+    {
+        List<InventoryItemSaveData> data = new List<InventoryItemSaveData>();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            InventorySlot slot = slots[i];
+            if (slot.Item == null || slot.Count <= 0) continue;
+            data.Add(InventoryItemSaveData.FromSlot(slot));
+        }
+        return data;
+    }
+
+    public void Load(List<InventoryItemSaveData> savedItems)
+    {
+        ClearRuntimeLoadedItems();
+        slots.Clear();
+
+        if (savedItems != null)
+        {
+            Dictionary<string, InvenItemData> resolvedItems = new Dictionary<string, InvenItemData>();
+            for (int i = 0; i < savedItems.Count; i++)
+            {
+                InventoryItemSaveData savedItem = savedItems[i];
+                if (savedItem == null || string.IsNullOrEmpty(savedItem.ItemID) || savedItem.Count <= 0) continue;
+
+                if (!resolvedItems.TryGetValue(savedItem.ItemID, out InvenItemData item))
+                {
+                    item = itemDatabase != null ? itemDatabase.FindById(savedItem.ItemID) : null;
+                    if (item == null)
+                    {
+                        item = CreateRuntimeItem(savedItem);
+                        runtimeLoadedItems.Add(item);
+                    }
+                    resolvedItems.Add(savedItem.ItemID, item);
+                }
+
+                AddInternal(item, savedItem.Count, false);
+            }
+        }
+
+        OnInventoryChanged?.Invoke();
+    }
+
+    private static InvenItemData CreateRuntimeItem(InventoryItemSaveData data)
+    {
+        InvenItemData item = ScriptableObject.CreateInstance<InvenItemData>();
+        item.name = $"Loaded_{data.ItemID}_{data.ItemName}";
+        item.hideFlags = HideFlags.DontSave;
+        item.ItemID = data.ItemID;
+        item.ItemName = data.ItemName;
+        item.ItemType = data.ItemType;
+        item.SubType = data.SubType;
+        item.Description = data.Description;
+        item.MaxStack = Mathf.Max(1, data.MaxStack);
+        item.SellPrice = data.SellPrice;
+        item.MinBuyGold = data.MinBuyGold;
+        item.MaxBuyGold = data.MaxBuyGold;
+        item.BuyDiamond = data.BuyDiamond;
+        item.HungerRecovery = data.HungerRecovery;
+        return item;
+    }
+
+    private void ClearRuntimeLoadedItems()
+    {
+        for (int i = 0; i < runtimeLoadedItems.Count; i++)
+        {
+            if (runtimeLoadedItems[i] != null) Destroy(runtimeLoadedItems[i]);
+        }
+        runtimeLoadedItems.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        ClearRuntimeLoadedItems();
     }
 
     // 아이템 제거(소비/버리기). 실제 제거한 개수 반환.
@@ -69,6 +153,24 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
             slots[i].Count -= take;
             removed += take;
             if (slots[i].Count <= 0) slots.RemoveAt(i); // 빈 칸 정리
+        }
+
+        if (removed > 0) OnInventoryChanged?.Invoke();
+        return removed;
+    }
+
+    public int Remove(InvenItemData item, int count)
+    {
+        if (item == null || count <= 0) return 0;
+        int removed = 0;
+
+        for (int i = slots.Count - 1; i >= 0 && removed < count; i--)
+        {
+            if (slots[i].Item != item) continue;
+            int take = Mathf.Min(slots[i].Count, count - removed);
+            slots[i].Count -= take;
+            removed += take;
+            if (slots[i].Count <= 0) slots.RemoveAt(i);
         }
 
         if (removed > 0) OnInventoryChanged?.Invoke();

@@ -16,6 +16,7 @@ MonoBehaviour:
   ObjectName: "\uB098\uBB34 \uC0C1\uC790"
   ObjectType: Interactive
   HP: 3
+  ExpReward: 0
   Description: 
   RespawnTimeMin: 0
   RespawnTimeMax: 0

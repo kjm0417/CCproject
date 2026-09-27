@@ -14,6 +14,7 @@ public class InvenItemDTO
     public int MinBuyGold;
     public int MaxBuyGold;
     public int BuyDiamond;
+    public float HungerRecovery;
 }
 public class InvenItemImporter : BaseDataImporter<InvenItemDTO, InvenItemData>
 {
@@ -32,6 +33,7 @@ public class InvenItemImporter : BaseDataImporter<InvenItemDTO, InvenItemData>
         so.MinBuyGold = dto.MinBuyGold;
         so.MaxBuyGold = dto.MaxBuyGold;
         so.BuyDiamond = dto.BuyDiamond;
+        so.HungerRecovery = dto.HungerRecovery;
     }
 
     protected override string GetDTOID(InvenItemDTO dto)

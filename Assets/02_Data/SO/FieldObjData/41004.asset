@@ -16,6 +16,7 @@ MonoBehaviour:
   ObjectName: "\uC218\uD480"
   ObjectType: Bush
   HP: 1
+  ExpReward: 5
   Description: 
   RespawnTimeMin: 20
   RespawnTimeMax: 30

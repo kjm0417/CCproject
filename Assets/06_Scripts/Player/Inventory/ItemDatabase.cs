@@ -11,11 +11,17 @@ public class ItemDatabase : ScriptableObject
 
     public InvenItemData FindById(int itemId)
     {
-        string id = itemId.ToString();
+        return FindById(itemId.ToString());
+    }
+
+    public InvenItemData FindById(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId)) return null;
+
         for (int i = 0; i < items.Count; i++)
         {
             InvenItemData item = items[i];
-            if (item != null && item.ItemID == id)
+            if (item != null && item.ItemID == itemId)
             {
                 return item;
             }

@@ -16,6 +16,7 @@ MonoBehaviour:
   ObjectName: "\uCC38 \uB098\uBB34"
   ObjectType: Tree
   HP: 5
+  ExpReward: 10
   Description: 
   RespawnTimeMin: 45
   RespawnTimeMax: 60

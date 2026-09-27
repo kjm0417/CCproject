@@ -7,6 +7,7 @@ using UnityEngine;
 public class ObjBaseData : ScriptableObject
 {
     public int HP;
+    [Min(0)] public int ExpReward;
     public int RespawnTimeMin;
     public int RespawnTimeMax;
 }

@@ -9,6 +9,7 @@ public class HUDQuickSlot : MonoBehaviour
     [SerializeField] private Image imgIcon;
     [SerializeField] private TMP_Text txtCount;
     [SerializeField] private TMP_Text txtNumber;
+    [SerializeField] private TMP_Text txtItemName;
     [SerializeField] private Button button;
 
     private UnityAction clickAction;
@@ -25,19 +26,22 @@ public class HUDQuickSlot : MonoBehaviour
         if (txtNumber != null)
         {
             txtNumber.text = slotNumber.ToString();
+            txtNumber.gameObject.SetActive(true);
         }
 
         ClearClickAction();
     }
 
-    public void SetItem(InvenItemData item, int count, Sprite icon)
+    public void SetItem(InvenItemData item, int count, Sprite icon, UnityAction onClick = null)
     {
         SetIcon(icon);
-        SetCount(count > 1 ? count.ToString() : string.Empty);
+        SetCount(item != null && count > 0 ? count.ToString() : string.Empty);
+        SetClickAction(onClick);
 
         if (button != null)
         {
             button.interactable = item != null;
+            button.enabled = onClick != null;
         }
     }
 
@@ -45,10 +49,12 @@ public class HUDQuickSlot : MonoBehaviour
     {
         SetIcon(isOwned ? icon : null);
         SetCount(string.Empty);
+        SetItemName(string.Empty);
 
         if (button != null)
         {
-            button.interactable = false;
+            button.interactable = isOwned;
+            button.enabled = false;
         }
     }
 
@@ -56,11 +62,13 @@ public class HUDQuickSlot : MonoBehaviour
     {
         SetIcon(icon);
         SetCount(string.Empty);
+        SetItemName(string.Empty);
         SetClickAction(onClick);
 
         if (button != null)
         {
             button.interactable = onClick != null;
+            button.enabled = true;
         }
     }
 
@@ -68,17 +76,39 @@ public class HUDQuickSlot : MonoBehaviour
     {
         SetIcon(null);
         SetCount(string.Empty);
+        SetItemName(string.Empty);
         ClearClickAction();
 
         if (button != null)
         {
             button.interactable = false;
+            button.enabled = false;
         }
     }
 
     public void Release()
     {
         ClearClickAction();
+    }
+
+    public void SetNumberVisible(bool isVisible)
+    {
+        if (txtNumber != null)
+        {
+            txtNumber.gameObject.SetActive(isVisible);
+        }
+    }
+
+    public void SetItemName(string value)
+    {
+        if (txtItemName == null && !string.IsNullOrEmpty(value))
+        {
+            txtItemName = CreateItemNameText();
+        }
+
+        if (txtItemName == null) return;
+        txtItemName.text = value;
+        txtItemName.gameObject.SetActive(!string.IsNullOrEmpty(value));
     }
 
     private void SetIcon(Sprite sprite)
@@ -133,5 +163,69 @@ public class HUDQuickSlot : MonoBehaviour
                 imgIcon = iconTransform.GetComponent<Image>();
             }
         }
+
+        if (txtCount == null)
+        {
+            Transform countTransform = transform.Find("Txt_Count");
+            if (countTransform != null)
+            {
+                txtCount = countTransform.GetComponent<TMP_Text>();
+            }
+        }
+
+        if (txtCount == null)
+        {
+            txtCount = CreateCountText();
+        }
+    }
+
+    private TMP_Text CreateCountText()
+    {
+        GameObject countObject = new GameObject("Txt_Count", typeof(RectTransform));
+        countObject.layer = gameObject.layer;
+
+        RectTransform rect = countObject.GetComponent<RectTransform>();
+        rect.SetParent(transform, false);
+        rect.anchorMin = new Vector2(0.45f, 0f);
+        rect.anchorMax = new Vector2(1f, 0.38f);
+        rect.offsetMin = new Vector2(0f, 3f);
+        rect.offsetMax = new Vector2(-5f, 0f);
+
+        TextMeshProUGUI countText = countObject.AddComponent<TextMeshProUGUI>();
+        countText.text = string.Empty;
+        countText.alignment = TextAlignmentOptions.BottomRight;
+        countText.fontStyle = FontStyles.Bold;
+        countText.enableAutoSizing = true;
+        countText.fontSizeMin = 12f;
+        countText.fontSizeMax = 22f;
+        countText.color = Color.white;
+        countText.raycastTarget = false;
+        countObject.SetActive(false);
+        return countText;
+    }
+
+    private TMP_Text CreateItemNameText()
+    {
+        GameObject nameObject = new GameObject("Txt_ItemName", typeof(RectTransform));
+        nameObject.layer = gameObject.layer;
+
+        RectTransform rect = nameObject.GetComponent<RectTransform>();
+        rect.SetParent(transform, false);
+        rect.anchorMin = new Vector2(0.05f, 0.72f);
+        rect.anchorMax = new Vector2(0.95f, 0.98f);
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI nameText = nameObject.AddComponent<TextMeshProUGUI>();
+        nameText.text = string.Empty;
+        nameText.alignment = TextAlignmentOptions.Center;
+        nameText.fontStyle = FontStyles.Bold;
+        nameText.enableAutoSizing = true;
+        nameText.fontSizeMin = 8f;
+        nameText.fontSizeMax = 14f;
+        nameText.color = Color.white;
+        nameText.raycastTarget = false;
+        nameObject.SetActive(false);
+        return nameText;
     }
 }

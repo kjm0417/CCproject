@@ -16,6 +16,7 @@ MonoBehaviour:
   ObjectName: "\uC11D\uD0C4 \uBC14\uC704"
   ObjectType: Rock
   HP: 6
+  ExpReward: 12
   Description: 
   RespawnTimeMin: 55
   RespawnTimeMax: 65

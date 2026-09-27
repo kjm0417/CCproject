@@ -55,20 +55,18 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
     /// <param name="HungerValue"></param>
     public void Load(int playerLevel, int expLevel , int skillPoints)
     {
-        this.level = playerLevel;
-        this.expInLevel = expLevel;
-        this.skillPoints = skillPoints;
+        level = Mathf.Max(1, playerLevel);
+        expInLevel = Mathf.Max(0, expLevel);
+        this.skillPoints = Mathf.Max(0, skillPoints);
+        OnExpChanged?.Invoke();
+        OnSkillPointsChanged?.Invoke();
     }
     // 경험치 획득 (몬스터 처치/수확/제작 등이 호출 - 문서 2.3). 한 번에 여러 레벨도 처리.
     public void AddExp(float amount)
     {
         if (amount <= 0) return;
 
-        Debug.Log("경험치 획득 전" + expInLevel);
-
         expInLevel += (int)amount;
-
-        Debug.Log("경험치 획득 후" + expInLevel);
 
         int need = RequiredExp(level);
         while (need > 0 && expInLevel >= need)

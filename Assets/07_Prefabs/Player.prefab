@@ -243,6 +243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDebugHUD
   grantTestToolsOnStart: 1
+  grantTestFoodOnStart: 1
+  testFoodItem: {fileID: 11400000, guid: 9d60871ab9004ef4e91db1ee9b5bbc11, type: 2}
+  testFoodCount: 5
 --- !u!114 &2546596406338274135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +283,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
   maxSlots: 0
+  itemDatabase: {fileID: 11400000, guid: d488846811487e146948b2fa64b842a7, type: 2}
 --- !u!1 &6127395052949784845
 GameObject:
   m_ObjectHideFlags: 0

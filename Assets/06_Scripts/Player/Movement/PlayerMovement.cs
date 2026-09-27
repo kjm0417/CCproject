@@ -4,39 +4,73 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour, IPlayerComponent
 {
-    [Header("ÀÔ·Â")]
+    [Header("ì…ë ¥")]
     [SerializeField]
-    private VariableJoystick joystick; // UI Á¶ÀÌ½ºÆ½. ÀÎ½ºÆåÅÍ¿¡¼­ ¿¬°áÇÑ´Ù.
-    public VariableJoystick JoyStick => joystick; //¿ÜºÎ Á¢±Ù ¿ëµµ
+    private VariableJoystick joystick; // UI ì¡°ì´ìŠ¤í‹±. ì¸ìŠ¤í™í„°ì—ì„œ ì—°ê²°í•œë‹¤.
+    public VariableJoystick JoyStick => joystick; //ì™¸ë¶€ ì ‘ê·¼ ìš©ë„
 
     private Rigidbody2D rb;
     private PlayerStats stats;
+    private bool joystickWasEnabled = true;
 
     public Vector2 MoveInput { get; private set; }
+    public bool IsInputBlocked { get; private set; }
 
     public bool IsMoving => MoveInput.sqrMagnitude > 0.0001f;
 
-    // PlayerContext°¡ È£Ãâ. ÇÊ¿äÇÑ ÂüÁ¶¸¦ Ä³½ÌÇÏ°í Å¾´Ù¿î ÀÌµ¿¿¡ ¸Â°Ô Rigidbody2D¸¦ ¼³Á¤ÇÑ´Ù.
+    // PlayerContextê°€ í˜¸ì¶œ. í•„ìš”í•œ ì°¸ì¡°ë¥¼ ìºì‹±í•˜ê³  íƒ‘ë‹¤ìš´ ì´ë™ì— ë§ê²Œ Rigidbody2Dë¥¼ ì„¤ì •í•œë‹¤.
     public void Initialize(PlayerContext context)
     {
         rb = GetComponent<Rigidbody2D>();
         stats = context.Stats;
 
-        // Å¾´Ù¿î(2D ºÎ°¨) ÀÌµ¿: Áß·Â Á¦°Å, ¹°¸® Ãæµ¹·Î ÀÎÇÑ È¸Àü °íÁ¤
+        // íƒ‘ë‹¤ìš´(2D ë¶€ê°) ì´ë™: ì¤‘ë ¥ ì œê±°, ë¬¼ë¦¬ ì¶©ëŒë¡œ ì¸í•œ íšŒì „ ê³ ì •
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
     }
 
     private void Update()
     {
-        // ÀÔ·Â ÀĞ±â´Â Update¿¡¼­ (ÇÁ·¹ÀÓ¸¶´Ù ÃÖ½Å ÀÔ·Â È®º¸). Á¶ÀÌ½ºÆ½ ¹Ì¿¬°áÀÌ¸é Á¤Áö.
+        if (IsInputBlocked)
+        {
+            MoveInput = Vector2.zero;
+            return;
+        }
+
+        // ì…ë ¥ ì½ê¸°ëŠ” Updateì—ì„œ (í”„ë ˆì„ë§ˆë‹¤ ìµœì‹  ì…ë ¥ í™•ë³´). ì¡°ì´ìŠ¤í‹± ë¯¸ì—°ê²°ì´ë©´ ì •ì§€.
         MoveInput = (joystick != null) ? joystick.Direction : Vector2.zero;
     }
 
     private void FixedUpdate()
     {
-        // ¹°¸® ÀÌµ¿Àº FixedUpdate¿¡¼­. Áï½Ã ÀÌµ¿(°ü¼º ¾øÀ½): ¿øÇÏ´Â ¼Óµµ¸¦ ±×´ë·Î ÁöÁ¤ÇÑ´Ù.
+        // ë¬¼ë¦¬ ì´ë™ì€ FixedUpdateì—ì„œ. ì¦‰ì‹œ ì´ë™(ê´€ì„± ì—†ìŒ): ì›í•˜ëŠ” ì†ë„ë¥¼ ê·¸ëŒ€ë¡œ ì§€ì •í•œë‹¤.
         float speed = (stats != null) ? stats.MoveSpeed : 0f;
-        rb.linearVelocity = MoveInput * speed;
+        rb.linearVelocity = IsInputBlocked ? Vector2.zero : MoveInput * speed;
+    }
+
+    public void SetInputBlocked(bool blocked)
+    {
+        if (IsInputBlocked == blocked) return;
+
+        IsInputBlocked = blocked;
+        MoveInput = Vector2.zero;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        if (joystick == null) return;
+
+        if (blocked)
+        {
+            joystickWasEnabled = joystick.enabled;
+            joystick.OnPointerUp(null);
+            joystick.enabled = false;
+        }
+        else
+        {
+            joystick.enabled = joystickWasEnabled;
+        }
     }
 }

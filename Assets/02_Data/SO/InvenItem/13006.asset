@@ -22,3 +22,4 @@ MonoBehaviour:
   MinBuyGold: 0
   MaxBuyGold: 0
   BuyDiamond: 0
+  HungerRecovery: 20

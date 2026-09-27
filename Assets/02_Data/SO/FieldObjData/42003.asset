@@ -16,6 +16,7 @@ MonoBehaviour:
   ObjectName: "\uB9E4\uC2E4\uB098\uBB34"
   ObjectType: tree
   HP: 5
+  ExpReward: 0
   Description: 
   RespawnTimeMin: 45
   RespawnTimeMax: 60

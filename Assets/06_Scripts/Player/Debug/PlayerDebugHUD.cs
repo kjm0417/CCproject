@@ -13,6 +13,14 @@ public class PlayerDebugHUD : MonoBehaviour
     [SerializeField]
     private bool grantTestToolsOnStart = true;
 
+    [Header("Test Food")]
+    [SerializeField]
+    private bool grantTestFoodOnStart = true;
+    [SerializeField]
+    private InvenItemData testFoodItem;
+    [SerializeField]
+    private int testFoodCount = 5;
+
     private PlayerContext context;
     private InvenItemData runtimeAxe;
     private InvenItemData runtimePickaxe;
@@ -28,13 +36,20 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             GrantTestTools();
         }
+
+        if (grantTestFoodOnStart
+            && testFoodItem != null
+            && !HasItem(testFoodItem.ItemID))
+        {
+            GrantTestFood(testFoodCount);
+        }
     }
 
     private void OnGUI()
     {
         if (context == null) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 420, 340), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(10, 10, 420, 430), GUI.skin.box);
         GUILayout.Label("== Player Debug ==");
 
         if (context.Progression != null)
@@ -58,6 +73,9 @@ public class PlayerDebugHUD : MonoBehaviour
         if (context.Inventory != null)
         {
             GUILayout.Label($"Test Tools  Axe: {HasItem(AxeItemId)}    Pickaxe: {HasItem(PickaxeItemId)}");
+            string foodName = testFoodItem != null ? testFoodItem.ItemName : "Not Assigned";
+            int foodCount = testFoodItem != null ? GetItemCount(testFoodItem.ItemID) : 0;
+            GUILayout.Label($"Test Food  {foodName}: {foodCount}");
         }
 
         GUILayout.Space(6);
@@ -78,9 +96,18 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             context.Vitals.TakeDamage(10);
         }
+        if (context.Vitals != null && GUILayout.Button("-30 Hunger"))
+        {
+            context.Vitals.ConsumeHunger(30);
+        }
         if (context.Inventory != null && GUILayout.Button("Give Axe + Pickaxe"))
         {
             GrantTestTools();
+        }
+        string testFoodName = testFoodItem != null ? testFoodItem.ItemName : "Food";
+        if (context.Inventory != null && GUILayout.Button($"+{testFoodCount} {testFoodName}"))
+        {
+            GrantTestFood(testFoodCount);
         }
 
         GUILayout.EndArea();
@@ -105,15 +132,32 @@ public class PlayerDebugHUD : MonoBehaviour
 
     private bool HasItem(string itemId)
     {
-        if (context == null || context.Inventory == null) return false;
+        return GetItemCount(itemId) > 0;
+    }
+
+    private int GetItemCount(string itemId)
+    {
+        if (context == null || context.Inventory == null) return 0;
+
+        int count = 0;
 
         for (int i = 0; i < context.Inventory.Slots.Count; i++)
         {
-            InvenItemData item = context.Inventory.Slots[i].Item;
-            if (item != null && item.ItemID == itemId) return true;
+            InventorySlot slot = context.Inventory.Slots[i];
+            if (slot.Item != null && slot.Item.ItemID == itemId)
+            {
+                count += slot.Count;
+            }
         }
 
-        return false;
+        return count;
+    }
+
+    private void GrantTestFood(int count)
+    {
+        if (context == null || context.Inventory == null || testFoodItem == null) return;
+
+        context.Inventory.Add(testFoodItem, Mathf.Max(1, count));
     }
 
     private static InvenItemData CreateTestTool(string itemId, string itemName)

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 42003
   m_EditorClassIdentifier: Assembly-CSharp::FieldComplexObjData
   HP: 5
+  ExpReward: 10
   RespawnTimeMin: 45
   RespawnTimeMax: 60
   ObjectID: 42003

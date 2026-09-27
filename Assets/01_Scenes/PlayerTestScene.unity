@@ -14239,6 +14239,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 592442640601518412, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
+    - target: {fileID: 592442640601518412, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1192175806662289492, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -14258,6 +14266,18 @@ PrefabInstance:
     - target: {fileID: 3670839879279212984, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
       propertyPath: m_Name
       value: Canvas - HUDUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4065759901642641081, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
+    - target: {fileID: 4065759901642641081, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5820603653732131157, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
+      propertyPath: m_Name
+      value: Pnl_Inventory
       objectReference: {fileID: 0}
     - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
       propertyPath: m_AnchorMax.y

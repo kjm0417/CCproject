@@ -63,6 +63,7 @@ public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, ID
 
     public virtual void TakeDamage(InteractionContext context)
     {
+        bool wasDepleted = IsDepleted;
         float baseDamage = context.Damage > 0f ? context.Damage : fallbackDamage;
         if (preferredToolType != ToolType.None && context.ToolType == preferredToolType)
         {
@@ -70,6 +71,11 @@ public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, ID
         }
 
         ReduceHp(Mathf.CeilToInt(baseDamage));
+
+        if (!wasDepleted && IsDepleted && data != null && data.ExpReward > 0)
+        {
+            context.Player?.Progression?.AddExp(data.ExpReward);
+        }
     }
 
     protected void ReduceHp(int amount)

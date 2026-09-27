@@ -4,7 +4,7 @@ using UnityEngine;
 
 #region 플레이어 저장 데이터 ( 체력 / 배고픔 / 레벨 )
 /// <summary>
-/// 씬 이동 또는 게임 종료 시 사라지는 플레이어 저장 데이터 ( 플레이어 상태 / 배고픔 / 레벨최고 하고, 인벤토리는 제외 )
+/// 플레이어 상태, 진행도, 재화, 인벤토리를 한 번에 저장하는 데이터
 /// </summary>
 [System.Serializable]
 public class PlayerSaveData
@@ -30,6 +30,9 @@ public class PlayerSaveData
 
     //PlayerWallet 클래스
     public List<CurrencyAmount> currencies = new();
+
+    //PlayerInventory 클래스
+    public List<InventoryItemSaveData> InventoryItems = new();
 
     /// <summary>
     /// 플레이어 데이터 저장
@@ -65,6 +68,11 @@ public class PlayerSaveData
             });
         }
 
+        if (playerContext.Inventory != null)
+        {
+            data.InventoryItems = playerContext.Inventory.CreateSaveData();
+        }
+
         return data;
     }
 
@@ -88,9 +96,52 @@ public class PlayerSaveData
 
         //PlayerWallet 로드
         playerContext.Wallet.Load(data.currencies);
+
+        //PlayerInventory 로드
+        if (playerContext.Inventory != null)
+        {
+            playerContext.Inventory.Load(data.InventoryItems);
+        }
     }
 }
 #endregion
+
+[System.Serializable]
+public class InventoryItemSaveData
+{
+    public string ItemID;
+    public string ItemName;
+    public string ItemType;
+    public string SubType;
+    public string Description;
+    public int MaxStack;
+    public int SellPrice;
+    public int MinBuyGold;
+    public int MaxBuyGold;
+    public int BuyDiamond;
+    public float HungerRecovery;
+    public int Count;
+
+    public static InventoryItemSaveData FromSlot(InventorySlot slot)
+    {
+        InvenItemData item = slot.Item;
+        return new InventoryItemSaveData
+        {
+            ItemID = item.ItemID,
+            ItemName = item.ItemName,
+            ItemType = item.ItemType,
+            SubType = item.SubType,
+            Description = item.Description,
+            MaxStack = item.MaxStack,
+            SellPrice = item.SellPrice,
+            MinBuyGold = item.MinBuyGold,
+            MaxBuyGold = item.MaxBuyGold,
+            BuyDiamond = item.BuyDiamond,
+            HungerRecovery = item.HungerRecovery,
+            Count = slot.Count
+        };
+    }
+}
 
 [System.Serializable]
 public class TerritorySaveData

@@ -34,6 +34,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
     private readonly DepletableStat health = new DepletableStat(0f);
     private readonly DepletableStat hunger = new DepletableStat(0f);
     private PlayerStats stats;
+    private PlayerProgression progression;
     private HungerTier hungerTier = HungerTier.Full;
     private float starveTimer;
     private bool isDead;
@@ -51,6 +52,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
     public void Initialize(PlayerContext context)
     {
         stats = context.Stats;
+        progression = context.Progression;
 
         hunger.SetMax(maxHunger, true);
         health.SetMax(stats != null ? stats.MaxHp : 100f, true);
@@ -58,6 +60,7 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
 
         // ��ų/���� �ִ� ü���� �ٲ�� ������ ���󰣴�.
         if (stats != null) stats.OnStatsChanged += HandleStatsChanged;
+        if (progression != null) progression.OnLevelUp += HandleLevelUp;
 
         OnHealthChanged?.Invoke();
         OnHungerChanged?.Invoke();
@@ -81,12 +84,27 @@ public class PlayerVitals : MonoBehaviour, IPlayerComponent
     private void OnDestroy()
     {
         if (stats != null) stats.OnStatsChanged -= HandleStatsChanged;
+        if (progression != null) progression.OnLevelUp -= HandleLevelUp;
     }
 
     private void HandleStatsChanged()
     {
         health.SetMax(stats.MaxHp, false); // ���Ѹ� ����, ���� ü�� ����
         OnHealthChanged?.Invoke();
+    }
+
+    private void HandleLevelUp(int newLevel)
+    {
+        RestoreToFull();
+    }
+
+    public void RestoreToFull()
+    {
+        health.Reset();
+        hunger.Reset();
+        OnHealthChanged?.Invoke();
+        OnHungerChanged?.Invoke();
+        UpdateHungerTier();
     }
 
     private void Update()

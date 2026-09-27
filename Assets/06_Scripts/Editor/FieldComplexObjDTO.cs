@@ -8,6 +8,7 @@ public class FieldComplexObjDTO
     public string ObjectName;
     public string ObjectType;
     public int HP;
+    public int ExpReward;
     public string Description;
     public int RespawnTimeMin;
     public int RespawnTimeMax;
@@ -25,6 +26,7 @@ public class FieldComplexObjImporter : BaseDataImporter<FieldComplexObjDTO, Fiel
         so.ObjectName = dto.ObjectName;
         so.ObjectType = dto.ObjectType;
         so.HP = dto.HP;
+        so.ExpReward = dto.ExpReward;
         so.Description = dto.Description;
         so.RespawnTimeMin = dto.RespawnTimeMin;
         so.RespawnTimeMax = dto.RespawnTimeMax;

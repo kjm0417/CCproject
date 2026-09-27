@@ -13,6 +13,7 @@ public class InvenItemData : ScriptableObject
     public int SellPrice;
     public int MinBuyGold;
     public int MaxBuyGold;
-    public int BuyDiamond; 
+    public int BuyDiamond;
+    [Min(0f)] public float HungerRecovery;
 }
 

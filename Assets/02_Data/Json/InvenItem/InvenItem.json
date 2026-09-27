@@ -21,7 +21,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":11002,
@@ -57,7 +58,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":13003,
@@ -69,7 +71,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":13004,
@@ -81,7 +84,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":13005,
@@ -93,7 +97,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":13006,
@@ -105,7 +110,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":13007,
@@ -117,7 +123,8 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":20
   },
   {
     "ItemID":14001,

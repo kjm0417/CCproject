@@ -1306,6 +1306,7 @@ RectTransform:
   m_Children:
   - {fileID: 916204998195043303}
   - {fileID: 8851150362644473249}
+  - {fileID: 6126709073910340481}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2176,7 +2177,8 @@ MonoBehaviour:
   attackButton: {fileID: 8521226550471634132}
   btnAutoTarget: {fileID: 776118232911360510}
   quickSlots: []
-  inventoryPanel: {fileID: 0}
+  inventoryPanel: {fileID: 5820603653732131157}
+  inventoryPanelView: {fileID: 7119103136466915695}
   btnInventory: {fileID: 8016466661668364237}
   swordItemId: 25101
   axeItemId: 22101
@@ -2185,7 +2187,9 @@ MonoBehaviour:
   axeIcon: {fileID: 0}
   pickaxeIcon: {fileID: 0}
   foodFallbackIcon: {fileID: 0}
+  inventoryIcon: {fileID: 0}
   foodSubType: "\uC74C\uC2DD \uC544\uC774\uD15C"
+  defaultFoodHungerRecovery: 20
 --- !u!1 &7289035622369250010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2737,6 +2741,124 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8511619044449014991, guid: f439d173abd44b74daaf904193651d4e, type: 3}
   m_PrefabInstance: {fileID: 2572236880054370689}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3995624411546649602
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6516656082310115263}
+    m_Modifications:
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 760
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 620
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7473089252215317847, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_Name
+      value: InventoryPanel
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+--- !u!1 &5820603653732131157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7473089252215317847, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+  m_PrefabInstance: {fileID: 3995624411546649602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6126709073910340481 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+  m_PrefabInstance: {fileID: 3995624411546649602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7119103136466915695 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6178777808041727341, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+  m_PrefabInstance: {fileID: 3995624411546649602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5820603653732131157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fa2d693b8e4f7fa9830c1b6e47f8a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HUDInventoryPanelView
 --- !u!1001 &5994795819203151653
 PrefabInstance:
   m_ObjectHideFlags: 0
