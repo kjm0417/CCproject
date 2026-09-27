@@ -166,6 +166,17 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         inventory = null;
     }
 
+    /// <summary>
+    /// 화면에 보이는 퀵슬롯 번호(1부터)에 들어 있는 아이템. 없으면 null
+    /// </summary>
+    public InvenItemData GetQuickSlotItem(int slotNumber)
+    {
+        int index = slotNumber - 1;
+        if (quickSlots == null || index < 0 || index >= quickSlots.Length || quickSlots[index] == null) return null;
+
+        return quickSlots[index].Item;
+    }
+
     private void HandleTargetChanged(IInteractable target, ToolType toolType)
     {
         if (attackButton == null) return;

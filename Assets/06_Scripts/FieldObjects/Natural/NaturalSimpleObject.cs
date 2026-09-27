@@ -27,7 +27,7 @@ public class NaturalSimpleObject : DamageableFieldObject
     {
         if (dropper != null)
         {
-            dropper.DropOnDeath(fieldSimpleObjData.DropGroupID, transform.position);
+            dropper.DropFinal(fieldSimpleObjData.DropGroupID, transform.position);
         }
 
         Destroy(gameObject);

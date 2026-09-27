@@ -6,16 +6,25 @@ using UnityEngine;
 
 /// <summary>
 /// 자연 생성물 - 복합 자원 오브젝트 ( 성장 단계가 존재 함)
+/// 성장 자체는 GrowthController가 담당, 여기서는 단계마다 드랍 / 피격 시 단계 리셋만 처리
 /// </summary>
 public class NaturalComplexObject : DamageableFieldObject, IGrowable
 {
-    public virtual int GrowthStage { get; set; } = 1;
+    public virtual int GrowthStage
+    {
+        get => growth.CurrentStage;
+        set => growth.CurrentStage = value;
+    }
     public virtual bool IsHarvestable => false;
 
     /// <summary>
     /// 최대 단계 드랍까지 끝났는지 여부 - 저장/로드 시 최대 단계 중복 드랍 방지
     /// </summary>
-    public bool IsGrowthComplete { get; set; }
+    public bool IsGrowthComplete
+    {
+        get => growth.IsGrowthComplete;
+        set => growth.IsGrowthComplete = value;
+    }
 
     private FieldComplexObjData fieldComplexObjData;
 
@@ -30,67 +39,38 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
    
     [SerializeField] 
     private int resetStage = 1;        //리셋할 단계
+
+    private GrowthController growth;
+
     protected override void Awake()
     {
         base.Awake();
 
         InitDropper(dropper);
 
+        growth = new GrowthController(this, farmObjDatas, maxGrowthStage);
+        growth.OnStageCompleted += HandleStageCompleted;
     }
 
     private void Start()
     {
         fieldComplexObjData = Data as FieldComplexObjData;
 
-        StartGrowthForStage(GrowthStage);
+        // 로드 시 GrowthStage/IsGrowthComplete가 Start 전에 채워지므로 그 단계부터 이어서 성장
+        growth.StartGrowth();
     }
 
     /// <summary>
-    /// 현재 농작물의 성장 단계 찾기
+    /// 한 단계 성장이 끝날 때마다 해당 단계 드랍
     /// </summary>
-    /// <param name="growIndex"></param>
-    private void StartGrowthForStage(int growIndex)
+    private void HandleStageCompleted(FarmObjData farmObj)
     {
-        if (growIndex > maxGrowthStage || IsGrowthComplete)
-            return;
-
-
-        foreach (FarmObjData farmObj in farmObjDatas)
+        if (dropper != null)
         {
-            string[] cropID = farmObj.CropID.Split('_');
-
-            if (cropID.Length > 1 && cropID[1] == growIndex.ToString())
-            {
-                StartCoroutine(GrowCorutine(farmObj));
-                break;
-            }
-
+            dropper.DropOnHit(farmObj.DropGroupID, transform.position);
         }
     }
 
-    /// <summary>
-    /// 실제 농작물이 성장하는 코루틴
-    /// </summary>
-    /// <param name="farmObj"></param>
-    /// <returns></returns>
-    private IEnumerator GrowCorutine(FarmObjData farmObj)
-    {
-        yield return new WaitForSeconds(farmObj.TimePerStageSec);
-       
-        dropper.DropOnHit(farmObj.DropGroupID, transform.position);
-
-        if (GrowthStage >= maxGrowthStage)
-        {
-            IsGrowthComplete = true;
-            yield break;
-        }
-
-        GrowthStage++;
-
-        yield return new WaitForSeconds(0.1f);
-
-        StartGrowthForStage(GrowthStage);
-    }
     private bool IsTakeDamageSeedDrop;
 
     public override void TakeDamage(InteractionContext context)
@@ -99,17 +79,16 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
         if (IsDepleted) return;
 
-        if(GrowthStage == maxGrowthStage)
+        if (growth.IsMaxStage)
         {
             IsTakeDamageSeedDrop = true;
-            GrowthStage = resetStage;
-            IsGrowthComplete = false;
-            StartGrowthForStage(GrowthStage); // 성장 재시작
+            growth.ResetTo(resetStage); // 성장 재시작
         }
         
     }
     protected override void OnDepleted()
     {
+        growth.Stop();
         Destroy(gameObject);
     }
 }

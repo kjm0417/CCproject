@@ -258,8 +258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113bebf3f480bb04cb1691a596bc05fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ComplexFieldObjectDropper
-  deathDropTable: {fileID: 11400000, guid: d5d1adfbabf9b0f49a12f7403cd90167, type: 2}
-  deathPickupPrefab: {fileID: 7672621953354016798, guid: e003435437af64d4290bb8b1ee2693f2, type: 3}
+  finalDropTable: {fileID: 11400000, guid: 47d945fd805f74544a24209680dab8e7, type: 2}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: f30fb90aabb9dd049abb5de593817e3e, type: 3}
   scatterRadius: 0.35
   dropMappings:
   - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}

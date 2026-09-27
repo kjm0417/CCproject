@@ -105,6 +105,8 @@ public class SaveManager : MonoBehaviour
             }
         }
     }
+
+
     #region Json 데이터 역직렬화
     /// <summary>
     /// 플레이어 데이터 역직렬화

@@ -14,6 +14,9 @@ public class HUDQuickSlot : MonoBehaviour
 
     private UnityAction clickAction;
 
+    // 이 슬롯에 표시 중인 아이템 (도구/명령/빈 슬롯이면 null)
+    public InvenItemData Item { get; private set; }
+
     private void Awake()
     {
         AutoAssignReferences();
@@ -34,6 +37,7 @@ public class HUDQuickSlot : MonoBehaviour
 
     public void SetItem(InvenItemData item, int count, Sprite icon, UnityAction onClick = null)
     {
+        Item = item;
         SetIcon(icon);
         SetCount(item != null && count > 0 ? count.ToString() : string.Empty);
         SetClickAction(onClick);
@@ -47,6 +51,7 @@ public class HUDQuickSlot : MonoBehaviour
 
     public void SetTool(bool isOwned, Sprite icon)
     {
+        Item = null;
         SetIcon(isOwned ? icon : null);
         SetCount(string.Empty);
         SetItemName(string.Empty);
@@ -60,6 +65,7 @@ public class HUDQuickSlot : MonoBehaviour
 
     public void SetCommand(Sprite icon, UnityAction onClick)
     {
+        Item = null;
         SetIcon(icon);
         SetCount(string.Empty);
         SetItemName(string.Empty);
@@ -74,6 +80,7 @@ public class HUDQuickSlot : MonoBehaviour
 
     public void Clear()
     {
+        Item = null;
         SetIcon(null);
         SetCount(string.Empty);
         SetItemName(string.Empty);
