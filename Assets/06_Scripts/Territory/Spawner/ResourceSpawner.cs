@@ -64,11 +64,11 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// 현재 스폰된 모든 오브젝트 반환
+    /// 현재 스폰된 모든 오브젝트 반환 (여러 칸 차지하는 자원도 1번만)
     /// </summary>
     public List<GameObject> GetSpawnedObjects()
     {
-        return new List<GameObject>(occupiedCells.Values);
+        return new List<GameObject>(occupiedCellsByObject.Keys);
     }
 
     /// <summary>
@@ -368,9 +368,19 @@ public class ResourceSpawner : MonoBehaviour
     /// </summary>
     public GameObject SpawnResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition)
     {
-        GameObject resourceObj = CreateResourceAtPosition(entry, worldPosition,false);
+        // 저장된 위치는 offset이 적용된 위치 -> offset 빼서 원래 칸 계산
+        GridCenterPoint centerPoint = entry.ResourcePrefab.GetComponent<GridCenterPoint>();
+        Vector3 cellWorldPos = centerPoint != null ? worldPosition - centerPoint.offset : worldPosition;
+        Vector3Int cellPos = territoryZone.TerritoryTileMapGround.WorldToCell(cellWorldPos);
 
-        Vector3Int cellPos = territoryZone.TerritoryTileMapGround.WorldToCell(worldPosition);
+        // 이미 점유된 칸이면 중복 생성하지 않음 (예전 세이브의 중복 데이터 방어)
+        if (IsOccupied(cellPos))
+        {
+            Debug.LogWarning($"{cellPos} 칸이 이미 점유되어 {entry.ResourcePrefab.name} 로드를 건너뜀");
+            return null;
+        }
+
+        GameObject resourceObj = CreateResourceAtPosition(entry, worldPosition,false);
 
         // 범위 체크
         BoundsInt bounds = territoryZone.TerritoryTileMapGround.cellBounds;

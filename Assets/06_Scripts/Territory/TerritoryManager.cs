@@ -295,6 +295,8 @@ public class TerritoryManager : MonoBehaviour
 
             // 특정 위치에 자원 생성
             GameObject resourceObj = spawner.SpawnResourceAtPosition(targetEntry, objState.Position);
+            if (resourceObj == null) continue;
+
             DamageableFieldObject damageable = resourceObj.GetComponent<DamageableFieldObject>();
 
             if (damageable != null)
