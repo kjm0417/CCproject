@@ -6,10 +6,10 @@ using System.Collections.Generic;
 public class HUDBottomPanel : PlayerHUDPanelBase
 {
     private const int QuickSlotCount = 8;
-    private const int FirstGeneralSlotIndex = 3;
-    private const int LastGeneralSlotIndex = 5;
-    private const int FoodSlotIndex = 6;
     private const int InventorySlotIndex = 7;
+    private const float QuickSlotMaxWidth = 700f;
+    private const float QuickSlotMaxHeight = 80f;
+    private const float QuickSlotHorizontalMargin = 16f;
 
     [Header("��ȣ�ۿ� �� ���� Ű")]
     [SerializeField] private UIAttackButton attackButton;
@@ -25,11 +25,13 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     [SerializeField] private string swordItemId = "25101";
     [SerializeField] private string axeItemId = "22101";
     [SerializeField] private string pickaxeItemId = "21101";
+    [SerializeField] private string shovelItemId = "23101";
 
     [Header("Quick Slot Icons")]
     [SerializeField] private Sprite swordIcon;
     [SerializeField] private Sprite axeIcon;
     [SerializeField] private Sprite pickaxeIcon;
+    [SerializeField] private Sprite shovelIcon;
     [SerializeField] private Sprite foodFallbackIcon;
     [SerializeField] private Sprite inventoryIcon;
 
@@ -40,13 +42,24 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private PlayerInventory inventory;
     private bool isInventoryOpen;
     private HUDQuickSlot quickSlotTemplate;
+    private Transform quickSlotGridTransform;
     private HUDQuickSlot inventoryItemSlotTemplate;
     private HUDQuickSlot[] inventoryQuickSlots;
     private RectTransform inventoryItemsContent;
     private readonly List<HUDQuickSlot> inventoryItemSlots = new List<HUDQuickSlot>();
+    private InvenItemData selectedQuickSlotItem;
+    private string selectedQuickSlotItemId;
 
     public event Action OnInventoryRequested;
     public bool IsInventoryOpen => isInventoryOpen;
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (quickSlotGridTransform != null)
+        {
+            ResizeSlotGrid(quickSlotGridTransform);
+        }
+    }
 
     // 2. Context ���� �� 1ȸ �ʱ�ȭ
     protected override void OnInitialize()
@@ -101,11 +114,6 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     // 4. Show �� ��� UI ����
     protected override void Refresh()
     {
-        if (Context.Interaction != null && attackButton != null)
-        {
-            attackButton.UpdateTarget(Context.Interaction.CurrentTarget, Context.Interaction.CurrentTargetToolType);
-        }
-
         RefreshQuickSlots();
     }
 
@@ -169,11 +177,19 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void HandleTargetChanged(IInteractable target, ToolType toolType)
     {
         if (attackButton == null) return;
+
+        if (selectedQuickSlotItem != null)
+        {
+            RefreshInteractionButton();
+            return;
+        }
+
         attackButton.UpdateTarget(target, toolType);
     }
 
     private void RefreshQuickSlots()
     {
+        ValidateSelectedQuickSlotItem();
         HashSet<InvenItemData> registeredItems = PopulateQuickSlotSet(quickSlots);
 
         if (inventoryQuickSlots != null)
@@ -182,6 +198,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
 
         RefreshInventoryItems(registeredItems);
+        RefreshInteractionButton();
     }
 
     private HashSet<InvenItemData> PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
@@ -194,11 +211,28 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             targetSlots[i]?.Clear();
         }
 
-        SetToolSlot(targetSlots, 0, swordItemId, "칼", GetIcon(swordIcon, "Equipment/Sword"), registeredItems);
-        SetToolSlot(targetSlots, 1, axeItemId, "도끼", GetIcon(axeIcon, "Equipment/Axe"), registeredItems);
-        SetToolSlot(targetSlots, 2, pickaxeItemId, "곡괭이", GetIcon(pickaxeIcon, "Equipment/Pick"), registeredItems);
-        SetGeneralItemSlots(targetSlots, registeredItems);
-        SetFoodSlot(targetSlots, FoodSlotIndex, registeredItems);
+        if (inventory != null)
+        {
+            int visibleItemCount = Mathf.Min(inventory.Slots.Count, InventorySlotIndex);
+            for (int i = 0; i < visibleItemCount; i++)
+            {
+                if (!IsValidSlot(targetSlots, i)) continue;
+
+                InventorySlot inventorySlot = inventory.Slots[i];
+                InvenItemData item = inventorySlot.Item;
+                if (item == null) continue;
+
+                int displayCount = item.MaxStack > 1 || inventorySlot.Count > 1
+                    ? inventorySlot.Count
+                    : 0;
+                Sprite icon = ResolveInventoryIcon(item);
+                targetSlots[i].SetItem(item, displayCount, icon, () => SelectQuickSlotItem(item));
+
+                targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
+                registeredItems.Add(item);
+            }
+        }
+
         SetInventorySlot(targetSlots);
         return registeredItems;
     }
@@ -227,6 +261,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         {
             Transform slotParent = foundSlots[0].transform.parent;
             quickSlotTemplate = foundSlots[0];
+            quickSlotGridTransform = slotParent;
 
             foundSlots[0].gameObject.SetActive(true);
             for (int i = foundSlots.Length; i < QuickSlotCount; i++)
@@ -265,13 +300,32 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
     }
 
-    private static void ResizeSlotGrid(Transform slotParent)
+    private void ResizeSlotGrid(Transform slotParent)
     {
         if (slotParent == null) return;
 
         GridLayoutGroup grid = slotParent.GetComponent<GridLayoutGroup>();
         RectTransform rect = slotParent as RectTransform;
         if (grid == null || rect == null) return;
+
+        RectTransform quickSlotRoot = rect.parent as RectTransform;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        RectTransform canvasRect = canvas != null
+            ? canvas.rootCanvas.transform as RectTransform
+            : null;
+
+        if (quickSlotRoot != null && canvasRect != null && canvasRect.rect.width > 0f)
+        {
+            float targetWidth = Mathf.Min(
+                QuickSlotMaxWidth,
+                Mathf.Max(QuickSlotCount, canvasRect.rect.width - QuickSlotHorizontalMargin * 2f));
+            float sizeRatio = targetWidth / QuickSlotMaxWidth;
+
+            quickSlotRoot.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetWidth);
+            quickSlotRoot.SetSizeWithCurrentAnchors(
+                RectTransform.Axis.Vertical,
+                QuickSlotMaxHeight * sizeRatio);
+        }
 
         float availableWidth = rect.rect.width - grid.padding.left - grid.padding.right;
         availableWidth -= grid.spacing.x * (QuickSlotCount - 1);
@@ -349,62 +403,6 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         return inventoryItemSlots[index];
     }
 
-    private void SetToolSlot(
-        HUDQuickSlot[] targetSlots,
-        int index,
-        string itemId,
-        string itemName,
-        Sprite icon,
-        HashSet<InvenItemData> registeredItems)
-    {
-        if (!IsValidSlot(targetSlots, index)) return;
-
-        InventorySlot inventorySlot = FindItemSlot(itemId, itemName);
-        targetSlots[index].SetTool(inventorySlot != null, icon);
-        if (inventorySlot?.Item != null) registeredItems.Add(inventorySlot.Item);
-    }
-
-    private void SetGeneralItemSlots(HUDQuickSlot[] targetSlots, HashSet<InvenItemData> registeredItems)
-    {
-        if (inventory == null) return;
-
-        int quickSlotIndex = FirstGeneralSlotIndex;
-        for (int i = 0; i < inventory.Slots.Count && quickSlotIndex <= LastGeneralSlotIndex; i++)
-        {
-            InventorySlot inventorySlot = inventory.Slots[i];
-            InvenItemData item = inventorySlot.Item;
-            if (item == null || IsTool(item) || IsFood(item)) continue;
-            if (!IsValidSlot(targetSlots, quickSlotIndex)) break;
-
-            targetSlots[quickSlotIndex].SetItem(item, inventorySlot.Count, ResolveItemIcon(item));
-            registeredItems.Add(item);
-            quickSlotIndex++;
-        }
-    }
-
-    private void SetFoodSlot(
-        HUDQuickSlot[] targetSlots,
-        int index,
-        HashSet<InvenItemData> registeredItems)
-    {
-        if (!IsValidSlot(targetSlots, index)) return;
-
-        InventorySlot foodSlot = FindFirstFoodSlot();
-        if (foodSlot == null)
-        {
-            targetSlots[index].SetItem(null, 0, null);
-            return;
-        }
-
-        InvenItemData foodItem = foodSlot.Item;
-        targetSlots[index].SetItem(
-            foodItem,
-            foodSlot.Count,
-            ResolveFoodIcon(foodItem),
-            () => ConsumeFood(foodItem));
-        registeredItems.Add(foodItem);
-    }
-
     private void ConsumeFood(InvenItemData foodItem)
     {
         if (inventory == null || Context == null || Context.Vitals == null || foodItem == null) return;
@@ -418,51 +416,8 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         if (inventory.Remove(foodItem, 1) > 0)
         {
             Context.Vitals.RecoverHunger(hungerRecovery);
+            RefreshInteractionButton();
         }
-    }
-
-    private InventorySlot FindItemSlot(string itemId, string itemName)
-    {
-        if (inventory == null) return null;
-
-        for (int i = 0; i < inventory.Slots.Count; i++)
-        {
-            InvenItemData item = inventory.Slots[i].Item;
-            if (item == null) continue;
-
-            if (!string.IsNullOrEmpty(itemId) && item.ItemID == itemId) return inventory.Slots[i];
-            if (!string.IsNullOrEmpty(itemName) && item.ItemName == itemName) return inventory.Slots[i];
-        }
-
-        return null;
-    }
-
-    private InventorySlot FindFirstFoodSlot()
-    {
-        if (inventory == null) return null;
-
-        for (int i = 0; i < inventory.Slots.Count; i++)
-        {
-            InvenItemData item = inventory.Slots[i].Item;
-            if (item != null && item.SubType == foodSubType)
-            {
-                return inventory.Slots[i];
-            }
-        }
-
-        return null;
-    }
-
-    private bool IsTool(InvenItemData item)
-    {
-        if (item == null) return false;
-
-        return item.ItemID == swordItemId
-            || item.ItemID == axeItemId
-            || item.ItemID == pickaxeItemId
-            || item.ItemName == "칼"
-            || item.ItemName == "도끼"
-            || item.ItemName == "곡괭이";
     }
 
     private bool IsFood(InvenItemData item)
@@ -481,6 +436,117 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
 
         targetSlots[InventorySlotIndex].SetCommand(icon, ToggleInventory);
+        targetSlots[InventorySlotIndex].SetSelected(false);
+    }
+
+    private void SelectQuickSlotItem(InvenItemData item)
+    {
+        if (item == null) return;
+
+        selectedQuickSlotItem = item;
+        selectedQuickSlotItemId = item.ItemID;
+        Context?.Interaction?.SetCurrentTool(ResolveToolType(item), true);
+        RefreshQuickSlotSelection();
+        RefreshInteractionButton();
+    }
+
+    private void ValidateSelectedQuickSlotItem()
+    {
+        if (selectedQuickSlotItem == null && string.IsNullOrEmpty(selectedQuickSlotItemId)) return;
+        if (inventory != null)
+        {
+            for (int i = 0; i < inventory.Slots.Count; i++)
+            {
+                InvenItemData item = inventory.Slots[i].Item;
+                if (IsSelectedQuickSlotItem(item))
+                {
+                    selectedQuickSlotItem = item;
+                    return;
+                }
+            }
+        }
+
+        selectedQuickSlotItem = null;
+        selectedQuickSlotItemId = null;
+        Context?.Interaction?.SetCurrentTool(ToolType.None, false);
+        attackButton?.ClearQuickSlotOverride();
+    }
+
+    private bool IsSelectedQuickSlotItem(InvenItemData item)
+    {
+        if (item == null) return false;
+        if (item == selectedQuickSlotItem) return true;
+
+        return !string.IsNullOrEmpty(selectedQuickSlotItemId)
+            && item.ItemID == selectedQuickSlotItemId;
+    }
+
+    private void RefreshQuickSlotSelection()
+    {
+        ApplyQuickSlotSelection(quickSlots);
+        ApplyQuickSlotSelection(inventoryQuickSlots);
+    }
+
+    private void ApplyQuickSlotSelection(HUDQuickSlot[] targetSlots)
+    {
+        if (targetSlots == null || inventory == null) return;
+
+        int itemSlotCount = Mathf.Min(inventory.Slots.Count, InventorySlotIndex);
+        for (int i = 0; i < targetSlots.Length; i++)
+        {
+            bool isSelected = i < itemSlotCount
+                && IsSelectedQuickSlotItem(inventory.Slots[i].Item);
+            targetSlots[i]?.SetSelected(isSelected);
+        }
+    }
+
+    private ToolType ResolveToolType(InvenItemData item)
+    {
+        if (item == null) return ToolType.None;
+        if (item.ItemID == swordItemId || item.ItemName == "칼") return ToolType.Sword;
+        if (item.ItemID == axeItemId || item.ItemName == "도끼") return ToolType.Axe;
+        if (item.ItemID == pickaxeItemId || item.ItemName == "곡괭이") return ToolType.Pickaxe;
+        if (item.ItemID == shovelItemId || item.ItemName == "삽") return ToolType.Shovel;
+        return ToolType.None;
+    }
+
+    private void RefreshInteractionButton()
+    {
+        if (attackButton == null) return;
+
+        PlayerInteraction interaction = Context != null ? Context.Interaction : null;
+        if (selectedQuickSlotItem == null)
+        {
+            attackButton.ClearQuickSlotOverride();
+            if (interaction != null)
+            {
+                attackButton.UpdateTarget(interaction.CurrentTarget, interaction.CurrentTargetToolType);
+            }
+            return;
+        }
+
+        InvenItemData item = selectedQuickSlotItem;
+        Sprite icon = ResolveInventoryIcon(item);
+        if (IsFood(item))
+        {
+            bool canConsume = Context != null
+                && Context.Vitals != null
+                && Context.Vitals.HungerValue < Context.Vitals.MaxHunger;
+            attackButton.SetQuickSlotOverride(icon, () => ConsumeFood(item), canConsume);
+            return;
+        }
+
+        ToolType toolType = ResolveToolType(item);
+        if (toolType == ToolType.None || interaction == null)
+        {
+            attackButton.SetQuickSlotOverride(icon, null, false);
+            return;
+        }
+
+        bool canInteract = toolType == ToolType.Shovel
+            || (interaction.CurrentTarget != null
+                && interaction.CurrentTargetToolType == toolType);
+        attackButton.SetQuickSlotOverride(icon, interaction.Interact, canInteract);
     }
 
     private Sprite ResolveItemIcon(InvenItemData item)
@@ -509,11 +575,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                 resourcesPath = "Inven_Drop/Plum";
                 break;
             default:
-                return IsFood(item) ? foodFallbackIcon : null;
+                return IsFood(item) ? GetFoodFallbackIcon() : null;
         }
 
         Sprite loadedIcon = Resources.Load<Sprite>(resourcesPath);
-        return loadedIcon != null ? loadedIcon : foodFallbackIcon;
+        return loadedIcon != null ? loadedIcon : GetFoodFallbackIcon();
     }
 
     private Sprite ResolveInventoryIcon(InvenItemData item)
@@ -535,17 +601,24 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return GetIcon(pickaxeIcon, "Equipment/Pick");
         }
 
-        return ResolveItemIcon(item);
-    }
+        if (item.ItemID == shovelItemId || item.ItemName == "삽")
+        {
+            return GetIcon(shovelIcon, "Equipment/Shovel");
+        }
 
-    private Sprite ResolveFoodIcon(InvenItemData item)
-    {
         return ResolveItemIcon(item);
     }
 
     private Sprite GetIcon(Sprite assignedIcon, string resourcesPath)
     {
         return assignedIcon != null ? assignedIcon : Resources.Load<Sprite>(resourcesPath);
+    }
+
+    private Sprite GetFoodFallbackIcon()
+    {
+        return foodFallbackIcon != null
+            ? foodFallbackIcon
+            : Resources.Load<Sprite>("Inven_Drop/Apple");
     }
 
     private static bool IsValidSlot(HUDQuickSlot[] targetSlots, int index)

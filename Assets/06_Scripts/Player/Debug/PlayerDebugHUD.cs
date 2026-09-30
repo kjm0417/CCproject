@@ -8,6 +8,7 @@ public class PlayerDebugHUD : MonoBehaviour
 {
     private const string AxeItemId = "22101";
     private const string PickaxeItemId = "21101";
+    private const string ShovelItemId = "23101";
 
     [Header("Test Tools")]
     [SerializeField]
@@ -24,6 +25,7 @@ public class PlayerDebugHUD : MonoBehaviour
     private PlayerContext context;
     private InvenItemData runtimeAxe;
     private InvenItemData runtimePickaxe;
+    private InvenItemData runtimeShovel;
 
     private void Awake()
     {
@@ -49,7 +51,7 @@ public class PlayerDebugHUD : MonoBehaviour
     {
         if (context == null) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 420, 430), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(10, 10, 420, 460), GUI.skin.box);
         GUILayout.Label("== Player Debug ==");
 
         if (context.Progression != null)
@@ -72,7 +74,10 @@ public class PlayerDebugHUD : MonoBehaviour
 
         if (context.Inventory != null)
         {
-            GUILayout.Label($"Test Tools  Axe: {HasItem(AxeItemId)}    Pickaxe: {HasItem(PickaxeItemId)}");
+            GUILayout.Label(
+                $"Test Tools  Axe: {HasItem(AxeItemId)}    "
+                + $"Pickaxe: {HasItem(PickaxeItemId)}    "
+                + $"Shovel: {HasItem(ShovelItemId)}");
             string foodName = testFoodItem != null ? testFoodItem.ItemName : "Not Assigned";
             int foodCount = testFoodItem != null ? GetItemCount(testFoodItem.ItemID) : 0;
             GUILayout.Label($"Test Food  {foodName}: {foodCount}");
@@ -100,9 +105,13 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             context.Vitals.ConsumeHunger(30);
         }
-        if (context.Inventory != null && GUILayout.Button("Give Axe + Pickaxe"))
+        if (context.Inventory != null && GUILayout.Button("Give Axe + Pickaxe + Shovel"))
         {
             GrantTestTools();
+        }
+        if (context.Inventory != null && GUILayout.Button("Give Shovel"))
+        {
+            GrantTestShovel();
         }
         string testFoodName = testFoodItem != null ? testFoodItem.ItemName : "Food";
         if (context.Inventory != null && GUILayout.Button($"+{testFoodCount} {testFoodName}"))
@@ -127,6 +136,21 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             runtimePickaxe = CreateTestTool(PickaxeItemId, "곡괭이");
             context.Inventory.Add(runtimePickaxe, 1);
+        }
+
+        GrantTestShovel();
+    }
+
+    private void GrantTestShovel()
+    {
+        if (context == null || context.Inventory == null || HasItem(ShovelItemId)) return;
+
+        runtimeShovel = CreateTestTool(ShovelItemId, "삽");
+        int remaining = context.Inventory.Add(runtimeShovel, 1);
+        if (remaining > 0)
+        {
+            Destroy(runtimeShovel);
+            runtimeShovel = null;
         }
     }
 
@@ -178,5 +202,6 @@ public class PlayerDebugHUD : MonoBehaviour
     {
         if (runtimeAxe != null) Destroy(runtimeAxe);
         if (runtimePickaxe != null) Destroy(runtimePickaxe);
+        if (runtimeShovel != null) Destroy(runtimeShovel);
     }
 }

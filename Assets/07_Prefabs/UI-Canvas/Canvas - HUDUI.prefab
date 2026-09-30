@@ -2183,9 +2183,11 @@ MonoBehaviour:
   swordItemId: 25101
   axeItemId: 22101
   pickaxeItemId: 21101
+  shovelItemId: 23101
   swordIcon: {fileID: 0}
   axeIcon: {fileID: 0}
   pickaxeIcon: {fileID: 0}
+  shovelIcon: {fileID: 0}
   foodFallbackIcon: {fileID: 0}
   inventoryIcon: {fileID: 0}
   foodSubType: "\uC74C\uC2DD \uC544\uC774\uD15C"

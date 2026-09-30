@@ -27,6 +27,7 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 자동으로 설정되게 하면 됨.")]
     [SerializeField]
     private ToolType currentToolType = ToolType.None;
+    private bool isCurrentToolLocked;
 
     [Tooltip("켜두면 장비 판정이 없을 때 오브젝트가 원하는 도구를 들고 있다고 가정.")]
     [SerializeField]
@@ -48,6 +49,8 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     public event Action<IInteractable, ToolType> OnTargetChanged;
     public IInteractable CurrentTarget { get; private set; }
     public ToolType CurrentTargetToolType { get; private set; }
+    public ToolType CurrentToolType => currentToolType;
+    public bool IsCurrentToolLocked => isCurrentToolLocked;
 
     private PlayerContext context;
     private PlayerStats stats;
@@ -78,7 +81,7 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         scanTimer = scanInterval;
 
         IInteractable newTarget = FindNearestInteractable();
-        ToolType newToolType = newTarget != null ? ResolveToolType(newTarget) : ToolType.None;
+        ToolType newToolType = ResolveActiveToolType(newTarget);
 
         if (newTarget != CurrentTarget || newToolType != CurrentTargetToolType)
         {
@@ -90,7 +93,27 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
     public void SetCurrentTool(ToolType toolType)
     {
+        SetCurrentTool(toolType, false);
+    }
+
+    public void SetCurrentTool(ToolType toolType, bool isLocked)
+    {
+        if (currentToolType == toolType && isCurrentToolLocked == isLocked) return;
+
         currentToolType = toolType;
+        isCurrentToolLocked = isLocked;
+        RefreshCurrentTargetTool();
+    }
+
+    private void RefreshCurrentTargetTool()
+    {
+        ToolType resolvedToolType = CurrentTarget != null
+            ? ResolveToolType(CurrentTarget)
+            : ResolveActiveToolType(null);
+        if (resolvedToolType == CurrentTargetToolType) return;
+
+        CurrentTargetToolType = resolvedToolType;
+        OnTargetChanged?.Invoke(CurrentTarget, CurrentTargetToolType);
     }
 
     public void Interact()
@@ -100,17 +123,18 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
     public bool TryInteract()
     {
-
-        if (CurrentTarget == null) return false;
-
         // 삽을 들고 있으면 발밑 타일 먼저 시도, 실패하면 오브젝트 상호작용
         if (currentToolType == ToolType.Shovel && TryInteractTile(currentToolType)) return true;
+
+        if (CurrentTarget == null) return false;
 
         IInteractable target = FindNearestInteractable();
         if (target == null) return false;
 
 
         ToolType toolType = ResolveToolType(CurrentTarget);
+        if (isCurrentToolLocked && toolType == ToolType.None) return false;
+
         InteractionContext interactionContext = CreateInteractionContext(toolType);
         if (!CurrentTarget.CanInteract(interactionContext)) return false;
 
@@ -159,6 +183,18 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         IToolInteractionTarget toolTarget = target as IToolInteractionTarget;
         ToolType preferredToolType = toolTarget != null ? toolTarget.PreferredToolType : ToolType.None;
 
+        if (isCurrentToolLocked)
+        {
+            if (currentToolType == ToolType.None || !HasTool(currentToolType))
+            {
+                return ToolType.None;
+            }
+
+            return preferredToolType == ToolType.None || preferredToolType == currentToolType
+                ? currentToolType
+                : ToolType.None;
+        }
+
         if (preferredToolType != ToolType.None)
         {
             if (!assumeCorrectToolInRange && currentToolType != preferredToolType)
@@ -171,6 +207,22 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
         return currentToolType != ToolType.None && HasTool(currentToolType)
             ? currentToolType
+            : ToolType.None;
+    }
+
+    private ToolType ResolveActiveToolType(IInteractable target)
+    {
+        if (target != null) return ResolveToolType(target);
+
+        if (isCurrentToolLocked)
+        {
+            return currentToolType == ToolType.Shovel && HasTool(ToolType.Shovel)
+                ? ToolType.Shovel
+                : ToolType.None;
+        }
+
+        return currentToolType == ToolType.Shovel && HasTool(ToolType.Shovel)
+            ? ToolType.Shovel
             : ToolType.None;
     }
 

@@ -11,8 +11,14 @@ public class HUDQuickSlot : MonoBehaviour
     [SerializeField] private TMP_Text txtNumber;
     [SerializeField] private TMP_Text txtItemName;
     [SerializeField] private Button button;
+    [SerializeField] private Outline selectionOutline;
+    [SerializeField] private Color selectedOutlineColor = new Color(1f, 0.72f, 0.15f, 1f);
+    [SerializeField] private Vector2 selectedOutlineDistance = new Vector2(3f, -3f);
 
     private UnityAction clickAction;
+    private Color defaultOutlineColor;
+    private Vector2 defaultOutlineDistance;
+    private bool outlineDefaultsCaptured;
 
     private void Awake()
     {
@@ -30,6 +36,7 @@ public class HUDQuickSlot : MonoBehaviour
         }
 
         ClearClickAction();
+        SetSelected(false);
     }
 
     public void SetItem(InvenItemData item, int count, Sprite icon, UnityAction onClick = null)
@@ -78,6 +85,7 @@ public class HUDQuickSlot : MonoBehaviour
         SetCount(string.Empty);
         SetItemName(string.Empty);
         ClearClickAction();
+        SetSelected(false);
 
         if (button != null)
         {
@@ -97,6 +105,19 @@ public class HUDQuickSlot : MonoBehaviour
         {
             txtNumber.gameObject.SetActive(isVisible);
         }
+    }
+
+    public void SetSelected(bool isSelected)
+    {
+        AutoAssignReferences();
+        if (selectionOutline == null) return;
+
+        selectionOutline.effectColor = isSelected
+            ? selectedOutlineColor
+            : defaultOutlineColor;
+        selectionOutline.effectDistance = isSelected
+            ? selectedOutlineDistance
+            : defaultOutlineDistance;
     }
 
     public void SetItemName(string value)
@@ -153,6 +174,18 @@ public class HUDQuickSlot : MonoBehaviour
         if (button == null)
         {
             button = GetComponent<Button>();
+        }
+
+        if (selectionOutline == null)
+        {
+            selectionOutline = GetComponent<Outline>();
+        }
+
+        if (selectionOutline != null && !outlineDefaultsCaptured)
+        {
+            defaultOutlineColor = selectionOutline.effectColor;
+            defaultOutlineDistance = selectionOutline.effectDistance;
+            outlineDefaultsCaptured = true;
         }
 
         if (imgIcon == null)
