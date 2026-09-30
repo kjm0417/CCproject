@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7240828685489058576}
   - component: {fileID: 2051265747238199171}
   - component: {fileID: 7672621953354016798}
-  m_Layer: 0
-  m_Name: DropItem_Log
+  m_Layer: 10
+  m_Name: DropItem_Coal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009dcbdb20334f40994ca364ea209885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  item: {fileID: 11400000, guid: 47aa57cc8972cf8489ebca0636c6869c, type: 2}
+  item: {fileID: 11400000, guid: c4b602599150a094e91c48d5ae1c34cb, type: 2}
   count: 1
 --- !u!1 &8768160785967591672
 GameObject:
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8493075345822898847}
   - component: {fileID: 5897914992743513308}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite_Ani
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2368875588930414890, guid: 00ddef14bf1250e4da19a159b203f2d3, type: 3}
+  m_Sprite: {fileID: -228819513787663229, guid: dfc10884a9308f848b6b0c824391998a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

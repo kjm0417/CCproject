@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7240828685489058576}
   - component: {fileID: 2051265747238199171}
   - component: {fileID: 7672621953354016798}
-  m_Layer: 0
-  m_Name: DropItem_Gravel
+  m_Layer: 10
+  m_Name: DropItem_BroilApple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009dcbdb20334f40994ca364ea209885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  item: {fileID: 11400000, guid: 60d1cacc84328f049be9966b6a5e72bb, type: 2}
+  item: {fileID: 11400000, guid: 747a01ce94da6a447b81b535ae48e503, type: 2}
   count: 1
 --- !u!1 &8768160785967591672
 GameObject:
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8493075345822898847}
   - component: {fileID: 5897914992743513308}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite_Ani
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3578582641699816866, guid: 7c4a5a75bbad7a74d8d9cafa1e8217a4, type: 3}
+  m_Sprite: {fileID: 1223761379750993167, guid: 6744040dfb79c084d87b4e9fedcba3bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

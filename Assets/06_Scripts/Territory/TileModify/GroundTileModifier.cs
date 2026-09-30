@@ -35,24 +35,49 @@ public class GroundTileModifier : MonoBehaviour
     /// </summary>
     public bool TryConvertTile(Vector3 worldPosition, ToolType toolType)
     {
+        if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
+            return false;
+
+        zone.TerritoryTileMapGround.SetTile(cell, resultTile);
+        RecordCell(zone.TerritoryZoneData.ZoneId, cell, resultTile);
+        return true;
+    }
+
+    /// <summary>
+    /// 월드 좌표가 속한 칸을 도구로 변환할 수 있는지 확인만 (타일은 바꾸지 않음)
+    /// </summary>
+    public bool CanConvertTile(Vector3 worldPosition, ToolType toolType)
+    {
+        return TryFindConversion(worldPosition, toolType, false, out _, out _, out _);
+    }
+
+    /// <summary>
+    /// 변환 가능 여부 판정. 가능하면 대상 구역/칸/결과 타일을 돌려준다.
+    /// </summary>
+    private bool TryFindConversion(Vector3 worldPosition, ToolType toolType, bool logFailure,
+        out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile)
+    {
+        resultTile = null;
+        cell = default;
+        zone = null;
+
         if (conversionData == null)
         {
-            Log("TileConversionData 미연결");
+            if (logFailure) Log("TileConversionData 미연결");
             return false;
         }
 
-        TerritoryZone zone = FindUnlockedZoneAt(worldPosition, out Vector3Int cell);
+        zone = FindUnlockedZoneAt(worldPosition, out cell);
         if (zone == null)
         {
-            Log($"{worldPosition} 위치에 해금된 구역의 Ground 타일 없음");
+            if (logFailure) Log($"{worldPosition} 위치에 해금된 구역의 Ground 타일 없음");
             return false;
         }
 
-        Tilemap ground = zone.TerritoryTileMapGround;
-        TileBase currentTile = ground.GetTile(cell);
-        if (!conversionData.TryGetResult(toolType, currentTile, out TileBase resultTile))
+        TileBase currentTile = zone.TerritoryTileMapGround.GetTile(cell);
+        if (!conversionData.TryGetResult(toolType, currentTile, out resultTile))
         {
-            Log($"{zone.name} {cell} 타일 '{currentTile.name}' 은(는) {toolType} 변환 규칙 없음");
+            if (logFailure) Log($"{zone.name} {cell} 타일 '{currentTile.name}' 은(는) {toolType} 변환 규칙 없음");
             return false;
         }
 
@@ -60,13 +85,20 @@ public class GroundTileModifier : MonoBehaviour
         ResourceSpawner spawner = zone.GetComponent<ResourceSpawner>();
         if (spawner != null && spawner.IsOccupied(cell))
         {
-            Log($"{zone.name} {cell} 자원이 있어 변환 불가");
+            if (logFailure) Log($"{zone.name} {cell} 자원이 있어 변환 불가");
             return false;
         }
 
-        ground.SetTile(cell, resultTile);
-        RecordCell(zone.TerritoryZoneData.ZoneId, cell, resultTile);
         return true;
+    }
+
+    /// <summary>
+    /// 월드 좌표가 속한 칸이 도구로 변환된 칸(파낸 흙 등)이면 구역/칸을 돌려준다
+    /// </summary>
+    public bool TryGetModifiedCell(Vector3 worldPosition, out TerritoryZone zone, out Vector3Int cell)
+    {
+        zone = FindUnlockedZoneAt(worldPosition, out cell);
+        return zone != null && IsModified(zone, cell);
     }
 
     /// <summary>

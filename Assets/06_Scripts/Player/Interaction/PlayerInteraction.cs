@@ -81,7 +81,12 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         scanTimer = scanInterval;
 
         IInteractable newTarget = FindNearestInteractable();
+
         ToolType newToolType = ResolveActiveToolType(newTarget);
+
+        if (newTarget == null) newTarget = FindShovelTileTarget_Temp(); // [TEMP] 삽 타일 테스트
+        ToolType newToolType = newTarget != null ? ResolveToolType(newTarget) : ToolType.None;
+
 
         if (newTarget != CurrentTarget || newToolType != CurrentTargetToolType)
         {
@@ -129,7 +134,7 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         if (CurrentTarget == null) return false;
 
         IInteractable target = FindNearestInteractable();
-        if (target == null) return false;
+        if (target == null && !(CurrentTarget is ShovelTileTarget_Temp)) return false; // [TEMP] 삽 타일 테스트
 
 
         ToolType toolType = ResolveToolType(CurrentTarget);
@@ -152,6 +157,51 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         context.Animation?.PlayToolInteraction(toolType);
         return true;
     }
+
+    #region [TEMP] 삽 타일 테스트 - 삭제 예정
+    // 주변에 오브젝트가 없고 발밑이 삽질 가능한 흙이면, 삽을 선호하는 가짜 타겟을 잡아
+    // 기존 타겟 흐름(버튼 아이콘/활성화, 도구 보유 체크)을 그대로 태운다.
+    // 삭제 시: 이 region + Update/TryInteract의 [TEMP] 두 줄 제거.
+    [Header("[TEMP] 삽 타일 테스트")]
+    [SerializeField]
+    private bool autoShovelOnTile_Temp = true;
+
+    private ShovelTileTarget_Temp shovelTileTarget_Temp;
+
+    private IInteractable FindShovelTileTarget_Temp()
+    {
+        if (!autoShovelOnTile_Temp) return null;
+
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier == null || !tileModifier.CanConvertTile(tileCheckOrigin.position, ToolType.Shovel)) return null;
+
+        if (shovelTileTarget_Temp == null) shovelTileTarget_Temp = new ShovelTileTarget_Temp(this);
+        return shovelTileTarget_Temp;
+    }
+
+    private class ShovelTileTarget_Temp : IInteractable, IToolInteractionTarget
+    {
+        private readonly PlayerInteraction owner;
+
+        public ShovelTileTarget_Temp(PlayerInteraction owner)
+        {
+            this.owner = owner;
+        }
+
+        public ToolType PreferredToolType => ToolType.Shovel;
+
+        public bool CanInteract(InteractionContext context) => context.ToolType == ToolType.Shovel;
+
+        public void Interact(InteractionContext context)
+        {
+            GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+            if (tileModifier == null) return;
+
+            tileModifier.TryConvertTile(owner.tileCheckOrigin.position, ToolType.Shovel);
+            owner.scanTimer = 0f; // 바로 재탐색해서 파낸 칸이면 타겟 해제
+        }
+    }
+    #endregion
 
     private IInteractable FindNearestInteractable()
     {
