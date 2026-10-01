@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 5536742608559195457}
   - component: {fileID: 7043493377894389443}
   - component: {fileID: 4625084435417044547}
-  - component: {fileID: 1502404736650290477}
   - component: {fileID: 1190626846925551634}
   - component: {fileID: 2546596406338274135}
   - component: {fileID: 7112345678901234567}
@@ -311,25 +310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ba96bd763936e48978861a15503931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWallet
---- !u!114 &1502404736650290477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3392514085708701532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b37b09ca6bf08a41b9045a95e0b4dc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CropPlantTestGUI
-  seedCropMappings:
-  - SeedItemId: 14002
-    CropPrefab: {fileID: 2798940810901604452, guid: ed0947235530bd94cb7818278c868e0e, type: 3}
-  plantOrigin: {fileID: 5272995044236496231}
-  quickSlotCount: 8
-  font: {fileID: 11400000, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
-  showPanel: 1
 --- !u!114 &1190626846925551634
 MonoBehaviour:
   m_ObjectHideFlags: 0

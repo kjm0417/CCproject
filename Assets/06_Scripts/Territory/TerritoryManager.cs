@@ -54,6 +54,9 @@ public class TerritoryManager : MonoBehaviour
     // 도구로 Ground 타일 변환 (같은 오브젝트에 붙어 있을 때만)
     public GroundTileModifier TileModifier { get; private set; }
 
+    // 파낸 흙에 씨앗 심기 (같은 오브젝트에 붙어 있을 때만)
+    public CropPlanter CropPlanter { get; private set; }
+
     private Dictionary<int, Dictionary<ResourceSpawnEntry, float>> savedRespawningResources = new Dictionary<int, Dictionary<ResourceSpawnEntry, float>>();
 
     private void Awake()
@@ -79,6 +82,7 @@ public class TerritoryManager : MonoBehaviour
         territoryRunTimeData = new TerritoryRunTimeData();
 
         TileModifier = GetComponent<GroundTileModifier>();
+        CropPlanter = GetComponent<CropPlanter>();
     }
 
     #region 영토 저장 및 불러오기

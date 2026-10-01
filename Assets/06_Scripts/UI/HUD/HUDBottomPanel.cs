@@ -11,7 +11,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private const float QuickSlotMaxHeight = 80f;
     private const float QuickSlotHorizontalMargin = 16f;
 
-    [Header("��ȣ�ۿ� �� ���� Ű")]
+    [Header("상호작용 버튼")]
     [SerializeField] private UIAttackButton attackButton;
     [SerializeField] private Button btnAutoTarget;
 
@@ -38,6 +38,9 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     [Header("Food Rule")]
     [SerializeField] private string foodSubType = "음식 아이템";
     [SerializeField, Min(0f)] private float defaultFoodHungerRecovery = 20f;
+
+    [Header("Seed Rule")]
+    [SerializeField] private string seedSubType = "씨앗 아이템";
 
     private PlayerInventory inventory;
     private bool isInventoryOpen;
@@ -172,17 +175,6 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
 
         inventory = null;
-    }
-
-    /// <summary>
-    /// 화면에 보이는 퀵슬롯 번호(1부터)에 들어 있는 아이템. 없으면 null
-    /// </summary>
-    public InvenItemData GetQuickSlotItem(int slotNumber)
-    {
-        int index = slotNumber - 1;
-        if (quickSlots == null || index < 0 || index >= quickSlots.Length || quickSlots[index] == null) return null;
-
-        return quickSlots[index].Item;
     }
 
     private void HandleTargetChanged(IInteractable target, ToolType toolType)
@@ -436,6 +428,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         return item != null && item.SubType == foodSubType;
     }
 
+    private bool IsSeed(InvenItemData item)
+    {
+        return item != null && item.SubType == seedSubType;
+    }
+
     private void SetInventorySlot(HUDQuickSlot[] targetSlots)
     {
         if (!IsValidSlot(targetSlots, InventorySlotIndex)) return;
@@ -547,6 +544,15 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return;
         }
 
+        if (IsSeed(item))
+        {
+            // 발밑 칸은 이동할 때마다 바뀌므로 버튼은 켜두고, 심을 수 있는지는 누를 때 판정
+            CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
+            bool canPlant = interaction != null && cropPlanter != null && cropPlanter.IsPlantable(item);
+            attackButton.SetQuickSlotOverride(icon, () => interaction.TryPlantSeed(item), canPlant);
+            return;
+        }
+
         ToolType toolType = ResolveToolType(item);
         if (toolType == ToolType.None || interaction == null)
         {
@@ -615,6 +621,14 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         if (item.ItemID == shovelItemId || item.ItemName == "삽")
         {
             return GetIcon(shovelIcon, "Equipment/Shovel");
+        }
+
+        if (IsSeed(item))
+        {
+            // 씨앗은 심을 작물 prefab의 Sprite로 표시
+            CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
+            Sprite seedIcon = cropPlanter != null ? cropPlanter.GetSeedIcon(item) : null;
+            if (seedIcon != null) return seedIcon;
         }
 
         return ResolveItemIcon(item);

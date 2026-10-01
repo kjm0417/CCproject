@@ -54,6 +54,19 @@ public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable
 
     public bool IsHarvestable => growth.IsGrowthComplete;
 
+    /// <summary>
+    /// UI 아이콘용 Sprite. prefab의 SpriteRenderer Sprite, 없으면 1단계 Sprite
+    /// </summary>
+    public Sprite IconSprite
+    {
+        get
+        {
+            SpriteRenderer renderer = spriteRenderer != null ? spriteRenderer : GetComponent<SpriteRenderer>();
+            if (renderer != null && renderer.sprite != null) return renderer.sprite;
+            return stageSprites.Count > 0 ? stageSprites[0] : null;
+        }
+    }
+
     private void Awake()
     {
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
