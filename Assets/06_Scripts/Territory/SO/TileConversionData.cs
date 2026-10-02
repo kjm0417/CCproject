@@ -13,6 +13,10 @@ public class TileConversionRule
     public TileBase FromTile; //바꾸기 전 타일
     public List<TileBase> ToTiles = new List<TileBase>(); //바꾼 후 타일 후보 (랜덤으로 하나)
 
+    #region [이전] ToTile 단일 타일
+    // public TileBase ToTile; //바꾼 후 타일
+    #endregion
+
     /// <summary>
     /// 비어 있지 않은 후보 중 랜덤으로 하나 (없으면 null)
     /// </summary>
@@ -62,6 +66,18 @@ public class TileConversionData : ScriptableObject
             if (resultTile != null) return true;
         }
         return false;
+
+        #region [이전] ToTile 단일 타일
+        // foreach (TileConversionRule rule in rules)
+        // {
+        //     if (rule.ToolType == toolType && rule.FromTile == currentTile && rule.ToTile != null)
+        //     {
+        //         resultTile = rule.ToTile;
+        //         return true;
+        //     }
+        // }
+        // return false;
+        #endregion
     }
 
     /// <summary>
@@ -80,5 +96,14 @@ public class TileConversionData : ScriptableObject
             }
         }
         return null;
+
+        #region [이전] ToTile 단일 타일
+        // foreach (TileConversionRule rule in rules)
+        // {
+        //     if (rule.ToTile != null && rule.ToTile.name == tileName)
+        //         return rule.ToTile;
+        // }
+        // return null;
+        #endregion
     }
 }
