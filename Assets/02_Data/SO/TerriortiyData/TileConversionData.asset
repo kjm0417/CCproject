@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TileConversionData
   rules:
   - ToolType: 3
-    FromTile: {fileID: 11400000, guid: 3d635fa3085bb074d9bfe7530ddd8898, type: 2}
-    ToTile: {fileID: 11400000, guid: ce2bfdaa542ae1f42a56fd8337e8bd64, type: 2}
+    FromTile: {fileID: 11400000, guid: c28dee2da2ac38a45baa4193df9db698, type: 2}
+    ToTiles:
+    - {fileID: 11400000, guid: d93a17f2029e93f40973404ccbd310c4, type: 2}
+    - {fileID: 11400000, guid: b86446c79bf12d34588a1b2d567a6567, type: 2}
+    - {fileID: 11400000, guid: 0c0f571e67ceb9842b605cb983398630, type: 2}
