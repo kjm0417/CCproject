@@ -12,7 +12,21 @@ public class EnemySlime : EnemyBase
     {
         if (enemyContext == null) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 220, 150), GUI.skin.box);
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        //슬라임 위치 기준으로 GUI 배치 - 여러 마리여도 겹치지 않게
+        Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
+        if (screenPos.z < 0) return; //카메라 뒤쪽이면 표시 안 함
+
+        const float width = 160f;
+        const float height = 120f;
+        const float headOffset = 40f; //머리 위로 띄우는 거리(px)
+
+        //GUI 좌표는 위쪽이 0이라 y 반전
+        Rect rect = new Rect(screenPos.x - width * 0.5f, Screen.height - screenPos.y - height - headOffset, width, height);
+
+        GUILayout.BeginArea(rect, GUI.skin.box);
 
         GUILayout.Label($"{name}");
         GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");

@@ -191,6 +191,12 @@ public class TerritoryManager : MonoBehaviour
             territorySaveData.modifiedTiles = TileModifier.Save();
         }
 
+        // 심은 작물 저장
+        if (CropPlanter != null)
+        {
+            territorySaveData.plantedCrops = CropPlanter.Save();
+        }
+
         // 바닥에 떨어진 드랍 아이템 저장
         foreach (PickupItem pickup in FindObjectsByType<PickupItem>(FindObjectsSortMode.None))
         {
@@ -274,6 +280,12 @@ public class TerritoryManager : MonoBehaviour
         if (TileModifier != null)
         {
             TileModifier.Load(data.modifiedTiles);
+        }
+
+        // 심은 작물 복원 (파낸 흙 복원 이후)
+        if (CropPlanter != null)
+        {
+            CropPlanter.Load(data.plantedCrops);
         }
 
         foreach(var objState in data.fieldObjects)

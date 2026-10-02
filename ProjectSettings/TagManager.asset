@@ -47,6 +47,9 @@ TagManager:
   - name: Resource
     uniqueID: 660640049
     locked: 0
+  - name: Gimik
+    uniqueID: 37387603
+    locked: 0
   - name: 'Character '
     uniqueID: 3036556891
     locked: 0

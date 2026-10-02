@@ -151,6 +151,21 @@ public class TerritorySaveData
     public List<RespawningResourceData> respawningResources = new List<RespawningResourceData>();
     public List<ModifiedTileData> modifiedTiles = new List<ModifiedTileData>();
     public List<DroppedItemData> droppedItems = new List<DroppedItemData>();
+    public List<PlantedCropData> plantedCrops = new List<PlantedCropData>();
+}
+
+/// <summary>
+/// 플레이어가 심은 작물 저장 데이터
+/// </summary>
+[System.Serializable]
+public class PlantedCropData
+{
+    public int ZoneId;
+    public int CellX;
+    public int CellY;
+    public string SeedItemID; //심은 씨앗 ID -> CropPlanter 매핑으로 작물 prefab 찾음
+    public int GrowthStage;
+    public bool IsGrowthComplete;
 }
 
 /// <summary>

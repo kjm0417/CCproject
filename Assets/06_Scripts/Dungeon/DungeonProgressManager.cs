@@ -16,25 +16,6 @@ public enum DungeonState
 }
 
 /// <summary>
-/// 던전 스테이지(구역) 1개 - 선형 진행이라 앞 스테이지 적 전멸 시 다음 스테이지 진행
-/// 마지막 스테이지 = 보스 스테이지
-/// </summary>
-[Serializable]
-public class DungeonStage
-{
-    public string StageName;
-
-    [Tooltip("스테이지 시작 시 활성화할 루트 ( 적/구역 ). 비우면 처음부터 활성 상태")]
-    public GameObject StageRoot;
-
-    [Tooltip("처치해야 할 적. 비우면 StageRoot 하위 EnemyBase 자동 수집")]
-    public List<EnemyBase> Enemies = new List<EnemyBase>();
-
-    [Tooltip("스테이지 클리어 시 비활성화할 오브젝트 ( 다음 구역을 막는 벽/문 )")]
-    public List<GameObject> Blockers = new List<GameObject>();
-}
-
-/// <summary>
 /// 던전 결과 ( 추후 결과 UI에서 사용 )
 /// </summary>
 public class DungeonResult
@@ -53,7 +34,7 @@ public class DungeonResult
 
 /// <summary>
 /// 던전 진행 관리자
-/// 선형 진행 ( 스테이지 순서대로 적 전멸 ) -> 보스 처치 시 클리어 -> 최초/반복 보상 지급
+/// 클리어 시 최초/반복 보상 지급 ( 스테이지 진행은 별도 구현 후 ClearDungeon 호출 )
 /// 플레이어 사망/포기 시 실패 -> 클리어 기록 없으면 입장 아이템 일부 환급
 /// 시간 제한 없음 / 재입장 무제한
 /// </summary>
@@ -68,10 +49,6 @@ public class DungeonProgressManager : MonoBehaviour
     [SerializeField]
     private DungeonData fallbackDungeon;
 
-    [Header("스테이지 ( 순서대로 진행, 마지막 = 보스 )")]
-    [SerializeField]
-    private List<DungeonStage> stages = new List<DungeonStage>();
-
     [Header("던전 종료 후 돌아갈 씬")]
     [SerializeField]
     private string returnSceneName = "KJ_Scene";
@@ -84,18 +61,12 @@ public class DungeonProgressManager : MonoBehaviour
 
     #region 이벤트 ( 추후 UI 연결용 )
     public event Action<DungeonData> OnDungeonStarted;
-    public event Action<int> OnStageStarted;            //스테이지 인덱스
-    public event Action<int> OnStageCleared;            //스테이지 인덱스
-    public event Action OnBossStageStarted;
-    public event Action<int, int> OnEnemyCountChanged;  //남은 적 수, 스테이지 전체 적 수
     public event Action<DungeonResult> OnDungeonCleared;
     public event Action<DungeonResult> OnDungeonFailed;
     #endregion
 
     private DungeonData dungeon;
     private DungeonState state = DungeonState.Ready;
-    private int currentStageIndex = -1;
-    private readonly HashSet<EnemyBase> aliveEnemies = new HashSet<EnemyBase>();
 
     private PlayerContext player;
     private PlayerInventory inventory;
@@ -105,10 +76,6 @@ public class DungeonProgressManager : MonoBehaviour
 
     public DungeonData Dungeon => dungeon;
     public DungeonState State => state;
-    public int CurrentStageIndex => currentStageIndex;
-    public int StageCount => stages.Count;
-    public bool IsBossStage => currentStageIndex == stages.Count - 1;
-    public int RemainingEnemyCount => aliveEnemies.Count;
     public DungeonResult LastResult { get; private set; }
 
     private void Awake()
@@ -122,28 +89,11 @@ public class DungeonProgressManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        //스테이지 적 자동 수집 + 선형 진행이라 아직 도달하지 않은 스테이지는 비활성화
-        for (int i = 0; i < stages.Count; i++)
-        {
-            DungeonStage stage = stages[i];
-            if (stage.Enemies.Count == 0 && stage.StageRoot != null)
-            {
-                stage.Enemies.AddRange(stage.StageRoot.GetComponentsInChildren<EnemyBase>(true));
-            }
-
-            if (i > 0 && stage.StageRoot != null)
-            {
-                stage.StageRoot.SetActive(false);
-            }
-        }
     }
 
     private void OnDestroy()
     {
         if (instance == this) instance = null;
-
-        UnsubscribeAllEnemies();
 
         if (player != null && player.Vitals != null)
         {
@@ -174,12 +124,6 @@ public class DungeonProgressManager : MonoBehaviour
         }
         dungeon = DungeonSession.CurrentDungeon;
 
-        if (stages.Count == 0)
-        {
-            Debug.LogError("[Dungeon] 스테이지가 없음");
-            return;
-        }
-
         player = FindAnyObjectByType<PlayerContext>();
         if (player != null)
         {
@@ -197,103 +141,16 @@ public class DungeonProgressManager : MonoBehaviour
         Debug.Log($"[Dungeon] 시작 : {dungeon.DungeonName} ( 클리어 기록 {record.ClearCount}회 )");
         OnDungeonStarted?.Invoke(dungeon);
 
-        EnterStage(0);
-    }
-
-    /// <summary>
-    /// 스테이지 진입 - 적 등록 후 전멸 대기
-    /// </summary>
-    private void EnterStage(int index)
-    {
-        //적이 없는 스테이지는 바로 통과
-        while (state == DungeonState.InProgress && index < stages.Count)
-        {
-            currentStageIndex = index;
-            DungeonStage stage = stages[index];
-
-            if (stage.StageRoot != null && !stage.StageRoot.activeSelf)
-            {
-                stage.StageRoot.SetActive(true);
-            }
-
-            UnsubscribeAllEnemies();
-            foreach (EnemyBase enemy in stage.Enemies)
-            {
-                if (enemy == null || enemy.IsDie) continue;
-
-                aliveEnemies.Add(enemy);
-                enemy.OnEnemyDied += OnEnemyDied;
-            }
-
-            Debug.Log($"[Dungeon] 스테이지 {index + 1}/{stages.Count} 시작 : {stage.StageName} ( 적 {aliveEnemies.Count} )");
-            OnStageStarted?.Invoke(index);
-            if (IsBossStage) OnBossStageStarted?.Invoke();
-            OnEnemyCountChanged?.Invoke(aliveEnemies.Count, aliveEnemies.Count);
-
-            if (aliveEnemies.Count > 0) return;
-
-            //적 없음 - 바로 클리어 처리 후 다음 스테이지
-            if (!CompleteStage()) return;
-            index++;
-        }
-    }
-
-    private void OnEnemyDied(EnemyBase enemy)
-    {
-        enemy.OnEnemyDied -= OnEnemyDied;
-
-        if (state != DungeonState.InProgress) return;
-        if (!aliveEnemies.Remove(enemy)) return;
-
-        int total = stages[currentStageIndex].Enemies.Count;
-        OnEnemyCountChanged?.Invoke(aliveEnemies.Count, total);
-
-        if (aliveEnemies.Count > 0) return;
-
-        if (CompleteStage())
-        {
-            EnterStage(currentStageIndex + 1);
-        }
-    }
-
-    /// <summary>
-    /// 현재 스테이지 클리어 처리. 다음 스테이지로 진행해야 하면 true
-    /// </summary>
-    private bool CompleteStage()
-    {
-        DungeonStage stage = stages[currentStageIndex];
-        foreach (GameObject blocker in stage.Blockers)
-        {
-            if (blocker != null) blocker.SetActive(false);
-        }
-
-        Debug.Log($"[Dungeon] 스테이지 {currentStageIndex + 1} 클리어");
-        OnStageCleared?.Invoke(currentStageIndex);
-
-        //클리어 조건 : 보스(마지막 스테이지) 처치
-        if (IsBossStage)
-        {
-            ClearDungeon();
-            return false;
-        }
-        return true;
-    }
-
-    private void UnsubscribeAllEnemies()
-    {
-        foreach (EnemyBase enemy in aliveEnemies)
-        {
-            if (enemy != null) enemy.OnEnemyDied -= OnEnemyDied;
-        }
-        aliveEnemies.Clear();
+        //TODO KJ - 스테이지 진행 시작
     }
     #endregion
 
     #region 클리어
     /// <summary>
     /// 던전 클리어 - 최초 클리어면 최초 보상, 이후는 반복 보상
+    /// 스테이지 진행 로직에서 클리어 조건 달성 시 호출
     /// </summary>
-    private void ClearDungeon()
+    public void ClearDungeon()
     {
         if (state != DungeonState.InProgress) return;
         state = DungeonState.Cleared;
@@ -402,7 +259,6 @@ public class DungeonProgressManager : MonoBehaviour
     private void FinishDungeon(DungeonResult result)
     {
         LastResult = result;
-        UnsubscribeAllEnemies();
         DungeonSession.End();
 
         if (autoExit)

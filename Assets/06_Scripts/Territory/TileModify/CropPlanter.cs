@@ -34,8 +34,9 @@ public class CropPlanter : MonoBehaviour
         }
     }
 
-    // 작물이 심긴 칸 (구역 ID, 칸)
-    private readonly HashSet<(int, Vector3Int)> plantedCells = new HashSet<(int, Vector3Int)>();
+    // 작물이 심긴 칸 (구역 ID, 칸) -> 심은 작물 / 씨앗 ID
+    private readonly Dictionary<(int, Vector3Int), (PlantedCropObject crop, string seedItemId)> plantedCells
+        = new Dictionary<(int, Vector3Int), (PlantedCropObject, string)>();
 
     /// <summary>
     /// 해당 씨앗을 심을 수 있는 작물이 등록되어 있는지
@@ -75,7 +76,7 @@ public class CropPlanter : MonoBehaviour
         }
 
         var cellKey = (zone.TerritoryZoneData.ZoneId, cell);
-        if (plantedCells.Contains(cellKey))
+        if (plantedCells.ContainsKey(cellKey))
         {
             Log($"{zone.name} {cell} 이미 작물이 심겨 있음");
             return false;
@@ -87,24 +88,100 @@ public class CropPlanter : MonoBehaviour
             return false;
         }
 
-        Vector3 spawnPosition = zone.TerritoryTileMapGround.GetCellCenterWorld(cell);
-        PlantedCropObject crop = Instantiate(cropPrefab, spawnPosition, Quaternion.identity);
-
-        plantedCells.Add(cellKey);
-        crop.OnRemoved += _ => plantedCells.Remove(cellKey);
+        SpawnCrop(cropPrefab, zone, cell, seed.ItemID);
         return true;
     }
 
+    /// <summary>
+    /// 칸 중앙에 작물 생성 및 칸 점유 등록
+    /// </summary>
+    private PlantedCropObject SpawnCrop(PlantedCropObject cropPrefab, TerritoryZone zone, Vector3Int cell, string seedItemId)
+    {
+        var cellKey = (zone.TerritoryZoneData.ZoneId, cell);
+
+        Vector3 spawnPosition = zone.TerritoryTileMapGround.GetCellCenterWorld(cell);
+        PlantedCropObject crop = Instantiate(cropPrefab, spawnPosition, Quaternion.identity);
+
+        plantedCells.Add(cellKey, (crop, seedItemId));
+        crop.OnRemoved += _ => plantedCells.Remove(cellKey);
+        return crop;
+    }
+
+    #region 저장 및 불러오기
+    /// <summary>
+    /// 심은 작물 저장
+    /// </summary>
+    public List<PlantedCropData> Save()
+    {
+        List<PlantedCropData> data = new List<PlantedCropData>();
+
+        foreach (var pair in plantedCells)
+        {
+            PlantedCropObject crop = pair.Value.crop;
+            if (crop == null) continue;
+
+            data.Add(new PlantedCropData
+            {
+                ZoneId = pair.Key.Item1,
+                CellX = pair.Key.Item2.x,
+                CellY = pair.Key.Item2.y,
+                SeedItemID = pair.Value.seedItemId,
+                GrowthStage = crop.GrowthStage,
+                IsGrowthComplete = crop.IsGrowthComplete
+            });
+        }
+        return data;
+    }
+
+    /// <summary>
+    /// 저장된 작물 다시 심기 (씨앗 소모 없음, 저장된 단계부터 성장)
+    /// </summary>
+    public void Load(List<PlantedCropData> data)
+    {
+        if (data == null) return;
+
+        TerritoryManager manager = TerritoryManager.Instance;
+        if (manager == null) return;
+
+        foreach (PlantedCropData cropData in data)
+        {
+            TerritoryZone zone = manager.GetZone(cropData.ZoneId);
+            if (zone == null) continue;
+
+            PlantedCropObject cropPrefab = FindCropPrefab(cropData.SeedItemID);
+            if (cropPrefab == null)
+            {
+                Debug.LogWarning($"[CropPlanter] 씨앗 {cropData.SeedItemID} 매핑된 작물 없음 - 로드 건너뜀");
+                continue;
+            }
+
+            Vector3Int cell = new Vector3Int(cropData.CellX, cropData.CellY, 0);
+            if (plantedCells.ContainsKey((cropData.ZoneId, cell))) continue;
+
+            PlantedCropObject crop = SpawnCrop(cropPrefab, zone, cell, cropData.SeedItemID);
+
+            // Start 전에 채워두면 그 단계부터 이어서 성장
+            crop.GrowthStage = cropData.GrowthStage > 0 ? cropData.GrowthStage : 1;
+            crop.IsGrowthComplete = cropData.IsGrowthComplete;
+        }
+    }
+    #endregion
+
     private PlantedCropObject FindCropPrefab(InvenItemData seed)
     {
-        if (seed == null) return null;
+        return seed != null ? FindCropPrefab(seed.ItemID) : null;
+    }
+
+    private PlantedCropObject FindCropPrefab(string seedItemId)
+    {
+        if (string.IsNullOrEmpty(seedItemId)) return null;
 
         foreach (SeedCropMapping mapping in seedCropMappings)
         {
             if (mapping.Seed == null || mapping.CropPrefab == null) continue;
 
             // 같은 SO가 아니어도 ID가 같으면 같은 씨앗으로 취급
-            if (mapping.Seed == seed || mapping.Seed.ItemID == seed.ItemID)
+            if (mapping.Seed.ItemID == seedItemId)
                 return mapping.CropPrefab;
         }
         return null;
