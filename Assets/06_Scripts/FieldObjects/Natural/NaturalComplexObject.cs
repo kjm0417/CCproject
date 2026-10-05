@@ -17,6 +17,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         {
             growth.CurrentStage = value;
             ApplyStageSprite(value);
+            RefreshBlossoms(value);
         }
     }
     public virtual bool IsHarvestable => false;
@@ -52,6 +53,21 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
     private SpriteRenderer spriteRenderer;
 
+    [Header("매화")]
+    [Tooltip("매화가 피는 단계")]
+    [SerializeField]
+    private int blossomStage = 4;
+
+    [Tooltip("포인트마다 생성할 매화 prefab")]
+    [SerializeField]
+    private GameObject blossomPrefab;
+
+    [Tooltip("매화 생성 위치 (나무 자식으로 빈 오브젝트 배치)")]
+    [SerializeField]
+    private List<Transform> blossomPoints = new();
+
+    private readonly List<GameObject> spawnedBlossoms = new();
+
     private GrowthController growth;
 
     protected override void Awake()
@@ -65,6 +81,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         // growth.OnStageCompleted += HandleStageCompleted;
         #endregion
         growth.OnStageChanged += ApplyStageSprite;
+        growth.OnStageChanged += RefreshBlossoms;
 
         // 스프라이트는 자식(Sprite_Ani)에 있음
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -76,6 +93,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
         // 로드 시 GrowthStage/IsGrowthComplete가 Start 전에 채워지므로 그 단계부터 이어서 성장
         ApplyStageSprite(growth.CurrentStage);
+        RefreshBlossoms(growth.CurrentStage);
         growth.StartGrowth();
     }
 
@@ -96,10 +114,9 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     #endregion
 
     /// <summary>
-    /// 플레이어 상호작용(피격) 시 현재 단계 드랍.
-    /// 최대 단계(열매)면 드랍 후 resetStage로 되돌려 재성장
+    /// 최대 단계(열매) 수확 - HP 감소 없이 열매 드랍 후 resetStage로 되돌려 재성장
     /// </summary>
-    private void DropOnHit()
+    private void HarvestFruit()
     {
         FarmObjData stageData = growth.GetStageData(growth.CurrentStage);
         if (dropper != null && stageData != null)
@@ -107,11 +124,24 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
             dropper.DropOnHit(stageData.DropGroupID, transform.position);
         }
 
-        if (growth.IsMaxStage)
-        {
-            growth.ResetTo(resetStage);
-        }
+        growth.ResetTo(resetStage);
     }
+
+    #region [이전] 피격마다 현재 단계 드랍 (최대 단계면 리셋)
+    // private void DropOnHit()
+    // {
+    //     FarmObjData stageData = growth.GetStageData(growth.CurrentStage);
+    //     if (dropper != null && stageData != null)
+    //     {
+    //         dropper.DropOnHit(stageData.DropGroupID, transform.position);
+    //     }
+    //
+    //     if (growth.IsMaxStage)
+    //     {
+    //         growth.ResetTo(resetStage);
+    //     }
+    // }
+    #endregion
 
     /// <summary>
     /// HP 0(파괴) 시 현재 단계 드랍 (리셋 없음)
@@ -128,12 +158,24 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
     public override void TakeDamage(InteractionContext context)
     {
+        // 최대 단계: HP 공격 대신 열매 수확 + resetStage로 전환
+        if (growth.IsMaxStage)
+        {
+            HarvestFruit();
+            return;
+        }
+
+        // 1 ~ (최대-1) 단계: HP 공격만, 드랍은 파괴(OnDepleted) 시에만
         base.TakeDamage(context);
 
-        // 이번 타격으로 HP 0이 되면 OnDepleted에서 파괴 드랍만 처리
-        if (IsDepleted) return;
-
-        DropOnHit();
+        #region [이전] 피격마다 현재 단계 드랍
+        // base.TakeDamage(context);
+        //
+        // // 이번 타격으로 HP 0이 되면 OnDepleted에서 파괴 드랍만 처리
+        // if (IsDepleted) return;
+        //
+        // DropOnHit();
+        #endregion
 
         #region [이전] 최대 단계에서만 열매 드랍 + 리셋
         // if (growth.IsMaxStage)
@@ -164,6 +206,32 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         if (index < 0 || index >= stageSprites.Count || stageSprites[index] == null) return;
 
         spriteRenderer.sprite = stageSprites[index];
+    }
+
+    /// <summary>
+    /// blossomStage일 때만 포인트마다 매화 생성, 다른 단계면 제거
+    /// </summary>
+    private void RefreshBlossoms(int stage)
+    {
+        bool shouldBloom = stage == blossomStage && blossomPrefab != null;
+
+        if (!shouldBloom)
+        {
+            foreach (GameObject blossom in spawnedBlossoms)
+            {
+                if (blossom != null) Destroy(blossom);
+            }
+            spawnedBlossoms.Clear();
+            return;
+        }
+
+        if (spawnedBlossoms.Count > 0) return; // 이미 생성됨
+
+        foreach (Transform point in blossomPoints)
+        {
+            if (point == null) continue;
+            spawnedBlossoms.Add(Instantiate(blossomPrefab, point.position, Quaternion.identity, point));
+        }
     }
 
     protected override void OnDepleted()

@@ -204,9 +204,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
-  deathDropTable: {fileID: 11400000, guid: d5d1adfbabf9b0f49a12f7403cd90167, type: 2}
-  deathPickupPrefab: {fileID: 7672621953354016798, guid: e003435437af64d4290bb8b1ee2693f2, type: 3}
+  finalDropTable: {fileID: 0}
+  finalPickupPrefab: {fileID: 0}
   scatterRadius: 0.35
+  jumpPower: 0.8
+  jumpDuration: 0.5
+  spinCount: 1
 --- !u!114 &7007042218327987479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,7 +217,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7417119400850013465}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9b4924bd1b14bb4cbb443de0797f558, type: 3}
   m_Name: 
