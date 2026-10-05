@@ -1,5 +1,5 @@
-// ÀÎº¥Åä¸® ÇÑ Ä­. ¾î¶² ¾ÆÀÌÅÛ(ItemData)À» ¸î °³ µé°í ÀÖ´ÂÁö.
-// MonoBehaviour°¡ ¾Æ´Ï¶ó ¼ø¼ö µ¥ÀÌÅÍ¶ó PlayerInventory ¾È¿¡¼­ ¸®½ºÆ®·Î ´Ù·é´Ù.
+// ì¸ë²¤í† ë¦¬ í•œ ì¹¸. ì–´ë–¤ ì•„ì´í…œ(ItemData)ì„ ëª‡ ê°œ ë“¤ê³  ìžˆëŠ”ì§€.
+// MonoBehaviourê°€ ì•„ë‹ˆë¼ ìˆœìˆ˜ ë°ì´í„°ë¼ PlayerInventory ì•ˆì—ì„œ ë¦¬ìŠ¤íŠ¸ë¡œ ë‹¤ë£¬ë‹¤.
 public class InventorySlot
 {
     public InvenItemData Item;
@@ -11,6 +11,6 @@ public class InventorySlot
         Count = count;
     }
 
-    // ÀÌ Ä­¿¡ ´õ ³ÖÀ» ¼ö ÀÖ´Â ¿©À¯ (½ºÅÃ »óÇÑ - ÇöÀç °³¼ö)
+    // ì´ ì¹¸ì— ë” ë„£ì„ ìˆ˜ ìžˆëŠ” ì—¬ìœ  (ìŠ¤íƒ ìƒí•œ - í˜„ìž¬ ê°œìˆ˜)
     public int SpaceLeft => Item != null ? Item.MaxStack - Count : 0;
 }

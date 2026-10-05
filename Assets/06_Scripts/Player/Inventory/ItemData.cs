@@ -1,13 +1,13 @@
 using UnityEngine;
 
-// ¾ÆÀÌÅÛ "Á¤ÀÇ"(µ¥ÀÌÅÍ). ½ÇÁ¦ º¸À¯´Â PlayerInventory°¡ ÀÌ µ¥ÀÌÅÍ + °³¼ö·Î °ü¸®ÇÑ´Ù.
-// ¸ó½ºÅÍ/±¸¿ª µ¥ÀÌÅÍÃ³·³ ¾ÆÀÌÅÛµµ ScriptableObject ¾Ö¼ÂÀ¸·Î ¸¸µç´Ù.
+// ì•„ì´í…œ "ì •ì˜"(ë°ì´í„°). ì‹¤ì œ ë³´ìœ ëŠ” PlayerInventoryê°€ ì´ ë°ì´í„° + ê°œìˆ˜ë¡œ ê´€ë¦¬í•œë‹¤.
+// ëª¬ìŠ¤í„°/êµ¬ì—­ ë°ì´í„°ì²˜ëŸ¼ ì•„ì´í…œë„ ScriptableObject ì• ì…‹ìœ¼ë¡œ ë§Œë“ ë‹¤.
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
 public class ItemData : ScriptableObject
 {
-    public string ItemId;       // °íÀ¯ id (ÀúÀå/ºñ±³¿ë)
-    public string DisplayName;  // Ç¥½Ã ÀÌ¸§
-    //public ItemType Type;       // ºĞ·ù (¹®¼­ 3.2
-    public int MaxStack = 1;    // ÇÑ Ä­ ÃÖ´ë ÁßÃ¸ ¼ö. 1ÀÌ¸é ÁßÃ¸ ºÒ°¡(Àåºñ/µµ±¸)
-    public Sprite Icon;         // ÀÎº¥Åä¸® UI ¾ÆÀÌÄÜ
+    public string ItemId;       // ê³ ìœ  id (ì €ì¥/ë¹„êµìš©)
+    public string DisplayName;  // í‘œì‹œ ì´ë¦„
+    //public ItemType Type;       // ë¶„ë¥˜ (ë¬¸ì„œ 3.2
+    public int MaxStack = 1;    // í•œ ì¹¸ ìµœëŒ€ ì¤‘ì²© ìˆ˜. 1ì´ë©´ ì¤‘ì²© ë¶ˆê°€(ì¥ë¹„/ë„êµ¬)
+    public Sprite Icon;         // ì¸ë²¤í† ë¦¬ UI ì•„ì´ì½˜
 }

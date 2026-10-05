@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-// ½ºÅÈ ÇÏ³ª¿¡ ´ëÇÑ º¯°æÄ¡. ½ºÅ³Æ®¸® ³ëµå ÇÏ³ª = StatModifier ÇÏ³ª·Î Ç¥ÇöµÈ´Ù.
-// (¿¹: ÀÌµ¿¼Óµµ +0.5 ½ºÅ³ -> new StatModifier(StatType.MoveSpeed, 0.5f))
-// StatType Á¤ÀÇ´Â Core/PlayerEnums.cs Âü°í.
+// ìŠ¤íƒ¯ í•˜ë‚˜ì— ëŒ€í•œ ë³€ê²½ì¹˜. ìŠ¤í‚¬íŠ¸ë¦¬ ë…¸ë“œ í•˜ë‚˜ = StatModifier í•˜ë‚˜ë¡œ í‘œí˜„ëœë‹¤.
+// (ì˜ˆ: ì´ë™ì†ë„ +0.5 ìŠ¤í‚¬ -> new StatModifier(StatType.MoveSpeed, 0.5f))
+// StatType ì •ì˜ëŠ” Core/PlayerEnums.cs ì°¸ê³ .
 public struct StatModifier
 {
     public StatType Type;
@@ -15,38 +15,38 @@ public struct StatModifier
     }
 }
 
-// ¼ø¼ö C# ½ºÅÈ °è»ê±â. Unity¸¦ ÀüÇô ¸ğ¸¥´Ù -> ´ÜÀ§ Å×½ºÆ®°¡ ½±´Ù.
-// ±âº»°ª + ÇØ´ç Á¾·ùÀÇ ¸ğµç Modifier ÇÕ»êÀ¸·Î ÃÖÁ¾ ½ºÅÈÀ» °è»êÇÑ´Ù.
+// ìˆœìˆ˜ C# ìŠ¤íƒ¯ ê³„ì‚°ê¸°. Unityë¥¼ ì „í˜€ ëª¨ë¥¸ë‹¤ -> ë‹¨ìœ„ í…ŒìŠ¤íŠ¸ê°€ ì‰½ë‹¤.
+// ê¸°ë³¸ê°’ + í•´ë‹¹ ì¢…ë¥˜ì˜ ëª¨ë“  Modifier í•©ì‚°ìœ¼ë¡œ ìµœì¢… ìŠ¤íƒ¯ì„ ê³„ì‚°í•œë‹¤.
 public class StatCalculator
 {
     private readonly Dictionary<StatType, float> baseValues = new Dictionary<StatType, float>();
     private readonly List<StatModifier> modifiers = new List<StatModifier>();
 
-    // ±âº» ½ºÅÈ°ª ¼³Á¤. ÀÎ½ºÆåÅÍÀÇ ±âÃÊ ¼öÄ¡°¡ ¿©±â·Î µé¾î¿Â´Ù.
+    // ê¸°ë³¸ ìŠ¤íƒ¯ê°’ ì„¤ì •. ì¸ìŠ¤í™í„°ì˜ ê¸°ì´ˆ ìˆ˜ì¹˜ê°€ ì—¬ê¸°ë¡œ ë“¤ì–´ì˜¨ë‹¤.
     public void SetBase(StatType type, float value)
     {
         baseValues[type] = value;
     }
 
-    // Modifier Ãß°¡. ½ºÅ³Æ®¸®/Àåºñ°¡ È£ÃâÇÑ´Ù.
+    // Modifier ì¶”ê°€. ìŠ¤í‚¬íŠ¸ë¦¬/ì¥ë¹„ê°€ í˜¸ì¶œí•œë‹¤.
     public void AddModifier(StatModifier modifier)
     {
         modifiers.Add(modifier);
     }
 
-    // Modifier Á¦°Å. ½ºÅ³ ÇØÁ¦/Àåºñ Å»Âø ½Ã È£ÃâÇÑ´Ù.
+    // Modifier ì œê±°. ìŠ¤í‚¬ í•´ì œ/ì¥ë¹„ íƒˆì°© ì‹œ í˜¸ì¶œí•œë‹¤.
     public bool RemoveModifier(StatModifier modifier)
     {
         return modifiers.Remove(modifier);
     }
 
-    // ¸ğµç Modifier ÃÊ±âÈ­
+    // ëª¨ë“  Modifier ì´ˆê¸°í™”
     public void ClearModifiers()
     {
         modifiers.Clear();
     }
 
-    // ±âº»°ª + ÇØ´ç Á¾·ùÀÇ ¸ğµç Modifier ÇÕ»ê = ÃÖÁ¾°ª
+    // ê¸°ë³¸ê°’ + í•´ë‹¹ ì¢…ë¥˜ì˜ ëª¨ë“  Modifier í•©ì‚° = ìµœì¢…ê°’
     public float GetFinalValue(StatType type)
     {
         baseValues.TryGetValue(type, out float result);

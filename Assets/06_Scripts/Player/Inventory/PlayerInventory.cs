@@ -2,32 +2,32 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ¾ÆÀÌÅÛ º¸À¯ (¹®¼­ 3.1). "¾î¶² ¾ÆÀÌÅÛ ¸î °³"¸¦ ½½·Ô ´ÜÀ§·Î °ü¸®ÇÑ´Ù.
-// ½ºÅÃ °¡´É ¾ÆÀÌÅÛÀº ItemData.MaxStack ±îÁö ÇÑ Ä­¿¡ ¸ğÀ¸°í, ³ÑÄ¡¸é »õ Ä­.
-// ÀÎº¥Åä¸® UI´Â Slots¸¦ ±×¸®°í OnInventoryChanged·Î °»½Å, Á¦ÀÛÀº GetCount/HasEnough·Î Á¶È¸ÇÑ´Ù.
+// í”Œë ˆì´ì–´ ì•„ì´í…œ ë³´ìœ  (ë¬¸ì„œ 3.1). "ì–´ë–¤ ì•„ì´í…œ ëª‡ ê°œ"ë¥¼ ìŠ¬ë¡¯ ë‹¨ìœ„ë¡œ ê´€ë¦¬í•œë‹¤.
+// ìŠ¤íƒ ê°€ëŠ¥ ì•„ì´í…œì€ ItemData.MaxStack ê¹Œì§€ í•œ ì¹¸ì— ëª¨ìœ¼ê³ , ë„˜ì¹˜ë©´ ìƒˆ ì¹¸.
+// ì¸ë²¤í† ë¦¬ UIëŠ” Slotsë¥¼ ê·¸ë¦¬ê³  OnInventoryChangedë¡œ ê°±ì‹ , ì œì‘ì€ GetCount/HasEnoughë¡œ ì¡°íšŒí•œë‹¤.
 public class PlayerInventory : MonoBehaviour, IPlayerComponent
 {
-    [Header("½½·Ô »óÇÑ (0 = ¹«Á¦ÇÑ)")]
+    [Header("ìŠ¬ë¡¯ ìƒí•œ (0 = ë¬´ì œí•œ)")]
     [SerializeField]
     private int maxSlots = 0;
     [SerializeField]
     private ItemDatabase itemDatabase;
 
-    // º¸À¯ º¯°æ ½Ã ¹æ¼Û (ÀÎº¥Åä¸® UI °»½Å¿ë)
+    // ë³´ìœ  ë³€ê²½ ì‹œ ë°©ì†¡ (ì¸ë²¤í† ë¦¬ UI ê°±ì‹ ìš©)
     public event Action OnInventoryChanged;
 
     private readonly List<InventorySlot> slots = new List<InventorySlot>();
     private readonly List<InvenItemData> runtimeLoadedItems = new List<InvenItemData>();
 
-    // UI°¡ ÀĞÀ» ¼ö ÀÖ°Ô ½½·Ô ¸ñ·ÏÀ» ÀĞ±â Àü¿ëÀ¸·Î ³ëÃâ
+    // UIê°€ ì½ì„ ìˆ˜ ìˆê²Œ ìŠ¬ë¡¯ ëª©ë¡ì„ ì½ê¸° ì „ìš©ìœ¼ë¡œ ë…¸ì¶œ
     public IReadOnlyList<InventorySlot> Slots => slots;
 
     public void Initialize(PlayerContext context)
     {
-        // ½ÃÀÛ ½Ã ºñ¾î ÀÖÀ½. ¼¼ÀÌºê°¡ »ı±â¸é ¿©±â¼­ ºÒ·¯¿À¸é µÈ´Ù.
+        // ì‹œì‘ ì‹œ ë¹„ì–´ ìˆìŒ. ì„¸ì´ë¸Œê°€ ìƒê¸°ë©´ ì—¬ê¸°ì„œ ë¶ˆëŸ¬ì˜¤ë©´ ëœë‹¤.
     }
 
-    // ¾ÆÀÌÅÛ È¹µæ. ³ÖÁö ¸øÇÏ°í ³²Àº °³¼ö¸¦ ¹İÈ¯ÇÑ´Ù(0ÀÌ¸é ÀüºÎ µé¾î°¨ - ¹®¼­ 3.1 ²Ë Âü Ã³¸®).
+    // ì•„ì´í…œ íšë“. ë„£ì§€ ëª»í•˜ê³  ë‚¨ì€ ê°œìˆ˜ë¥¼ ë°˜í™˜í•œë‹¤(0ì´ë©´ ì „ë¶€ ë“¤ì–´ê° - ë¬¸ì„œ 3.1 ê½‰ ì°¸ ì²˜ë¦¬).
     public int Add(InvenItemData item, int count)
     {
         return AddInternal(item, count, true);
@@ -38,7 +38,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         if (item == null || count <= 0) return count;
         int remaining = count;
 
-        // 1) ½ºÅÃ °¡´ÉÇÏ¸é °°Àº ¾ÆÀÌÅÛÀÇ ±âÁ¸ Ä­ºÎÅÍ Ã¤¿î´Ù.
+        // 1) ìŠ¤íƒ ê°€ëŠ¥í•˜ë©´ ê°™ì€ ì•„ì´í…œì˜ ê¸°ì¡´ ì¹¸ë¶€í„° ì±„ìš´ë‹¤.
         if (item.MaxStack > 1)
         {
             for (int i = 0; i < slots.Count && remaining > 0; i++)
@@ -52,7 +52,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
             }
         }
 
-        // 2) ³²Àº °Ç »õ Ä­¿¡ (½½·Ô »óÇÑÀÌ ÀÖÀ¸¸é ±×¸¸Å­¸¸).
+        // 2) ë‚¨ì€ ê±´ ìƒˆ ì¹¸ì— (ìŠ¬ë¡¯ ìƒí•œì´ ìˆìœ¼ë©´ ê·¸ë§Œí¼ë§Œ).
         while (remaining > 0 && (maxSlots <= 0 || slots.Count < maxSlots))
         {
             int put = Mathf.Min(item.MaxStack, remaining);
@@ -61,7 +61,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         }
 
         if (notify && remaining != count) OnInventoryChanged?.Invoke();
-        return remaining; // ¸ø ³ÖÀº ¼ö·® (ÇÊµå¿¡ À¯ÁöÇÒ ¸ò)
+        return remaining; // ëª» ë„£ì€ ìˆ˜ëŸ‰ (í•„ë“œì— ìœ ì§€í•  ëª«)
     }
 
     public List<InventoryItemSaveData> CreateSaveData()
@@ -140,7 +140,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         ClearRuntimeLoadedItems();
     }
 
-    // ¾ÆÀÌÅÛ Á¦°Å(¼Òºñ/¹ö¸®±â). ½ÇÁ¦ Á¦°ÅÇÑ °³¼ö ¹İÈ¯.
+    // ì•„ì´í…œ ì œê±°(ì†Œë¹„/ë²„ë¦¬ê¸°). ì‹¤ì œ ì œê±°í•œ ê°œìˆ˜ ë°˜í™˜.
     public int Remove(ItemData item, int count)
     {
         if (item == null || count <= 0) return 0;
@@ -152,7 +152,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
             int take = Mathf.Min(slots[i].Count, count - removed);
             slots[i].Count -= take;
             removed += take;
-            if (slots[i].Count <= 0) slots.RemoveAt(i); // ºó Ä­ Á¤¸®
+            if (slots[i].Count <= 0) slots.RemoveAt(i); // ë¹ˆ ì¹¸ ì •ë¦¬
         }
 
         if (removed > 0) OnInventoryChanged?.Invoke();
@@ -177,7 +177,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         return removed;
     }
 
-    // ÀÌ ¾ÆÀÌÅÛ ÃÑ ¸î °³? (¿©·¯ Ä­ ÇÕ»ê) - Á¦ÀÛ/UI¿ë
+    // ì´ ì•„ì´í…œ ì´ ëª‡ ê°œ? (ì—¬ëŸ¬ ì¹¸ í•©ì‚°) - ì œì‘/UIìš©
     public int GetCount(ItemData item)
     {
         if (item == null) return 0;
@@ -189,7 +189,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         return total;
     }
 
-    // Á¦ÀÛ Àç·á°¡ ÃæºĞÇÑÁö (¹®¼­ 3.3)
+    // ì œì‘ ì¬ë£Œê°€ ì¶©ë¶„í•œì§€ (ë¬¸ì„œ 3.3)
     public bool HasEnough(ItemData item, int count)
     {
         return GetCount(item) >= count;

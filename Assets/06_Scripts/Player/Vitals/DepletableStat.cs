@@ -1,5 +1,5 @@
-// ´â°í Â÷´Â ¼öÄ¡(Ã¼·Â, Çã±â µî)ÀÇ ¼ø¼ö C# ¸ğµ¨. Unity¸¦ ¸ğ¸¥´Ù -> ´ÜÀ§ Å×½ºÆ®°¡ ½±´Ù.
-// ÇöÀç°ªÀº Ç×»ó 0 ~ ÃÖ´ë »çÀÌ·Î clamp µÈ´Ù. ³ªÁß¿¡ PlayerHealthµµ ÀÌ°É ±×´ë·Î Àç»ç¿ëÇÑ´Ù.
+// ë‹³ê³  ì°¨ëŠ” ìˆ˜ì¹˜(ì²´ë ¥, í—ˆê¸° ë“±)ì˜ ìˆœìˆ˜ C# ëª¨ë¸. Unityë¥¼ ëª¨ë¥¸ë‹¤ -> ë‹¨ìœ„ í…ŒìŠ¤íŠ¸ê°€ ì‰½ë‹¤.
+// í˜„ì¬ê°’ì€ í•­ìƒ 0 ~ ìµœëŒ€ ì‚¬ì´ë¡œ clamp ëœë‹¤. ë‚˜ì¤‘ì— PlayerHealthë„ ì´ê±¸ ê·¸ëŒ€ë¡œ ì¬ì‚¬ìš©í•œë‹¤.
 public class DepletableStat
 {
     private float current;
@@ -10,16 +10,16 @@ public class DepletableStat
     public bool IsEmpty => current <= 0f;
     public bool IsFull => current >= max;
 
-    // 0~1 ºñÀ² (HUD ¹Ù µî¿¡¼­ »ç¿ë). ÃÖ´ë°¡ 0ÀÌ¸é 0 ¹İÈ¯(0 ³ª´©±â ¹æ¾î).
+    // 0~1 ë¹„ìœ¨ (HUD ë°” ë“±ì—ì„œ ì‚¬ìš©). ìµœëŒ€ê°€ 0ì´ë©´ 0 ë°˜í™˜(0 ë‚˜ëˆ„ê¸° ë°©ì–´).
     public float Percent01 => max > 0f ? current / max : 0f;
 
     public DepletableStat(float max)
     {
         this.max = max < 0f ? 0f : max;
-        current = this.max; // ½ÃÀÛÀº °¡µæ Âù »óÅÂ
+        current = this.max; // ì‹œì‘ì€ ê°€ë“ ì°¬ ìƒíƒœ
     }
 
-    // ÃÖ´ëÄ¡ ¼³Á¤. refillÀÌ¸é ÇöÀç°ªµµ °¡µæ Ã¤¿ì°í, ¾Æ´Ï¸é ÃÖ´ë¸¦ ³Ñ´Â ¸¸Å­¸¸ ±ğ´Â´Ù.
+    // ìµœëŒ€ì¹˜ ì„¤ì •. refillì´ë©´ í˜„ì¬ê°’ë„ ê°€ë“ ì±„ìš°ê³ , ì•„ë‹ˆë©´ ìµœëŒ€ë¥¼ ë„˜ëŠ” ë§Œí¼ë§Œ ê¹ëŠ”ë‹¤.
     public void SetMax(float value, bool refill)
     {
         max = value < 0f ? 0f : value;
@@ -28,13 +28,13 @@ public class DepletableStat
     }
 
     /// <summary>
-    /// µ¥ÀÌÅÍ ºÒ·¯¿ÔÀ» ¶§, HP µ¤¾î¾²´Â ¿ëµµ
+    /// ë°ì´í„° ë¶ˆëŸ¬ì™”ì„ ë•Œ, HP ë®ì–´ì“°ëŠ” ìš©ë„
     /// </summary>
     public void LoadSet(float current)
     {
         this.current = current;
     }
-    // °¨¼Ò (0 ¹ØÀ¸·Î ³»·Á°¡Áö ¾ÊÀ½). À½¼ö/0Àº ¹«½Ã.
+    // ê°ì†Œ (0 ë°‘ìœ¼ë¡œ ë‚´ë ¤ê°€ì§€ ì•ŠìŒ). ìŒìˆ˜/0ì€ ë¬´ì‹œ.
     public void Reduce(float amount)
     {
         if (amount <= 0f) return;
@@ -42,7 +42,7 @@ public class DepletableStat
         if (current < 0f) current = 0f;
     }
 
-    // È¸º¹ (ÃÖ´ë ÃÊ°úÇÏÁö ¾ÊÀ½). À½¼ö/0Àº ¹«½Ã.
+    // íšŒë³µ (ìµœëŒ€ ì´ˆê³¼í•˜ì§€ ì•ŠìŒ). ìŒìˆ˜/0ì€ ë¬´ì‹œ.
     public void Add(float amount)
     {
         if (amount <= 0f) return;
@@ -50,7 +50,7 @@ public class DepletableStat
         if (current > max) current = max;
     }
 
-    // ÃÖ´ë·Î ¸®¼Â (¾À ÀçÁøÀÔ µî)
+    // ìµœëŒ€ë¡œ ë¦¬ì…‹ (ì”¬ ì¬ì§„ì… ë“±)
     public void Reset()
     {
         current = max;

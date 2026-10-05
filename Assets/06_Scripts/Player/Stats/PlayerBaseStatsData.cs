@@ -1,12 +1,12 @@
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ±âº» ½ºÅÈ °ª(µ¥ÀÌÅÍ). PlayerStats°¡ ½ÃÀÛ ½Ã ÀÌ°É ÀĞ¾î ±âº»°ªÀ¸·Î ¾´´Ù.
-// ¹ë·±½ÌÀº ÀÌ ¾Ö¼Â ¼ıÀÚ¸¸ ¹Ù²Ù¸é µÇ°í, Ä³¸¯ÅÍ/Á÷¾÷º°·Î ¾Ö¼ÂÀ» °¥¾Æ³¢¿ï ¼ö ÀÖ´Ù.
+// í”Œë ˆì´ì–´ ê¸°ë³¸ ìŠ¤íƒ¯ ê°’(ë°ì´í„°). PlayerStatsê°€ ì‹œì‘ ì‹œ ì´ê±¸ ì½ì–´ ê¸°ë³¸ê°’ìœ¼ë¡œ ì“´ë‹¤.
+// ë°¸ëŸ°ì‹±ì€ ì´ ì• ì…‹ ìˆ«ìë§Œ ë°”ê¾¸ë©´ ë˜ê³ , ìºë¦­í„°/ì§ì—…ë³„ë¡œ ì• ì…‹ì„ ê°ˆì•„ë¼ìš¸ ìˆ˜ ìˆë‹¤.
 [CreateAssetMenu(fileName = "PlayerBaseStatsData", menuName = "Scriptable Objects/PlayerBaseStatsData")]
 public class PlayerBaseStatsData : ScriptableObject
 {
-    public float MoveSpeed = 5f;   // ÀÌµ¿ ¼Óµµ
-    public float AttackPower = 10f; // °ø°İ·Â
-    public float AttackRange = 2f;  // °ø°İ ¹üÀ§
-    public float MaxHp = 100f;      // ÃÖ´ë Ã¼·Â
+    public float MoveSpeed = 5f;   // ì´ë™ ì†ë„
+    public float AttackPower = 10f; // ê³µê²©ë ¥
+    public float AttackRange = 2f;  // ê³µê²© ë²”ìœ„
+    public float MaxHp = 100f;      // ìµœëŒ€ ì²´ë ¥
 }
