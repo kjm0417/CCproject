@@ -169,6 +169,25 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         return cropPlanter.TryPlant(tileCheckOrigin.position, seed, context.Inventory);
     }
 
+    /// <summary>
+    /// 씨앗을 든 상태: 앞에 다 자란 작물이 있으면 수확, 없으면 발밑에 심기
+    /// (씨앗 선택 시 도구가 None으로 잠겨 TryInteract로는 수확이 막히므로 별도 처리)
+    /// </summary>
+    public bool TryHarvestOrPlantSeed(InvenItemData seed)
+    {
+        if (CurrentTarget is PlantedCropObject crop && context != null)
+        {
+            InteractionContext interactionContext = CreateInteractionContext(ToolType.None);
+            if (crop.CanInteract(interactionContext))
+            {
+                crop.Interact(interactionContext);
+                return true;
+            }
+        }
+
+        return TryPlantSeed(seed);
+    }
+
     private IInteractable FindNearestInteractable()
     {
         float range = stats != null ? stats.AttackRange : 1f;
