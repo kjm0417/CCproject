@@ -2,18 +2,18 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 
-// °æÇèÄ¡/·¹º§/½ºÅ³Æ÷ÀÎÆ® (¹®¼­ 2.3). ÇÃ·¹ÀÌ¾î °³ÀÎ À°¼º µ¥ÀÌÅÍ¶ó ÇÃ·¹ÀÌ¾î°¡ ¼ÒÀ¯ÇÑ´Ù.
-// ·¹º§¾÷ ½Ã "¾î¶² ½ºÅÈÀÌ ¿À¸¦Áö"´Â ¿©±â¼­ Á¤ÇÏÁö ¾Ê´Â´Ù. OnLevelUp¸¸ ¹ßÇàÇÏ°í,
-// ½ÇÁ¦ ½ºÅÈ ¼ºÀåÀº ³ªÁß¿¡ ¸¸µé µ¥ÀÌÅÍ ½Ã½ºÅÛÀÌ ÀÌ ÀÌº¥Æ®¸¦ ±¸µ¶ÇØ Àû¿ëÇÑ´Ù. (½ºÅÈ°ú ºĞ¸®)
+// ê²½í—˜ì¹˜/ë ˆë²¨/ìŠ¤í‚¬í¬ì¸íŠ¸ (ë¬¸ì„œ 2.3). í”Œë ˆì´ì–´ ê°œì¸ ìœ¡ì„± ë°ì´í„°ë¼ í”Œë ˆì´ì–´ê°€ ì†Œìœ í•œë‹¤.
+// ë ˆë²¨ì—… ì‹œ "ì–´ë–¤ ìŠ¤íƒ¯ì´ ì˜¤ë¥¼ì§€"ëŠ” ì—¬ê¸°ì„œ ì •í•˜ì§€ ì•ŠëŠ”ë‹¤. OnLevelUpë§Œ ë°œí–‰í•˜ê³ ,
+// ì‹¤ì œ ìŠ¤íƒ¯ ì„±ì¥ì€ ë‚˜ì¤‘ì— ë§Œë“¤ ë°ì´í„° ì‹œìŠ¤í…œì´ ì´ ì´ë²¤íŠ¸ë¥¼ êµ¬ë…í•´ ì ìš©í•œë‹¤. (ìŠ¤íƒ¯ê³¼ ë¶„ë¦¬)
 public class PlayerProgression : MonoBehaviour, IPlayerComponent
 {
-    [Header("ÇÊ¿ä °æÇèÄ¡ °ø½Ä: baseExp * (level ^ exponent)")]
+    [Header("í•„ìš” ê²½í—˜ì¹˜ ê³µì‹: baseExp * (level ^ exponent)")]
     [SerializeField]
-    private int baseExp = 100;      // 1 -> 2 ·¹º§¿¡ ÇÊ¿äÇÑ ±âÁØÄ¡
+    private int baseExp = 100;      // 1 -> 2 ë ˆë²¨ì— í•„ìš”í•œ ê¸°ì¤€ì¹˜
     [SerializeField]
-    private float exponent = 1.5f;  // ·¹º§ÀÌ ¿À¸¦¼ö·Ï ÇÊ¿äÄ¡°¡ Ä¿Áö´Â Á¤µµ
+    private float exponent = 1.5f;  // ë ˆë²¨ì´ ì˜¤ë¥¼ìˆ˜ë¡ í•„ìš”ì¹˜ê°€ ì»¤ì§€ëŠ” ì •ë„
 
-    [Header("·¹º§¾÷ º¸»ó")]
+    [Header("ë ˆë²¨ì—… ë³´ìƒ")]
     [SerializeField]
     private int skillPointsPerLevel = 1;
 
@@ -41,7 +41,7 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
     }
     public void Initialize(PlayerContext context)
     {
-        // ½ÃÀÛ ·¹º§Àº ±âº» Áö±Ş µ¥ÀÌÅÍ(SO)¿¡¼­ °¡Á®¿Â´Ù. ¼¼ÀÌºê°¡ »ı±â¸é ¿©±â¼­ ºÒ·¯¿À±â.
+        // ì‹œì‘ ë ˆë²¨ì€ ê¸°ë³¸ ì§€ê¸‰ ë°ì´í„°(SO)ì—ì„œ ê°€ì ¸ì˜¨ë‹¤. ì„¸ì´ë¸Œê°€ ìƒê¸°ë©´ ì—¬ê¸°ì„œ ë¶ˆëŸ¬ì˜¤ê¸°.
         if (context.BaseData != null)
         {
             level = Mathf.Max(1, context.BaseData.StartingLevel);
@@ -49,7 +49,7 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
         OnExpChanged?.Invoke();
     }
     /// <summary>
-    /// ÀúÀåµÈ µ¥ÀÌÅÍ ·Îµå
+    /// ì €ì¥ëœ ë°ì´í„° ë¡œë“œ
     /// </summary>
     /// <param name="HP"></param>
     /// <param name="HungerValue"></param>
@@ -61,7 +61,7 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
         OnExpChanged?.Invoke();
         OnSkillPointsChanged?.Invoke();
     }
-    // °æÇèÄ¡ È¹µæ (¸ó½ºÅÍ Ã³Ä¡/¼öÈ®/Á¦ÀÛ µîÀÌ È£Ãâ - ¹®¼­ 2.3). ÇÑ ¹ø¿¡ ¿©·¯ ·¹º§µµ Ã³¸®.
+    // ê²½í—˜ì¹˜ íšë“ (ëª¬ìŠ¤í„° ì²˜ì¹˜/ìˆ˜í™•/ì œì‘ ë“±ì´ í˜¸ì¶œ - ë¬¸ì„œ 2.3). í•œ ë²ˆì— ì—¬ëŸ¬ ë ˆë²¨ë„ ì²˜ë¦¬.
     public void AddExp(float amount)
     {
         if (amount <= 0) return;

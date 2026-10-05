@@ -108,6 +108,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             Context.Interaction.OnTargetChanged += HandleTargetChanged;
         }
 
+        if (Context.Combat != null)
+        {
+            Context.Combat.OnTargetAvailabilityChanged += HandleAttackTargetAvailabilityChanged;
+        }
+
         if (inventory != null)
         {
             inventory.OnInventoryChanged += RefreshQuickSlots;
@@ -130,6 +135,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         if (Context.Interaction != null)
         {
             Context.Interaction.OnTargetChanged -= HandleTargetChanged;
+        }
+
+        if (Context.Combat != null)
+        {
+            Context.Combat.OnTargetAvailabilityChanged -= HandleAttackTargetAvailabilityChanged;
         }
 
         if (inventory != null)
@@ -188,6 +198,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
 
         attackButton.UpdateTarget(target, toolType);
+    }
+
+    private void HandleAttackTargetAvailabilityChanged(bool hasTarget)
+    {
+        RefreshInteractionButton();
     }
 
     private void RefreshQuickSlots()
@@ -451,9 +466,24 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     {
         if (item == null) return;
 
+        if (IsSelectedQuickSlotItem(item))
+        {
+            ClearQuickSlotSelection();
+            return;
+        }
+
         selectedQuickSlotItem = item;
         selectedQuickSlotItemId = item.ItemID;
         Context?.Interaction?.SetCurrentTool(ResolveToolType(item), true);
+        RefreshQuickSlotSelection();
+        RefreshInteractionButton();
+    }
+
+    private void ClearQuickSlotSelection()
+    {
+        selectedQuickSlotItem = null;
+        selectedQuickSlotItemId = null;
+        Context?.Interaction?.SetCurrentTool(ToolType.None, false);
         RefreshQuickSlotSelection();
         RefreshInteractionButton();
     }
@@ -525,6 +555,14 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         PlayerInteraction interaction = Context != null ? Context.Interaction : null;
         if (selectedQuickSlotItem == null)
         {
+            PlayerCombat combat = Context != null ? Context.Combat : null;
+            if (combat != null && combat.HasTargetInAttackArea())
+            {
+                Sprite swordAttackIcon = GetIcon(swordIcon, "Equipment/Sword");
+                attackButton.SetQuickSlotOverride(swordAttackIcon, () => combat.TryAttack(), true);
+                return;
+            }
+
             attackButton.ClearQuickSlotOverride();
             if (interaction != null)
             {
@@ -557,6 +595,13 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         if (toolType == ToolType.None || interaction == null)
         {
             attackButton.SetQuickSlotOverride(icon, null, false);
+            return;
+        }
+
+        if (toolType == ToolType.Sword)
+        {
+            PlayerCombat combat = Context != null ? Context.Combat : null;
+            attackButton.SetQuickSlotOverride(icon, () => combat.TryAttack(), combat != null);
             return;
         }
 

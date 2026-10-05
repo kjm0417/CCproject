@@ -7,7 +7,7 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     [SerializeField]
     private Transform interactionOrigin;
 
-    [Tooltip("나중에 필드 오브젝트 레이어로 설정하면 됩니다. 지금은 테스트용으로 Everything 상태여도 e됨.")]
+    [Tooltip("나중에 필드 오브젝트 레이어로 설정하면 됩니다. 지금은 테스트용으로 Everything 상태여도 됩니다.")]
     [SerializeField]
     private LayerMask interactableLayers = ~0;
 

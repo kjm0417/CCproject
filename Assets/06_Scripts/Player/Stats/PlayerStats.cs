@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ½ºÅÈÀÇ MonoBehaviour ²®µ¥±â.
-// ±âº»°ªÀº PlayerContext°¡ ¹°°í ÀÖ´Â PlayerBaseData(SO)¿¡¼­ ÀĞ°í, ½ºÅ³/Àåºñ/·¹º§¾÷Àº Modifier·Î ¾ñ´Â´Ù.
-// ½ºÅÈÀÌ ¹Ù²î¸é OnStatsChanged ÀÌº¥Æ®¸¸ ¹æ¼Û -> ´Ù¸¥ ºÎÇ°Àº °ªÀ» ÀĞ±â¸¸ ÇÑ´Ù.
+// í”Œë ˆì´ì–´ ìŠ¤íƒ¯ì˜ MonoBehaviour ê»ë°ê¸°.
+// ê¸°ë³¸ê°’ì€ PlayerContextê°€ ë¬¼ê³  ìˆëŠ” PlayerBaseData(SO)ì—ì„œ ì½ê³ , ìŠ¤í‚¬/ì¥ë¹„/ë ˆë²¨ì—…ì€ Modifierë¡œ ì–¹ëŠ”ë‹¤.
+// ìŠ¤íƒ¯ì´ ë°”ë€Œë©´ OnStatsChanged ì´ë²¤íŠ¸ë§Œ ë°©ì†¡ -> ë‹¤ë¥¸ ë¶€í’ˆì€ ê°’ì„ ì½ê¸°ë§Œ í•œë‹¤.
 public class PlayerStats : MonoBehaviour, IPlayerComponent
 {
-    // ½ºÅÈÀÌ Àç°è»êµÉ ¶§¸¶´Ù ¹æ¼Û. ±¸µ¶ÀÚ´Â ÇÊ¿äÇÑ °ªÀ» ´Ù½Ã ÀĞ¾î°¡¸é µÈ´Ù.
+    // ìŠ¤íƒ¯ì´ ì¬ê³„ì‚°ë  ë•Œë§ˆë‹¤ ë°©ì†¡. êµ¬ë…ìëŠ” í•„ìš”í•œ ê°’ì„ ë‹¤ì‹œ ì½ì–´ê°€ë©´ ëœë‹¤.
     public event Action OnStatsChanged;
 
     private readonly StatCalculator calculator = new StatCalculator();
@@ -28,13 +28,13 @@ public class PlayerStats : MonoBehaviour, IPlayerComponent
         }
         else
         {
-            Debug.LogWarning("PlayerStats: PlayerContext¿¡ ±âº» µ¥ÀÌÅÍ(SO)°¡ ¾ø½À´Ï´Ù. PlayerContext ÀÎ½ºÆåÅÍ¿¡ PlayerBaseData¸¦ ¿¬°áÇÏ¼¼¿ä.");
+            Debug.LogWarning("PlayerStats: PlayerContextì— ê¸°ë³¸ ë°ì´í„°(SO)ê°€ ì—†ìŠµë‹ˆë‹¤. PlayerContext ì¸ìŠ¤í™í„°ì— PlayerBaseDataë¥¼ ì—°ê²°í•˜ì„¸ìš”.");
         }
         OnStatsChanged?.Invoke();
     }
 
     /// <summary>
-    /// ÀúÀåµÈ µ¥ÀÌÅÍ ·Îµå
+    /// ì €ì¥ëœ ë°ì´í„° ë¡œë“œ
     /// </summary>
     /// <param name="HP"></param>
     /// <param name="HungerValue"></param>

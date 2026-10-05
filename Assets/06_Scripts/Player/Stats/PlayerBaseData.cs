@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÀçÈ­ ÇÑ Á¾·ùÀÇ ½ÃÀÛ Áö±Ş·® (SO¿¡¼­ ¸ñ·ÏÀ¸·Î ¼³Á¤)
+// ì¬í™” í•œ ì¢…ë¥˜ì˜ ì‹œì‘ ì§€ê¸‰ëŸ‰ (SOì—ì„œ ëª©ë¡ìœ¼ë¡œ ì„¤ì •)
 [System.Serializable]
 public struct CurrencyAmount
 {
@@ -9,19 +9,20 @@ public struct CurrencyAmount
     public int Amount;
 }
 
-// ÇÃ·¹ÀÌ¾î ±âº» Áö±Ş µ¥ÀÌÅÍ(SO). ½ÃÀÛ ½ºÅÈ/·¹º§/ÀçÈ­¸¦ ÇÑ ¾Ö¼Â¿¡ ´ã´Â´Ù.
-// ·±Å¸ÀÓ ºÎÇ°(Stats/Wallet/Progression)ÀÌ ½ÃÀÛ ½Ã ÀÌ °ªÀ» ÀĞ¾î°¡°í,
-// ÀÌÈÄ "ÇöÀç°ª"Àº °¢ ºÎÇ°ÀÌ °¢ÀÚ °ü¸®ÇÑ´Ù. (±âº» Áö±Ş = µ¥ÀÌÅÍ, ÇöÀç°ª = ·±Å¸ÀÓ)
+// í”Œë ˆì´ì–´ ê¸°ë³¸ ì§€ê¸‰ ë°ì´í„°(SO). ì‹œì‘ ìŠ¤íƒ¯/ë ˆë²¨/ì¬í™”ë¥¼ í•œ ì• ì…‹ì— ë‹´ëŠ”ë‹¤.
+// ëŸ°íƒ€ì„ ë¶€í’ˆ(Stats/Wallet/Progression)ì´ ì‹œì‘ ì‹œ ì´ ê°’ì„ ì½ì–´ê°€ê³ ,
+// ì´í›„ "í˜„ì¬ê°’"ì€ ê° ë¶€í’ˆì´ ê°ì ê´€ë¦¬í•œë‹¤. (ê¸°ë³¸ ì§€ê¸‰ = ë°ì´í„°, í˜„ì¬ê°’ = ëŸ°íƒ€ì„)
 [CreateAssetMenu(fileName = "PlayerBaseData", menuName = "Scriptable Objects/PlayerBaseData")]
 public class PlayerBaseData : ScriptableObject
 {
-    [Header("±âº» ½ºÅÈ")]
-    public float MoveSpeed = 5f;    // ¼Óµµ
-    public float AttackPower = 10f; // °ø°İ
-    public float AttackRange = 2f;  // °ø°İ ¹üÀ§
-    public float MaxHp = 100f;      // Ã¼·Â
+    [Header("ê¸°ë³¸ ìŠ¤íƒ¯")]
+    public float MoveSpeed = 5f;    // ì†ë„
+    public float AttackPower = 10f; // ê³µê²©
+    public float AttackRange = 2f;  // ê³µê²© ë²”ìœ„
+    public float MaxHp = 100f;      // ì²´ë ¥
+    public float AttackCooldown = 0.4f; // ê³µê²© ì¬ì‚¬ìš© ëŒ€ê¸°ì‹œê°„
 
-    [Header("½ÃÀÛ Áö±Ş")]
-    public int StartingLevel = 1;                                 // ½ÃÀÛ ·¹º§
-    public List<CurrencyAmount> StartingCurrencies = new List<CurrencyAmount>(); // ½ÃÀÛ ÀçÈ­(µ· µî)
+    [Header("ì‹œì‘ ì§€ê¸‰")]
+    public int StartingLevel = 1;  // ì‹œì‘ ë ˆë²¨
+    public List<CurrencyAmount> StartingCurrencies = new List<CurrencyAmount>(); // ì‹œì‘ ì¬í™”(ëˆ ë“±)
 }

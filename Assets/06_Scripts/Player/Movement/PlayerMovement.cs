@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
     public Vector2 MoveInput { get; private set; }
     public bool IsInputBlocked { get; private set; }
 
+    public Vector2 FacingDirection { get; private set; } = Vector2.down;
+
     public bool IsMoving => MoveInput.sqrMagnitude > 0.0001f;
 
     // PlayerContext가 호출. 필요한 참조를 캐싱하고 탑다운 이동에 맞게 Rigidbody2D를 설정한다.
@@ -39,6 +41,11 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 
         // 입력 읽기는 Update에서 (프레임마다 최신 입력 확보). 조이스틱 미연결이면 정지.
         MoveInput = (joystick != null) ? joystick.Direction : Vector2.zero;
+
+        if (MoveInput.sqrMagnitude > 0.0001f)
+        {
+            FacingDirection = MoveInput.normalized;
+        }
     }
 
     private void FixedUpdate()

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ¼ÒÀ¯ ÀçÈ­(¿©·¯ Á¾·ù). ½ÃÀÛ Áö±ŞÀº PlayerBaseData(SO)¿¡¼­ ÀĞ°í, ÇöÀç ÀÜ¾×À» °ü¸®ÇÑ´Ù.
-// KJÀÇ Àü¿ª CurrencyManager¿Í º°°³·Î ÇÃ·¹ÀÌ¾î°¡ Á÷Á¢ °ü¸®ÇÑ´Ù.
+// í”Œë ˆì´ì–´ ì†Œìœ  ì¬í™”(ì—¬ëŸ¬ ì¢…ë¥˜). ì‹œì‘ ì§€ê¸‰ì€ PlayerBaseData(SO)ì—ì„œ ì½ê³ , í˜„ì¬ ì”ì•¡ì„ ê´€ë¦¬í•œë‹¤.
+// KJì˜ ì „ì—­ CurrencyManagerì™€ ë³„ê°œë¡œ í”Œë ˆì´ì–´ê°€ ì§ì ‘ ê´€ë¦¬í•œë‹¤.
 public class PlayerWallet : MonoBehaviour, IPlayerComponent
 {
-    // ÀÜ¾× º¯µ¿ ½Ã ¹æ¼Û (ÀÎÀÚ: ¹Ù²ï ÀçÈ­ Á¾·ù). °ñµå UI µîÀÌ ±¸µ¶.
+    // ì”ì•¡ ë³€ë™ ì‹œ ë°©ì†¡ (ì¸ì: ë°”ë€ ì¬í™” ì¢…ë¥˜). ê³¨ë“œ UI ë“±ì´ êµ¬ë….
     public event Action<CurrencyType> OnChanged;
 
     private readonly Dictionary<CurrencyType, int> balances = new Dictionary<CurrencyType, int>();
@@ -20,7 +20,7 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
         {
             foreach (CurrencyAmount c in data.StartingCurrencies)
             {
-                balances[c.Type] = c.Amount; // ½ÃÀÛ Áö±Ş
+                balances[c.Type] = c.Amount; // ì‹œì‘ ì§€ê¸‰
             }
         }
     }
@@ -33,13 +33,13 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
         }
     }
 
-    // ÀÜ¾× Á¶È¸ (¾øÀ¸¸é 0)
+    // ì”ì•¡ ì¡°íšŒ (ì—†ìœ¼ë©´ 0)
     public int GetBalance(CurrencyType type)
     {
         return balances.TryGetValue(type, out int v) ? v : 0;
     }
 
-    // È¹µæ (ÆÇ¸Å/º¸»ó/µå·Ó). À½¼ö/0Àº ¹«½Ã.
+    // íšë“ (íŒë§¤/ë³´ìƒ/ë“œë¡­). ìŒìˆ˜/0ì€ ë¬´ì‹œ.
     public void Add(CurrencyType type, int amount)
     {
         if (amount <= 0) return;
@@ -47,7 +47,7 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
         OnChanged?.Invoke(type);
     }
 
-    // ¼Òºñ ½Ãµµ. ºÎÁ·ÇÏ¸é false ¹İÈ¯(±¸¸Å Ãë¼Ò).
+    // ì†Œë¹„ ì‹œë„. ë¶€ì¡±í•˜ë©´ false ë°˜í™˜(êµ¬ë§¤ ì·¨ì†Œ).
     public bool TrySpend(CurrencyType type, int amount)
     {
         if (amount <= 0) return false;

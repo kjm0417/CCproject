@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerContext))]
 public class PlayerDebugHUD : MonoBehaviour
 {
+    private const string SwordItemId = "25101";
     private const string AxeItemId = "22101";
     private const string PickaxeItemId = "21101";
     private const string ShovelItemId = "23101";
@@ -23,6 +24,7 @@ public class PlayerDebugHUD : MonoBehaviour
     private int testFoodCount = 5;
 
     private PlayerContext context;
+    private InvenItemData runtimeSword;
     private InvenItemData runtimeAxe;
     private InvenItemData runtimePickaxe;
     private InvenItemData runtimeShovel;
@@ -75,7 +77,8 @@ public class PlayerDebugHUD : MonoBehaviour
         if (context.Inventory != null)
         {
             GUILayout.Label(
-                $"Test Tools  Axe: {HasItem(AxeItemId)}    "
+                $"Test Tools  Sword: {HasItem(SwordItemId)}    "
+                + $"Axe: {HasItem(AxeItemId)}    "
                 + $"Pickaxe: {HasItem(PickaxeItemId)}    "
                 + $"Shovel: {HasItem(ShovelItemId)}");
             string foodName = testFoodItem != null ? testFoodItem.ItemName : "Not Assigned";
@@ -105,9 +108,13 @@ public class PlayerDebugHUD : MonoBehaviour
         {
             context.Vitals.ConsumeHunger(30);
         }
-        if (context.Inventory != null && GUILayout.Button("Give Axe + Pickaxe + Shovel"))
+        if (context.Inventory != null && GUILayout.Button("Give Sword + Axe + Pickaxe + Shovel"))
         {
             GrantTestTools();
+        }
+        if (context.Inventory != null && GUILayout.Button("Give Sword"))
+        {
+            GrantTestSword();
         }
         if (context.Inventory != null && GUILayout.Button("Give Shovel"))
         {
@@ -126,6 +133,8 @@ public class PlayerDebugHUD : MonoBehaviour
     {
         if (context == null || context.Inventory == null) return;
 
+        GrantTestSword();
+
         if (!HasItem(AxeItemId))
         {
             runtimeAxe = CreateTestTool(AxeItemId, "도끼");
@@ -139,6 +148,19 @@ public class PlayerDebugHUD : MonoBehaviour
         }
 
         GrantTestShovel();
+    }
+
+    private void GrantTestSword()
+    {
+        if (context == null || context.Inventory == null || HasItem(SwordItemId)) return;
+
+        runtimeSword = CreateTestTool(SwordItemId, "칼");
+        int remaining = context.Inventory.Add(runtimeSword, 1);
+        if (remaining > 0)
+        {
+            Destroy(runtimeSword);
+            runtimeSword = null;
+        }
     }
 
     private void GrantTestShovel()
@@ -200,6 +222,7 @@ public class PlayerDebugHUD : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (runtimeSword != null) Destroy(runtimeSword);
         if (runtimeAxe != null) Destroy(runtimeAxe);
         if (runtimePickaxe != null) Destroy(runtimePickaxe);
         if (runtimeShovel != null) Destroy(runtimeShovel);
