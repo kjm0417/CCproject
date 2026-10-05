@@ -29,12 +29,19 @@ public class DungeonSpring : DungeonBase
 
     public DungeonSpring2FMap[] Maps2F => maps2F;
 
+    [Header("´øÀü 3Ãþ")]
+    [SerializeField, Tooltip("3Ãþ ¸Êº° ¼³Á¤ ( ¸Ê / Àû / Àû Ãâ¸ô À§Ä¡ / ¾¾¾Ñ Å¸ÀÏ / 4Ãþ Æ÷Å» ). 3Ãþ_0 -> Æ÷Å»_0, 3Ãþ_1 -> Æ÷Å»_1")]
+    private DungeonSpring3FMap[] maps3F;
+
+    public DungeonSpring3FMap[] Maps3F => maps3F;
+
     protected override void Awake()
     {
         base.Awake();
 
         dungeonSpring1F = new DungeonSpring1F(this);
         dungeonSpring2F = new DungeonSpring2F(this);
+        dungeonSpring3F = new DungeonSpring3F(this);
     }
 
     /// <summary>
@@ -46,7 +53,8 @@ public class DungeonSpring : DungeonBase
         {
             case 1: dungeonSpring1F.Enter(); break;
             case 2: dungeonSpring2F.Enter(map); break;
-            //TODO KJ - 3Ãþ / 4Ãþ
+            case 3: dungeonSpring3F.Enter(map); break;
+            //TODO KJ - 4Ãþ
         }
     }
 
@@ -275,11 +283,170 @@ public class DungeonSpring2F
 }
 
 /// <summary>
-/// º½ ´øÀü 3Ãþ
+/// º½ ´øÀü 3Ãþ ¸Ê 1°³ ¼³Á¤ ( ¸Ê / Àû / Àû Ãâ¸ô À§Ä¡ / ¾¾¾Ñ Å¸ÀÏ / 4Ãþ Æ÷Å» ¹­À½ )
+/// </summary>
+[Serializable]
+public class DungeonSpring3FMap
+{
+    [Tooltip("3Ãþ ¸Ê")]
+    public DungeonMap Map;
+    [Tooltip("ÀÌ ¸ÊÀÇ Àû ÇÁ¸®ÆÕ ( Ãâ¸ô À§Ä¡¿Í °°Àº ¼ø¼­, DungeonEnemySeedDrop ºÎÂø ÇÊ¿ä )")]
+    public EnemyBase[] EnemyPrefabs;
+    [Tooltip("ÀÌ ¸ÊÀÇ Àû Ãâ¸ô À§Ä¡ ( EnemyPrefabs ¿Í °°Àº ¼ø¼­ )")]
+    public Transform[] EnemySpawnPoints;
+    [Tooltip("ÀÌ ¸ÊÀÇ ¾¾¾Ñ Å¸ÀÏ ( ¸ðµÎ ¸Â´Â ¾¾¾Ñ ½ÉÀ¸¸é Æ÷Å» È°¼ºÈ­ )")]
+    public DungeonSeedTile[] SeedTiles;
+    [Tooltip("ÀÌ ¸Ê¿¡¼­ È°¼ºÈ­ÇÒ 4Ãþ Æ÷Å»")]
+    public DungeonPortal Portal;
+}
+
+/// <summary>
+/// º½ ´øÀü 3Ãþ - ¸Ê ¿©·¯ °³ ( µé¾î¿Â Æ÷Å»¿¡ µû¶ó ¸Ê °áÁ¤ )
+/// ½ºÆù À§Ä¡¸¶´Ù Àû 1¸¶¸®, Àû¸¶´Ù Á¤ÇØÁø ¾¾¾Ñ µå¶ø ( DungeonEnemySeedDrop )
+/// ¸Ê ¾È ¾¾¾Ñ Å¸ÀÏ¿¡ ¸ðµÎ ¸Â´Â ¾¾¾Ñ ½ÉÀ¸¸é ±× ¸ÊÀÇ 4Ãþ Æ÷Å» »ý¼º
 /// </summary>
 public class DungeonSpring3F
 {
+    private DungeonSpring dungeonSpring;
 
+    private DungeonSpring3FMap current; //ÇöÀç ÁøÇà ÁßÀÎ 3Ãþ ¸Ê
+    private int plantedCount; //½ÉÀº Å¸ÀÏ ¼ö
+
+    public DungeonSpring3F(DungeonSpring dungeonSpring)
+    {
+        this.dungeonSpring = dungeonSpring;
+    }
+
+    /// <summary>
+    /// 3Ãþ ÁøÀÔ - µé¾î¿Â ¸Ê ¼³Á¤À¸·Î Æ÷Å» ¼û±â°í Å¸ÀÏ ÃÊ±âÈ­ -> Àû Ãâ¸ô
+    /// </summary>
+    public void Enter(DungeonMap map)
+    {
+        Debug.Log($"[DungeonSpring3F] 3Ãþ ÁøÀÔ : {map.MapID}");
+
+        Exit();
+
+        current = FindMapSetting(map);
+        if (current == null)
+        {
+            Debug.LogError($"[DungeonSpring3F] {map.MapID} ¼³Á¤ ¾øÀ½ - DungeonSpring.maps3F µî·Ï ÇÊ¿ä");
+            return;
+        }
+
+        if (current.Portal != null)
+        {
+            current.Portal.gameObject.SetActive(false);
+        }
+
+        InitSeedTiles();
+        SpawnEnemies();
+    }
+
+    /// <summary>
+    /// ÀÌÀü ÁøÀÔ ±¸µ¶ ÇØÁ¦ / ÃÊ±âÈ­
+    /// </summary>
+    private void Exit()
+    {
+        if (current != null && current.SeedTiles != null)
+        {
+            foreach (DungeonSeedTile tile in current.SeedTiles)
+            {
+                if (tile != null)
+                {
+                    tile.OnPlanted -= OnTilePlanted;
+                }
+            }
+        }
+
+        current = null;
+        plantedCount = 0;
+    }
+
+    private void InitSeedTiles()
+    {
+        if (current.SeedTiles == null || current.SeedTiles.Length == 0)
+        {
+            Debug.LogError($"[DungeonSpring3F] {current.Map.MapID} ¾¾¾Ñ Å¸ÀÏ ¼³Á¤ ÇÊ¿ä");
+            return;
+        }
+
+        foreach (DungeonSeedTile tile in current.SeedTiles)
+        {
+            if (tile == null) continue;
+
+            tile.ResetState();
+            tile.OnPlanted += OnTilePlanted;
+        }
+    }
+
+    /// <summary>
+    /// ½ºÆù À§Ä¡¸¶´Ù Àû 1¸¶¸® »ý¼º ( ¾¾¾ÑÀº Àû ÇÁ¸®ÆÕÀÇ DungeonEnemySeedDrop ÀÌ µå¶ø )
+    /// </summary>
+    private void SpawnEnemies()
+    {
+        EnemyBase[] prefabs = current.EnemyPrefabs;
+        Transform[] spawnPoints = current.EnemySpawnPoints;
+
+        if (prefabs == null || spawnPoints == null || prefabs.Length != spawnPoints.Length)
+        {
+            Debug.LogError($"[DungeonSpring3F] {current.Map.MapID} Àû ÇÁ¸®ÆÕ / Ãâ¸ô À§Ä¡ ¼ö°¡ °°¾Æ¾ß ÇÔ");
+            return;
+        }
+
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (prefabs[i] == null || spawnPoints[i] == null) continue;
+
+            if (prefabs[i].GetComponent<DungeonEnemySeedDrop>() == null)
+            {
+                Debug.LogError($"[DungeonSpring3F] {prefabs[i].name} DungeonEnemySeedDrop ºÎÂø ÇÊ¿ä");
+            }
+
+            UnityEngine.Object.Instantiate(prefabs[i], spawnPoints[i].position, Quaternion.identity);
+        }
+    }
+
+    private void OnTilePlanted(DungeonSeedTile tile)
+    {
+        tile.OnPlanted -= OnTilePlanted;
+
+        plantedCount++;
+        Debug.Log($"[DungeonSpring3F] ¾¾¾Ñ ½É±â {plantedCount}/{current.SeedTiles.Length}");
+
+        if (plantedCount >= current.SeedTiles.Length)
+        {
+            OpenPortal();
+        }
+    }
+
+    /// <summary>
+    /// ÇöÀç ¸ÊÀÇ 4Ãþ ÀÌµ¿ Æ÷Å» »ý¼º
+    /// </summary>
+    private void OpenPortal()
+    {
+        if (current.Portal == null)
+        {
+            Debug.LogError($"[DungeonSpring3F] {current.Map.MapID} 4Ãþ Æ÷Å» ¼³Á¤ ÇÊ¿ä");
+            return;
+        }
+
+        current.Portal.gameObject.SetActive(true);
+        Debug.Log($"[DungeonSpring3F] 3Ãþ Å¬¸®¾î - Æ÷Å» »ý¼º : {current.Portal.name}");
+    }
+
+    private DungeonSpring3FMap FindMapSetting(DungeonMap map)
+    {
+        if (dungeonSpring.Maps3F == null) return null;
+
+        foreach (DungeonSpring3FMap setting in dungeonSpring.Maps3F)
+        {
+            if (setting != null && setting.Map == map)
+            {
+                return setting;
+            }
+        }
+        return null;
+    }
 }
 
 /// <summary>

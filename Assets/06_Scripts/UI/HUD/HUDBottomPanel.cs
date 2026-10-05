@@ -548,7 +548,9 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         {
             // 발밑 칸은 이동할 때마다 바뀌므로 버튼은 켜두고, 심을 수 있는지는 누를 때 판정
             CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
-            bool canPlant = interaction != null && cropPlanter != null && cropPlanter.IsPlantable(item);
+            bool canPlant = interaction != null
+                && ((cropPlanter != null && cropPlanter.IsPlantable(item))
+                    || interaction.CurrentTarget is DungeonSeedTile); // 던전 씨앗 타일 근처
             attackButton.SetQuickSlotOverride(icon, () => interaction.TryPlantSeed(item), canPlant);
             return;
         }

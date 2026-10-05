@@ -157,6 +157,12 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     /// </summary>
     public bool TryPlantSeed(InvenItemData seed)
     {
+        // 던전 씨앗 타일 근처면 타일에 심기
+        if (CurrentTarget is DungeonSeedTile seedTile)
+        {
+            return context != null && seedTile.TryPlant(seed, context.Inventory);
+        }
+
         CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
         if (cropPlanter == null || context == null) return false;
 
