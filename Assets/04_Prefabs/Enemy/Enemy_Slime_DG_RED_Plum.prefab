@@ -60,7 +60,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a230b2f5448975459c4af06349feca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonEnemySeedDrop
-  pickupPrefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  finalDropTable: {fileID: 0}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  scatterRadius: 0.35
+  jumpPower: 0.8
+  jumpDuration: 0.5
+  spinCount: 1
 --- !u!1 &8821267218433236044
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DungeonSpring : DungeonBase
@@ -35,6 +37,12 @@ public class DungeonSpring : DungeonBase
 
     public DungeonSpring3FMap[] Maps3F => maps3F;
 
+    [Header("던전 4층")]
+    [SerializeField, Tooltip("4층 맵별 설정 ( 맵 / 적 / 적 출몰 위치 / 샘 / 포탈 ). 4층_0 -> 포탈_0, 4층_1 -> 포탈_1")]
+    private DungeonSpring4FMap[] maps4F;
+
+    public DungeonSpring4FMap[] Maps4F => maps4F;
+
     protected override void Awake()
     {
         base.Awake();
@@ -42,6 +50,7 @@ public class DungeonSpring : DungeonBase
         dungeonSpring1F = new DungeonSpring1F(this);
         dungeonSpring2F = new DungeonSpring2F(this);
         dungeonSpring3F = new DungeonSpring3F(this);
+        dungeonSpring4F = new DungeonSpring4F(this);
     }
 
     /// <summary>
@@ -54,7 +63,7 @@ public class DungeonSpring : DungeonBase
             case 1: dungeonSpring1F.Enter(); break;
             case 2: dungeonSpring2F.Enter(map); break;
             case 3: dungeonSpring3F.Enter(map); break;
-            //TODO KJ - 4층
+            case 4: dungeonSpring4F.Enter(map); break;
         }
     }
 
@@ -450,9 +459,177 @@ public class DungeonSpring3F
 }
 
 /// <summary>
-/// 봄 던전 4층
+/// 봄 던전 4층 맵 1개 설정 ( 맵 / 적 / 적 출몰 위치 / 샘 / 포탈 묶음 )
+/// </summary>
+[Serializable]
+public class DungeonSpring4FMap
+{
+    [Tooltip("4층 맵")]
+    public DungeonMap Map;
+    [Tooltip("이 맵에 출몰할 적 프리팹 ( 출몰 시 랜덤 )")]
+    public EnemyBase[] EnemyPrefabs;
+    [Tooltip("적 출몰 위치 ( 사방 ) - 진입 시 위치마다 1마리")]
+    public Transform[] EnemySpawnPoints;
+    [Tooltip("적이 죽은 뒤 새 적이 출몰하기까지 대기 ( 초 )")]
+    public float RespawnDelay = 3f;
+    [Tooltip("이 맵의 샘 ( 정화율 100% 시 포탈 활성화 )")]
+    public DungeonFountain Fountain;
+    [Tooltip("정화 완료 시 활성화할 포탈")]
+    public DungeonPortal Portal;
+}
+
+/// <summary>
+/// 봄 던전 4층 - 진입 시 출몰 위치마다 적 1마리, 적이 죽으면 새 적 출몰 ( 정화 완료 전까지 )
+/// 샘 안에 있으면 정화율 증가 / 적이 샘에 닿으면 감소. 정화율 100% 시 그 맵의 포탈 생성 ( 5층 )
 /// </summary>
 public class DungeonSpring4F
 {
+    private DungeonSpring dungeonSpring;
 
+    private DungeonSpring4FMap current; //현재 진행 중인 4층 맵
+    private bool isSpawning; //정화 완료 / 맵 이탈 시 false -> 새 적 출몰 X
+
+    public DungeonSpring4F(DungeonSpring dungeonSpring)
+    {
+        this.dungeonSpring = dungeonSpring;
+    }
+
+    /// <summary>
+    /// 4층 진입 - 포탈 숨기고 샘 정화 시작 -> 적 출몰 시작
+    /// </summary>
+    public void Enter(DungeonMap map)
+    {
+        Debug.Log($"[DungeonSpring4F] 4층 진입 : {map.MapID}");
+
+        Exit();
+
+        current = FindMapSetting(map);
+        if (current == null)
+        {
+            Debug.LogError($"[DungeonSpring4F] {map.MapID} 설정 없음 - DungeonSpring.maps4F 등록 필요");
+            return;
+        }
+
+        if (current.Portal != null)
+        {
+            current.Portal.gameObject.SetActive(false);
+        }
+
+        if (current.Fountain == null)
+        {
+            Debug.LogError($"[DungeonSpring4F] {map.MapID} 샘 설정 필요");
+            return;
+        }
+
+        current.Fountain.OnPurified += OnPurified;
+        current.Fountain.Begin();
+
+        SpawnInitialEnemies();
+    }
+
+    /// <summary>
+    /// 이전 진입 정리 ( 구독 해제 / 출몰 중지 )
+    /// </summary>
+    private void Exit()
+    {
+        isSpawning = false;
+
+        if (current != null && current.Fountain != null)
+        {
+            current.Fountain.OnPurified -= OnPurified;
+        }
+
+        current = null;
+    }
+
+    /// <summary>
+    /// 진입 시 출몰 위치마다 적 1마리
+    /// </summary>
+    private void SpawnInitialEnemies()
+    {
+        if (current.EnemyPrefabs == null || current.EnemyPrefabs.Length == 0
+            || current.EnemySpawnPoints == null || current.EnemySpawnPoints.Length == 0)
+        {
+            Debug.LogError($"[DungeonSpring4F] {current.Map.MapID} 적 프리팹 / 출몰 위치 설정 필요");
+            return;
+        }
+
+        isSpawning = true;
+
+        foreach (Transform spawnPoint in current.EnemySpawnPoints)
+        {
+            SpawnEnemy(spawnPoint);
+        }
+    }
+
+    /// <summary>
+    /// 랜덤 적 생성 - 죽으면 새 적 출몰 예약
+    /// </summary>
+    private void SpawnEnemy(Transform spawnPoint)
+    {
+        EnemyBase prefab = current.EnemyPrefabs[UnityEngine.Random.Range(0, current.EnemyPrefabs.Length)];
+        if (prefab == null || spawnPoint == null) return;
+
+        EnemyBase enemy = UnityEngine.Object.Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        enemy.OnEnemyDied += OnEnemyDied;
+    }
+
+    private void OnEnemyDied(EnemyBase enemy)
+    {
+        enemy.OnEnemyDied -= OnEnemyDied;
+
+        if (!isSpawning) return;
+
+        dungeonSpring.StartCoroutine(RespawnRoutine(current));
+    }
+
+    /// <summary>
+    /// 대기 후 랜덤 위치에 새 적 출몰 ( 그 사이 정화 완료 / 맵 이탈이면 취소 )
+    /// </summary>
+    private IEnumerator RespawnRoutine(DungeonSpring4FMap setting)
+    {
+        yield return new WaitForSeconds(Mathf.Max(0f, setting.RespawnDelay));
+
+        if (!isSpawning || current != setting) yield break;
+
+        Transform[] spawnPoints = setting.EnemySpawnPoints;
+        SpawnEnemy(spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)]);
+    }
+
+    private void OnPurified(DungeonFountain fountain)
+    {
+        fountain.OnPurified -= OnPurified;
+
+        isSpawning = false;
+        OpenPortal();
+    }
+
+    /// <summary>
+    /// 정화 완료 - 현재 맵의 포탈 생성
+    /// </summary>
+    private void OpenPortal()
+    {
+        if (current.Portal == null)
+        {
+            Debug.LogError($"[DungeonSpring4F] {current.Map.MapID} 포탈 설정 필요");
+            return;
+        }
+
+        current.Portal.gameObject.SetActive(true);
+        Debug.Log($"[DungeonSpring4F] 4층 클리어 - 포탈 생성 : {current.Portal.name}");
+    }
+
+    private DungeonSpring4FMap FindMapSetting(DungeonMap map)
+    {
+        if (dungeonSpring.Maps4F == null) return null;
+
+        foreach (DungeonSpring4FMap setting in dungeonSpring.Maps4F)
+        {
+            if (setting != null && setting.Map == map)
+            {
+                return setting;
+            }
+        }
+        return null;
+    }
 }
