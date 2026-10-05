@@ -384,6 +384,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   attackAngle: 80
+  targetScanInterval: 0.1
+  showAttackRangeGizmo: 1
+  gizmoSegments: 24
+  gizmoColor: {r: 1, g: 0.25, b: 0.1, a: 0.8}
 --- !u!1 &3439827609930140897
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +491,7 @@ Transform:
   m_GameObject: {fileID: 4632013605558087656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.24, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

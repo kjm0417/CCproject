@@ -159,7 +159,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1.5
+  m_Speed: 3
   m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -181,13 +181,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50a971869f5448faa5fd04600a9f5d5a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  wanderPoints: []
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wanderPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   shopStandPoint: {fileID: 0}
   shopArea: {fileID: 0}
-  walkSpeed: 1.5
-  runSpeed: 4
+  walkSpeed: 2
+  runSpeed: 5
   arrivalDistance: 0.15
   navMeshSampleDistance: 0.5
   retryInterval: 1
