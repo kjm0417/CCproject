@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.coplaydev.unity-mcp": "http://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
+    "com.h8man.2d.navmeshplus": "https://github.com/h8man/NavMeshPlus.git#16283ee1040e591b9a99ddf93f37e9af93925aaf",
     "com.unity.2d.animation": "15.1.0",
     "com.unity.2d.aseprite": "5.0.3",
     "com.unity.2d.psdimporter": "14.0.3",
@@ -11,6 +12,7 @@
     "com.unity.2d.tooling": "3.0.1",
     "com.unity.ai.assistant": "2.17.0-pre.1",
     "com.unity.ai.inference": "2.6.1",
+    "com.unity.ai.navigation": "2.0.15",
     "com.unity.cinemachine": "3.1.7",
     "com.unity.collab-proxy": "2.13.3",
     "com.unity.device-simulator.devices": "1.0.1",

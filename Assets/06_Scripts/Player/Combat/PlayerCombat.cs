@@ -12,10 +12,7 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
     [Header("타겟 감지")]
     [SerializeField, Min(0.02f)] private float targetScanInterval = 0.1f;
 
-    [Header("공격 범위 표시")]
-    [SerializeField] private bool showAttackRangeGizmo = true;
-    [SerializeField, Range(3, 64)] private int gizmoSegments = 24;
-    [SerializeField] private Color gizmoColor = new Color(1f, 0.25f, 0.1f, 0.8f);
+   
 
     private PlayerContext context;
     private float nextAttackTime;
@@ -59,7 +56,7 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
         nextAttackTime = Time.time + context.BaseData.AttackCooldown;
 
         Vector2 origin = attackOrigin.position;
-        Vector2 facing = context.Movement.FacingDirection;
+        Vector2 facing = GetAttackFacingDirection();
         float range = context.Stats.AttackRange;
         int damage = Mathf.RoundToInt(context.Stats.AttackPower);
 
@@ -87,7 +84,7 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
         if (context == null || context.Stats == null || context.Movement == null) return false;
 
         Vector2 origin = attackOrigin != null ? attackOrigin.position : transform.position;
-        Vector2 facing = context.Movement.FacingDirection;
+        Vector2 facing = GetAttackFacingDirection();
         float range = context.Stats.AttackRange;
         targetColliders.Clear();
         int hitCount = Physics2D.OverlapCircle(origin, range, targetFilter, targetColliders);
@@ -124,6 +121,18 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
         return target != null;
     }
 
+    private Vector2 GetAttackFacingDirection()
+    {
+        if (context.Animation != null)
+        {
+            return context.Animation.FacingRight ? Vector2.right : Vector2.left;
+        }
+
+        return context.Movement != null && context.Movement.FacingDirection.x < 0f
+            ? Vector2.left
+            : Vector2.right;
+    }
+
     private bool IsInsideAttackArea(Collider2D targetCollider, Vector2 origin, Vector2 facing)
     {
         Vector2 hitPosition = targetCollider.ClosestPoint(origin);
@@ -133,17 +142,23 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
             || Vector2.Angle(facing, direction) <= attackAngle * 0.5f;
     }
 
+
+
+    [Header("공격 범위 표시")]
+    [SerializeField] private bool showAttackRangeGizmo = true;
+    [SerializeField, Range(3, 64)] private int gizmoSegments = 24;
+    [SerializeField] private Color gizmoColor = new Color(1f, 0.25f, 0.1f, 0.8f);
     private void OnDrawGizmos()
     {
         if (!showAttackRangeGizmo) return;
 
         Vector3 origin = attackOrigin != null ? attackOrigin.position : transform.position;
-        Vector2 facing = Vector2.down;
+        Vector2 facing = Vector2.right;
         float range = 2f;
 
         if (Application.isPlaying && context != null)
         {
-            if (context.Movement != null) facing = context.Movement.FacingDirection;
+            facing = GetAttackFacingDirection();
             if (context.Stats != null) range = context.Stats.AttackRange;
         }
         else
