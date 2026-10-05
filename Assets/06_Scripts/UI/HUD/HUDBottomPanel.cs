@@ -551,7 +551,14 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             bool canPlant = interaction != null
                 && ((cropPlanter != null && cropPlanter.IsPlantable(item))
                     || interaction.CurrentTarget is DungeonSeedTile); // 던전 씨앗 타일 근처
-            attackButton.SetQuickSlotOverride(icon, () => interaction.TryPlantSeed(item), canPlant);
+            bool canHarvest = interaction != null
+                && interaction.CurrentTarget is PlantedCropObject crop
+                && crop.IsHarvestable;
+            attackButton.SetQuickSlotOverride(icon, () => interaction.TryHarvestOrPlantSeed(item), canPlant || canHarvest);
+
+            #region [이전] 씨앗 선택 시 심기만 (수확 불가)
+            // attackButton.SetQuickSlotOverride(icon, () => interaction.TryPlantSeed(item), canPlant);
+            #endregion
             return;
         }
 

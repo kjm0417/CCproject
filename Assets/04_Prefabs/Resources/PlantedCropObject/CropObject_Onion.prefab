@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2798940810901604452}
   - component: {fileID: 1530188994063071397}
   m_Layer: 0
-  m_Name: CropObject_Plum
+  m_Name: CropObject_Onion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8889392320050509781, guid: 31027f82f1173714398160773af473d4, type: 3}
+  m_Sprite: {fileID: 7437800461313972792, guid: 61e0867ef0769b44aade770c36e8723b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -146,19 +146,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlantedCropObject
   dropper: {fileID: 1530188994063071397}
   farmObjDatas:
-  - {fileID: 11400000, guid: 3423b7b7555cebb4b9ed6dde2c478a8f, type: 2}
-  - {fileID: 11400000, guid: 6ec0768d4d6163b4780e1954e74f46b2, type: 2}
-  - {fileID: 11400000, guid: c7a806c1b8ab421478506ede4cb4b4bb, type: 2}
-  - {fileID: 11400000, guid: 19830795fd1adb74dbc0f60912b1f115, type: 2}
-  - {fileID: 11400000, guid: bbe36197656d779409aae997fb6fec07, type: 2}
+  - {fileID: 11400000, guid: 95624d5a3e342e4419c40e81de0cb4d8, type: 2}
+  - {fileID: 11400000, guid: 0b83089373c6b9d41bee041d7e7320b6, type: 2}
+  - {fileID: 11400000, guid: 409aeb277e6425d4bbecfd32f2bd45fd, type: 2}
+  - {fileID: 11400000, guid: 1d232e026fbb2ec4a902fd170a962cc6, type: 2}
+  - {fileID: 11400000, guid: d026b2f885c24294d8492b937599a277, type: 2}
   maxGrowthStage: 5
   regrowStage: 1
   stageSprites:
-  - {fileID: -8889392320050509781, guid: 31027f82f1173714398160773af473d4, type: 3}
-  - {fileID: 8998075037972044272, guid: 2c5882ac198d98b47bfcfb76c683a5ce, type: 3}
-  - {fileID: 6654232166475334664, guid: 834bd19a48a889c4aa08b05f331359b3, type: 3}
-  - {fileID: 8638131737526180085, guid: 4c054b55c4518284cb1be8ead6d3717d, type: 3}
-  - {fileID: 1569021196110048995, guid: 63b14052c2562244f9ec431e007c2ca7, type: 3}
+  - {fileID: 7437800461313972792, guid: 61e0867ef0769b44aade770c36e8723b, type: 3}
+  - {fileID: -6093213952395897613, guid: 7414d514bb895384ebdbc28e8ce99b14, type: 3}
+  - {fileID: 8344318188670826449, guid: 47b25127e06d9e34b943b988952a4755, type: 3}
+  - {fileID: 2816600322364278003, guid: 87d2399ea3c71ee4187ce1368d00de1b, type: 3}
+  - {fileID: 1036592954543797140, guid: a9aadc27ec59f3b4fb1457f23dbb37d7, type: 3}
 --- !u!114 &1530188994063071397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,8 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
-  finalDropTable: {fileID: 11400000, guid: 47d945fd805f74544a24209680dab8e7, type: 2}
-  finalPickupPrefab: {fileID: 7672621953354016798, guid: f30fb90aabb9dd049abb5de593817e3e, type: 3}
+  finalDropTable: {fileID: 11400000, guid: 363a43113697b4e40aaf8aef469aaff5, type: 2}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: 5bb8fbe296cce204ba056e0e95908dbf, type: 3}
   scatterRadius: 0.35
   jumpPower: 0.8
   jumpDuration: 0.5
