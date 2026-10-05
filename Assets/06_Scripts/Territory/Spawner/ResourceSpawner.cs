@@ -21,6 +21,9 @@ public class ResourceSpawner : MonoBehaviour
 
     private TerritoryZone territoryZone;
 
+    [SerializeField, Min(0), Tooltip("구조물 칸 기준 주변 몇 칸까지 자원 생성을 막을지 (0 = 구조물 칸만, 1 = 3x3)")]
+    private int structBlockRadius = 1;
+
     private Dictionary<Vector3Int, GameObject> occupiedCells = new Dictionary<Vector3Int, GameObject>();
     private Dictionary<GameObject, List<Vector3Int>> occupiedCellsByObject = new Dictionary<GameObject, List<Vector3Int>>();
 
@@ -248,16 +251,14 @@ public class ResourceSpawner : MonoBehaviour
                 if (tileModifier != null && tileModifier.IsModified(territoryZone, checkCell))
                     return false;
 
-                // 구조물과 충돌하면 불가
-                Vector3 cellWorldPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(checkCell);
+                // 구조물 셀 주변 structBlockRadius칸 안이면 불가
                 foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
                 {
-                    float distance = Vector2.Distance(structSlot.StructSpawnPos, cellWorldPos);
-                    if (distance < 4.0f)
-                    {
-                        Debug.Log($"Too close to struct! Blocked.");
+                    Vector3Int structCell = territoryZone.TerritoryTileMapGround.WorldToCell(structSlot.StructSpawnPos);
+
+                    if (Mathf.Abs(checkCell.x - structCell.x) <= structBlockRadius &&
+                        Mathf.Abs(checkCell.y - structCell.y) <= structBlockRadius)
                         return false;
-                    }
                 }
             }
         }

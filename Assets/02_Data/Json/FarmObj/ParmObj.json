@@ -52,7 +52,7 @@
     "CropName":"매실 (02)",
     "TimePerStageSec":5,
     "Regrowable":100,
-    "DropGroupID":73007,
+    "DropGroupID":73011,
     "CropSeason":"Spring"
   },
   {
@@ -60,7 +60,7 @@
     "CropName":"매실 (03)",
     "TimePerStageSec":5,
     "Regrowable":100,
-    "DropGroupID":73007,
+    "DropGroupID":73012,
     "CropSeason":"Spring"
   },
   {
@@ -68,7 +68,7 @@
     "CropName":"매실 (04)",
     "TimePerStageSec":5,
     "Regrowable":100,
-    "DropGroupID":73007,
+    "DropGroupID":73012,
     "CropSeason":"Spring"
   },
   {

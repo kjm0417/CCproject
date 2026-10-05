@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FarmObjData
   CropID: 51102_1
   CropName: "\uB9E4\uC2E4 (01)"
-  TimePerStageSec: 5
+  TimePerStageSec: 15
   Regrowable: 100
   DropGroupID: 73007
   CropSeason: Spring

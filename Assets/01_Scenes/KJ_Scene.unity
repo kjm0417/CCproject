@@ -1695,6 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3477,6 +3478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!1 &671309436
 GameObject:
   m_ObjectHideFlags: 0
@@ -4006,6 +4008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!1 &874208807
 GameObject:
   m_ObjectHideFlags: 0
@@ -4470,6 +4473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!1 &911656382
 GameObject:
   m_ObjectHideFlags: 0
@@ -6192,6 +6196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!114 &1154711833 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8858444571091387537, guid: 23a1642ceb473c7479c70aa902c11b94, type: 3}
@@ -6599,6 +6604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!4 &1278282102 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 438980273068796159, guid: a8f7be899629a59489df657e93b491d0, type: 3}
@@ -9502,6 +9508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!1 &1718987474 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4926919971455547305, guid: a8f7be899629a59489df657e93b491d0, type: 3}
@@ -9524,6 +9531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424ac749fc3e30845b8e0473078e1bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  structBlockRadius: 1
 --- !u!114 &1718987482 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5293634082941442516, guid: a8f7be899629a59489df657e93b491d0, type: 3}

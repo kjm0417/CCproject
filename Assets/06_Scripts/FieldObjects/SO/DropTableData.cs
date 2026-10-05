@@ -49,6 +49,47 @@ public class DropTableData : ScriptableObject
 
         return drops;
     }
+
+    /// <summary>
+    /// 같은 그룹 행 중 하나만 고르는 배타 드랍. DropRate를 가중치로 사용.
+    /// 합이 100 미만이면 나머지 확률은 드랍 없음, 100 이상이면 반드시 하나 드랍.
+    /// (Roll은 행마다 따로 굴리므로 둘 다/둘 다 안 나올 수 있음)
+    /// </summary>
+    public List<ItemDrop> RollOne(int dropGroupId)
+    {
+        List<ItemDrop> drops = new List<ItemDrop>();
+        List<DropTableEntry> candidates = new List<DropTableEntry>();
+        float totalRate = 0f;
+
+        for (int i = 0; i < entries.Count; i++)
+        {
+            DropTableEntry entry = entries[i];
+            if (entry.DropGroupID != dropGroupId || entry.DropRate <= 0f) continue;
+            if (entry.ResolveItem(itemDatabase) == null) continue;
+
+            candidates.Add(entry);
+            totalRate += entry.DropRate;
+        }
+
+        if (candidates.Count == 0) return drops;
+
+        float roll = Random.Range(0f, Mathf.Max(100f, totalRate));
+        float cumulative = 0f;
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            cumulative += candidates[i].DropRate;
+            if (roll >= cumulative) continue;
+
+            int count = Random.Range(candidates[i].MinCount, candidates[i].MaxCount + 1);
+            if (count > 0)
+            {
+                drops.Add(new ItemDrop(candidates[i].ResolveItem(itemDatabase), count));
+            }
+            break;
+        }
+
+        return drops;
+    }
 }
 
 [System.Serializable]

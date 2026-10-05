@@ -1,15 +1,14 @@
 ﻿[
   {
-    "ObjectID":42003,
+    "ObjectID":41005,
     "ObjectName":"매실 나무",
-    "ObjectType":"tree",
+    "ObjectType":"Tree",
     "HP":5,
     "ExpReward":10,
     "Description":"",
     "RespawnTimeMin":45,
     "RespawnTimeMax":60,
     "InteractionRange":"1 * 2",
-    "CropID":51102,
-    "":""
+    "CropID":51102
   }
 ]

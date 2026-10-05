@@ -7,6 +7,9 @@ public class DropGroupMapping
    // public int dropGroupId;
     public DropTableData dropTable;
     public PickupItem prefab;
+
+    [Tooltip("켜면 그룹 행 중 하나만 드랍 (DropRate = 가중치). 예: 씨앗 75 / 통나무 25")]
+    public bool pickOne;
 }
 
 /// <summary>
@@ -30,7 +33,14 @@ public class ComplexFieldObjectDropper : FieldObjectDropper
     {
         if (!dropDict.TryGetValue(dropGroupId, out var mapping)) return;
 
-        List<ItemDrop> drops = mapping.dropTable.Roll(dropGroupId);
+        List<ItemDrop> drops = mapping.pickOne
+            ? mapping.dropTable.RollOne(dropGroupId)
+            : mapping.dropTable.Roll(dropGroupId);
+
+        #region [이전] 행마다 따로 확률 판정
+        // List<ItemDrop> drops = mapping.dropTable.Roll(dropGroupId);
+        #endregion
+
         CreatePickUpItem(mapping.prefab, drops, origin);
     }
 }
