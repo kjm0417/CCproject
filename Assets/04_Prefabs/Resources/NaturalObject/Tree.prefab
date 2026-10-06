@@ -204,8 +204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
-  finalDropTable: {fileID: 0}
-  finalPickupPrefab: {fileID: 0}
+  finalDropTable: {fileID: 11400000, guid: d5d1adfbabf9b0f49a12f7403cd90167, type: 2}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: e003435437af64d4290bb8b1ee2693f2, type: 3}
   scatterRadius: 0.35
   jumpPower: 0.8
   jumpDuration: 0.5

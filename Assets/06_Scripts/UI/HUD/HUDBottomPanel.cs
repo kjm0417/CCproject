@@ -645,6 +645,18 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             case "13004":
                 resourcesPath = "Inven_Drop/Plum";
                 break;
+            case "13003":
+                resourcesPath = "Inven_Drop/Garlic";
+                break;
+            case "13005":
+                resourcesPath = "Inven_Drop/Berly";
+                break;
+            case "13006":
+                resourcesPath = "Inven_Drop/Onion";
+                break;
+            case "13007":
+                resourcesPath = "Inven_Drop/Mullbery";
+                break;
             default:
                 return IsFood(item) ? GetFoodFallbackIcon() : null;
         }

@@ -203,9 +203,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c40556a5017094082c8f237b489b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleFieldObjectDropper
-  deathDropTable: {fileID: 11400000, guid: 40edc66f02390e84186931e9c6f5cfa1, type: 2}
-  deathPickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
+  finalDropTable: {fileID: 11400000, guid: 40edc66f02390e84186931e9c6f5cfa1, type: 2}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: dc350348ef5c1e34a86ab6651502cdd9, type: 3}
   scatterRadius: 0.35
+  jumpPower: 0.8
+  jumpDuration: 0.5
+  spinCount: 1
 --- !u!1001 &5671247218529686802
 PrefabInstance:
   m_ObjectHideFlags: 0
