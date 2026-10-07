@@ -79,7 +79,10 @@ public class ResourceSpawner : MonoBehaviour
     /// </summary>
     private GameObject CreateResourceAtPosition(ResourceSpawnEntry entry, Vector3 worldPosition, bool applyOffset = true)
     {
-        GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+        GameObject resourceObj = ObjectPoolManager.Spawn(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+        #region [이전] Instantiate / Destroy
+        // GameObject resourceObj = Instantiate(entry.ResourcePrefab, Vector3.zero, Quaternion.identity);
+        #endregion
 
         GridCenterPoint centerPoint = resourceObj.GetComponent<GridCenterPoint>();
         if (centerPoint != null && applyOffset)
@@ -143,7 +146,10 @@ public class ResourceSpawner : MonoBehaviour
         {
             foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
             {
-                Instantiate(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                ObjectPoolManager.Spawn(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                #region [이전] Instantiate / Destroy
+                // Instantiate(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                #endregion
             }
         }
 
@@ -153,7 +159,10 @@ public class ResourceSpawner : MonoBehaviour
             foreach (var npcSlot in territoryZone.TerritoryZoneData.NpcSlots)
             {
                 // NpcSlotData 구조 확인 필요
-                Instantiate(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                ObjectPoolManager.Spawn(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                #region [이전] Instantiate / Destroy
+                // Instantiate(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                #endregion
             }
         }
 

@@ -14,7 +14,7 @@ public interface IEnemyDamageable
 /// <summary>
 /// 적 공통 
 /// </summary>
-public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
+public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable, IPoolable
 {
     protected EnemyContext enemyContext;
     protected EnemyFSM enemyFSM;
@@ -32,6 +32,11 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
     [SerializeField]
     protected MonsterData monsterData;
     public MonsterData MonsterData => monsterData;
+
+    [SerializeField, Tooltip("사망 후 제거 ( 풀 반납 ) 까지 대기 시간 - 사망 애니 길이")]
+    protected float despawnDelay = 1.5f;
+
+    private bool isSpawnedOnce; //첫 생성은 Awake 에서 초기화 완료
 
     protected virtual void Awake()
     {
@@ -108,6 +113,34 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable
 
         OnEnemyDieExpEvent?.Invoke(monsterData.EXP);
         OnEnemyDied?.Invoke(this);
+
+        //사망 애니 후 풀 반납 ( 풀 오브젝트가 아니면 Destroy )
+        ObjectPoolManager.Despawn(gameObject, despawnDelay);
+    }
+
+    /// <summary>
+    /// 풀 재사용 - 체력 / 애니 / 스킬 / FSM 초기화
+    /// </summary>
+    public virtual void OnSpawned()
+    {
+        if (!isSpawnedOnce)
+        {
+            isSpawnedOnce = true;
+            return;
+        }
+
+        enemyContext.EnemyHelath.ResetHelath();
+        ResetAnimParams();
+        enemyContext.Animator.Play(EnemyAnimHash.Spawn, 0, 0f);
+
+        skillManager = CreateSkillManager();
+        enemyFSM = CreateFSM();
+    }
+
+    public virtual void OnDespawned()
+    {
+        enemyFSM.Stop();
+        StopAllCoroutines();
     }
 
     /// <summary>

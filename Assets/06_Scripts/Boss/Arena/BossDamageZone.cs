@@ -29,7 +29,10 @@ public class BossDamageZone : MonoBehaviour
 
         if (vfxPrefab != null)
         {
-            zone.vfx = Instantiate(vfxPrefab, zone.shape.Center, Quaternion.Euler(0f, 0f, zone.shape.Angle), go.transform);
+            zone.vfx = ObjectPoolManager.Spawn(vfxPrefab, zone.shape.Center, Quaternion.Euler(0f, 0f, zone.shape.Angle), go.transform);
+            #region [이전] Instantiate / Destroy
+            // zone.vfx = Instantiate(vfxPrefab, zone.shape.Center, Quaternion.Euler(0f, 0f, zone.shape.Angle), go.transform);
+            #endregion
         }
         return zone;
     }
@@ -56,6 +59,12 @@ public class BossDamageZone : MonoBehaviour
 
     public void Release()
     {
+        //이펙트는 풀 반납 후 영역 제거 ( 같이 파괴되지 않게 )
+        if (vfx != null)
+        {
+            ObjectPoolManager.Despawn(vfx);
+            vfx = null;
+        }
         Destroy(gameObject);
     }
 }

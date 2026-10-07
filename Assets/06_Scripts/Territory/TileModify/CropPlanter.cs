@@ -100,7 +100,10 @@ public class CropPlanter : MonoBehaviour
         var cellKey = (zone.TerritoryZoneData.ZoneId, cell);
 
         Vector3 spawnPosition = zone.TerritoryTileMapGround.GetCellCenterWorld(cell);
-        PlantedCropObject crop = Instantiate(cropPrefab, spawnPosition, Quaternion.identity);
+        PlantedCropObject crop = ObjectPoolManager.Spawn(cropPrefab, spawnPosition, Quaternion.identity);
+        #region [이전] Instantiate / Destroy
+        // PlantedCropObject crop = Instantiate(cropPrefab, spawnPosition, Quaternion.identity);
+        #endregion
 
         plantedCells.Add(cellKey, (crop, seedItemId));
         crop.OnRemoved += _ => plantedCells.Remove(cellKey);

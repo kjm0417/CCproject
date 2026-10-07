@@ -119,6 +119,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &143832783
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 143832784}
+  - component: {fileID: 143832785}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &143832784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143832783}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &143832785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143832783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e563bb24e0b790b45a324893c1237723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  database: {fileID: 11400000, guid: ad7c6c1e79be06947bd62bb80e09e9ed, type: 2}
+  mixer: {fileID: 24100000, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  bgmGroup: {fileID: 4703349280584466112, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  sfxGroup: {fileID: 7071901938993071732, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  bgmFadeTime: 1
 --- !u!1 &965305852
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,3 +524,4 @@ SceneRoots:
   - {fileID: 965305855}
   - {fileID: 1632412730}
   - {fileID: 1260566361}
+  - {fileID: 143832784}

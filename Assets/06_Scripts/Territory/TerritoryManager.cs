@@ -229,7 +229,10 @@ public class TerritoryManager : MonoBehaviour
                 var spawnedObjects = spawner.GetSpawnedObjects();
                 foreach (var obj in spawnedObjects)
                 {
-                    Destroy(obj);
+                    ObjectPoolManager.Despawn(obj);
+                    #region [이전] Instantiate / Destroy
+                    // Destroy(obj);
+                    #endregion
                 }
                 // occupiedCells 초기화
                 spawner.ClearSpawnedResources();
@@ -244,7 +247,10 @@ public class TerritoryManager : MonoBehaviour
                 foreach (var structSlot in zone.TerritoryZoneData.StructSlots)
                 {
                     if (structSlot.StructPrefab != null)
-                        Instantiate(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                        ObjectPoolManager.Spawn(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                        #region [이전] Instantiate / Destroy
+                        // Instantiate(structSlot.StructPrefab, structSlot.StructSpawnPos, Quaternion.identity);
+                        #endregion
                 }
             }
         }
@@ -257,7 +263,10 @@ public class TerritoryManager : MonoBehaviour
                 foreach (var npcSlot in zone.TerritoryZoneData.NpcSlots)
                 {
                     if (npcSlot.NpcPrefab != null)
-                        Instantiate(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                        ObjectPoolManager.Spawn(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                        #region [이전] Instantiate / Destroy
+                        // Instantiate(npcSlot.NpcPrefab, npcSlot.NpcSpawnPos, Quaternion.identity);
+                        #endregion
                 }
             }
         }
@@ -375,7 +384,10 @@ public class TerritoryManager : MonoBehaviour
                     continue;
                 }
 
-                PickupItem pickup = Instantiate(prefab, dropped.Position, Quaternion.identity);
+                PickupItem pickup = ObjectPoolManager.Spawn(prefab, dropped.Position, Quaternion.identity);
+                #region [이전] Instantiate / Destroy
+                // PickupItem pickup = Instantiate(prefab, dropped.Position, Quaternion.identity);
+                #endregion
                 pickup.Initialize(pickup.Item, dropped.Count);
                 pickup.PrefabName = dropped.PrefabName;
             }

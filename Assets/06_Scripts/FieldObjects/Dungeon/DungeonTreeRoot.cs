@@ -6,10 +6,12 @@ using UnityEngine;
 /// 겹쳐진 뿌리는 가장 위에 그려진 뿌리부터 제거 가능 ( 아래 깔린 뿌리는 콜라이더 OFF -> 감지 X )
 /// 곡괭이 자동 변경은 PreferredToolType ( IToolInteractionTarget ) 으로 기존 PlayerInteraction 에서 처리
 /// </summary>
-public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget
+public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget, IPoolable
 {
     [SerializeField, Tooltip("곡괭이 상호작용 필요 횟수")]
     private int requiredHits = 3;
+    [SerializeField, Tooltip("true : 다른 뿌리에 덮여도 콜라이더 항상 ON ( 보스 자연의 부름 뿌리 등 )")]
+    private bool keepColliderEnabled;
 
     private int hitCount;
 
@@ -37,6 +39,13 @@ public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget
         activeRoots.Remove(this);
         RefreshAll();
     }
+
+    public void OnSpawned()
+    {
+        hitCount = 0;
+    }
+
+    public void OnDespawned() { }
 
     public override bool CanInteract(InteractionContext context)
     {
@@ -66,10 +75,17 @@ public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget
         {
             if (root.interactCollider != null)
             {
-                root.interactCollider.enabled = !root.IsCovered();
+                root.interactCollider.enabled = root.keepColliderEnabled || !root.IsCovered();
             }
         }
     }
+
+    #region [이전] 덮이면 무조건 콜라이더 OFF
+    // if (root.interactCollider != null)
+    // {
+    //     root.interactCollider.enabled = !root.IsCovered();
+    // }
+    #endregion
 
     private bool IsCovered()
     {

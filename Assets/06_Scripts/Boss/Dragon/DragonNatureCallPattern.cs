@@ -53,7 +53,10 @@ public class DragonNatureCallPattern : BossPattern
     /// </summary>
     private GameObject SpawnRoot(Transform point, int sortingOrder)
     {
-        GameObject root = Instantiate(rootPrefab, point.position, point.rotation, staging);
+        GameObject root = ObjectPoolManager.Spawn(rootPrefab, point.position, point.rotation, staging);
+        #region [이전] Instantiate / Destroy
+        // GameObject root = Instantiate(rootPrefab, point.position, point.rotation, staging);
+        #endregion
 
         foreach (SpriteRenderer sr in root.GetComponentsInChildren<SpriteRenderer>(true))
         {
@@ -61,7 +64,10 @@ public class DragonNatureCallPattern : BossPattern
         }
 
         root.transform.SetParent(rootContainer, true);
-        if (rootLifetime > 0f) Destroy(root, rootLifetime);
+        if (rootLifetime > 0f) ObjectPoolManager.Despawn(root, rootLifetime);
+        #region [이전] Instantiate / Destroy
+        // if (rootLifetime > 0f) Destroy(root, rootLifetime);
+        #endregion
         return root;
     }
 
@@ -83,7 +89,10 @@ public class DragonNatureCallPattern : BossPattern
     {
         foreach (GameObject root in spawnedRoots)
         {
-            if (root != null) Destroy(root);
+            if (root != null) ObjectPoolManager.Despawn(root);
+            #region [이전] Instantiate / Destroy
+            // if (root != null) Destroy(root);
+            #endregion
         }
         spawnedRoots.Clear();
     }

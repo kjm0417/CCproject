@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ using UnityEngine;
 /// 플레이어가 흙에 심은 작물.
 /// 성장은 GrowthController가 담당, 단계마다 모습만 바뀌고 다 자란 뒤 상호작용하면 수확 드랍.
 /// </summary>
-public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable
+public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable, IPoolable
 {
     [Tooltip("수확 시 한 번만 드랍하므로 SimpleFieldObjectDropper면 충분 (deathDropTable에 마지막 단계 DropGroupID 포함)")]
     [SerializeField]
@@ -30,6 +31,7 @@ public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable
     private List<Sprite> stageSprites = new();
 
     private GrowthController growth;
+    private bool hasStarted; //Start 실행 여부 ( 풀 재사용 판정 )
 
     /// <summary>
     /// 수확 후 제거될 때 알림 (심은 칸 점유 해제용)
@@ -80,6 +82,37 @@ public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable
         // 로드 시 GrowthStage/IsGrowthComplete가 Start 전에 채워지므로 그 단계부터 이어서 성장
         ApplyStageSprite(growth.CurrentStage);
         growth.StartGrowth();
+        hasStarted = true;
+    }
+
+    /// <summary>
+    /// 풀 재사용 - 1단계부터 다시 성장 ( 로드 시 단계 세팅 후 시작되게 Start 와 같이 다음 프레임 )
+    /// </summary>
+    public void OnSpawned()
+    {
+        if (!hasStarted) return; //첫 생성은 Start 에서 시작
+
+        growth.Stop();
+        growth.CurrentStage = 1;
+        growth.IsGrowthComplete = false;
+        StartCoroutine(BeginGrowthNextFrame());
+    }
+
+    /// <summary>
+    /// 풀 반납 - 성장 중지 / 칸 점유 구독 정리 ( 재사용 시 중복 방지 )
+    /// </summary>
+    public void OnDespawned()
+    {
+        growth.Stop();
+        OnRemoved = null;
+    }
+
+    private IEnumerator BeginGrowthNextFrame()
+    {
+        yield return null;
+
+        ApplyStageSprite(growth.CurrentStage);
+        growth.StartGrowth();
     }
 
     public override bool CanInteract(InteractionContext context)
@@ -114,7 +147,10 @@ public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable
 
         growth.Stop();
         OnRemoved?.Invoke(this);
-        Destroy(gameObject);
+        ObjectPoolManager.Despawn(gameObject);
+        #region [이전] Instantiate / Destroy
+        // Destroy(gameObject);
+        #endregion
     }
 
     private void ApplyStageSprite(int stage)

@@ -30,6 +30,9 @@ public class NaturalSimpleObject : DamageableFieldObject
             dropper.DropFinal(fieldSimpleObjData.DropGroupID, transform.position);
         }
 
-        Destroy(gameObject);
+        ObjectPoolManager.Despawn(gameObject);
+        #region [이전] Instantiate / Destroy
+        // Destroy(gameObject);
+        #endregion
     }
 }

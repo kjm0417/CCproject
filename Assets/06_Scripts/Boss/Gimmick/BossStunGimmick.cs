@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 보스 스턴 기믹 공용 - 모든 활성 구역이 활성화되면 보스 스턴 -> 공격 타임
-/// 보스별 추가 조건은 상속 후 CanZoneProgress override
+/// 보스 스턴 기믹 공용 - 활성 구역들을 관리하고 조건 달성 시 보스 스턴
+/// 기본 : 모든 구역 활성화 -> 바로 스턴
+/// 보스별 흐름은 OnZoneActivated / OnAllZonesActivated / ResetAll override
 /// </summary>
 public class BossStunGimmick : MonoBehaviour
 {
@@ -11,13 +13,20 @@ public class BossStunGimmick : MonoBehaviour
     [SerializeField] protected List<BossActivationZone> zones = new List<BossActivationZone>();
     [SerializeField] protected float stunDuration = 8f;
 
+    private readonly List<Action> zoneHandlers = new List<Action>();
+
     protected virtual void Start()
     {
-        foreach (BossActivationZone zone in zones)
+        for (int i = 0; i < zones.Count; i++)
         {
-            BossActivationZone captured = zone;
-            zone.Initialize(boss, () => CanZoneProgress(captured));
-            zone.OnActivated += HandleZoneActivated;
+            BossActivationZone zone = zones[i];
+            int index = i;
+
+            zone.Initialize(boss, () => CanZoneProgress(zone));
+
+            Action handler = () => HandleZoneActivated(zone, index);
+            zone.OnActivated += handler;
+            zoneHandlers.Add(handler);
         }
 
         boss.OnStunEndedEvent += ResetAll;
@@ -25,9 +34,9 @@ public class BossStunGimmick : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        foreach (BossActivationZone zone in zones)
+        for (int i = 0; i < zones.Count && i < zoneHandlers.Count; i++)
         {
-            if (zone != null) zone.OnActivated -= HandleZoneActivated;
+            if (zones[i] != null) zones[i].OnActivated -= zoneHandlers[i];
         }
         if (boss != null) boss.OnStunEndedEvent -= ResetAll;
     }
@@ -38,21 +47,61 @@ public class BossStunGimmick : MonoBehaviour
         return true;
     }
 
-    private void HandleZoneActivated()
+    private void HandleZoneActivated(BossActivationZone zone, int index)
     {
-        foreach (BossActivationZone zone in zones)
-        {
-            if (!zone.IsActivated) return;
-        }
+        OnZoneActivated(zone, index);
 
+        foreach (BossActivationZone z in zones)
+        {
+            if (!z.IsActivated) return;
+        }
+        OnAllZonesActivated();
+    }
+
+    /// <summary> 구역 하나가 활성화됐을 때 </summary>
+    protected virtual void OnZoneActivated(BossActivationZone zone, int index) { }
+
+    /// <summary> 모든 구역 활성화 - 기본은 바로 스턴 </summary>
+    protected virtual void OnAllZonesActivated()
+    {
+        ApplyStun();
+    }
+
+    protected void ApplyStun()
+    {
         boss.ApplyStun(stunDuration);
     }
 
-    protected void ResetAll()
+    /// <summary> 스턴 종료 시 처음부터 </summary>
+    protected virtual void ResetAll()
     {
         foreach (BossActivationZone zone in zones)
         {
             zone.ResetZone();
         }
     }
+
+    #region [이전] 모든 구역 활성화 시 바로 스턴만 하던 구조
+    // protected virtual void Start()
+    // {
+    //     foreach (BossActivationZone zone in zones)
+    //     {
+    //         BossActivationZone captured = zone;
+    //         zone.Initialize(boss, () => CanZoneProgress(captured));
+    //         zone.OnActivated += HandleZoneActivated;
+    //     }
+    //
+    //     boss.OnStunEndedEvent += ResetAll;
+    // }
+    //
+    // private void HandleZoneActivated()
+    // {
+    //     foreach (BossActivationZone zone in zones)
+    //     {
+    //         if (!zone.IsActivated) return;
+    //     }
+    //
+    //     boss.ApplyStun(stunDuration);
+    // }
+    #endregion
 }

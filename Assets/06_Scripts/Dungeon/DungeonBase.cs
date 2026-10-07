@@ -9,6 +9,8 @@ public abstract class DungeonBase : MonoBehaviour
 {
     [SerializeField, Tooltip("시작 맵 ( 0층 ). 플레이어는 씬에 배치된 위치에서 시작")]
     private DungeonMap startMap;
+    [SerializeField, Tooltip("맵 이동 시 바운드 영역을 바꿀 시네머신 Confiner2D. 비우면 씬에서 자동 탐색")]
+    private CinemachineConfiner2D confiner;
 
     public DungeonMap CurrentMap { get; private set; }
     public int CurrentDungeonFloor => CurrentMap != null ? CurrentMap.Floor : 0; //현재 던전 몇층에 있는지 ( 시작 맵 없으면 0층 )
@@ -32,6 +34,7 @@ public abstract class DungeonBase : MonoBehaviour
         //시작 맵도 층별 처리 ( 하위 클래스 Awake 에서 층 객체 생성 후라 Start 에서 호출 )
         if (CurrentMap != null)
         {
+            ApplyCamBound(CurrentMap);
             OnMapEntered(CurrentMap);
         }
     }
@@ -52,6 +55,7 @@ public abstract class DungeonBase : MonoBehaviour
         map.gameObject.SetActive(true);
         CurrentMap = map;
 
+        ApplyCamBound(map);
         TeleportPlayer(player, map.ArrivalPoint.position);
 
         Debug.Log($"[Dungeon] 맵 이동 : {map.Floor}층 {map.MapID}");
@@ -62,6 +66,32 @@ public abstract class DungeonBase : MonoBehaviour
     /// 층/맵 진입 시 처리 ( 던전별로 구현 )
     /// </summary>
     protected abstract void OnMapEntered(DungeonMap map);
+
+    /// <summary>
+    /// 맵의 CamBound 로 시네머신 바운드 영역 변경
+    /// </summary>
+    private void ApplyCamBound(DungeonMap map)
+    {
+        if (confiner == null)
+        {
+            confiner = FindAnyObjectByType<CinemachineConfiner2D>();
+        }
+
+        if (confiner == null)
+        {
+            Debug.LogError("[Dungeon] CinemachineConfiner2D 없음");
+            return;
+        }
+
+        if (map.CamBound == null)
+        {
+            Debug.LogError($"[Dungeon] {map.MapID} CamBound 설정 필요");
+            return;
+        }
+
+        confiner.BoundingShape2D = map.CamBound;
+        confiner.InvalidateBoundingShapeCache();
+    }
 
     private void TeleportPlayer(PlayerContext player, Vector3 position)
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class PickupItem : MonoBehaviour
+public class PickupItem : MonoBehaviour, IPoolable
 {
     [Header("런타임 아이템")]
     [Tooltip("보통 FieldObjectDropper가 실행 중에 넣어줍니다. 테스트할 때는 직접 넣어도 됩니다.")]
@@ -19,6 +19,16 @@ public class PickupItem : MonoBehaviour
     public int Count => count;
     public InvenItemData Item => item;
 
+    /// <summary>
+    /// 풀 재사용 - 드랍 연출 중 반납돼 꺼진 콜라이더 복구
+    /// </summary>
+    public void OnSpawned()
+    {
+        GetComponent<Collider2D>().enabled = true;
+    }
+
+    public void OnDespawned() { }
+
     public void Initialize(InvenItemData itemData, int itemCount)
     {
         item = itemData;
@@ -33,7 +43,10 @@ public class PickupItem : MonoBehaviour
         int remaining = inventory.Add(item, count);
         if (remaining <= 0)
         {
-            Destroy(gameObject);
+            ObjectPoolManager.Despawn(gameObject);
+            #region [이전] Instantiate / Destroy
+            // Destroy(gameObject);
+            #endregion
             return;
         }
 

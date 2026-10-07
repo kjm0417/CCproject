@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, IDamageableFieldObject, 
-    IToolInteractionTarget , IRespawnProvier
+    IToolInteractionTarget , IRespawnProvier, IPoolable
 {
     #region 자원 리스폰 ( IRespawnProvier )
     public ResourceSpawnEntry ResourceEntry { get; private set; } //이 오브젝트가 뭔지 정의
@@ -43,6 +43,22 @@ public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, ID
         ResetRuntimeState();
     }
 
+
+    /// <summary>
+    /// 풀 재사용 - HP / 파괴 상태 초기화
+    /// </summary>
+    public virtual void OnSpawned()
+    {
+        ResetRuntimeState();
+    }
+
+    /// <summary>
+    /// 풀 반납 - 리스폰 구독 정리 ( 재사용 시 중복 구독 방지 )
+    /// </summary>
+    public virtual void OnDespawned()
+    {
+        OnDestroyed = null;
+    }
 
     public void InfoResource(ResourceSpawnEntry entry)
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 /// 드랍 연출은 FieldObjectDropper 공통 사용 ( 드랍 테이블 X )
 /// </summary>
 [RequireComponent(typeof(EnemyBase))]
-public class DungeonEnemySeedDrop : FieldObjectDropper
+public class DungeonEnemySeedDrop : FieldObjectDropper, IPoolable
 {
     private EnemyBase enemy;
     private Rigidbody2D body; //실제 이동하는 몸체 ( 슬라임은 자식에 있음 - 루트는 시작 위치에 남음 )
@@ -27,6 +27,13 @@ public class DungeonEnemySeedDrop : FieldObjectDropper
     {
         enemy.OnEnemyDied -= OnEnemyDied;
     }
+
+    public void OnSpawned()
+    {
+        isDropped = false;
+    }
+
+    public void OnDespawned() { }
 
     private void OnEnemyDied(EnemyBase enemy)
     {

@@ -21,6 +21,7 @@ public class BossActivationZone : MonoBehaviour
     public event Action OnActivated;
 
     public bool IsActivated { get; private set; }
+    public bool IsPlayerInside { get; private set; }
     public float Progress => requiredStayTime > 0f ? Mathf.Clamp01(stayTime / requiredStayTime) : 1f;
 
     /// <param name="canProgress">추가 활성 조건 ( null 이면 항상 허용 )</param>
@@ -36,6 +37,7 @@ public class BossActivationZone : MonoBehaviour
     public void ResetZone()
     {
         IsActivated = false;
+        IsPlayerInside = false;
         stayTime = 0f;
         OnProgressChanged?.Invoke(0f);
         if (outline != null) outline.SetVisible(true);
@@ -43,9 +45,14 @@ public class BossActivationZone : MonoBehaviour
 
     private void Update()
     {
-        if (boss == null || IsActivated || boss.IsDead || boss.IsStunned) return;
+        if (boss == null || IsActivated || boss.IsDead || boss.IsStunned)
+        {
+            IsPlayerInside = false;
+            return;
+        }
 
         bool inside = boss.HasPlayer && shape.Contains(boss.PlayerPosition) && (canProgress == null || canProgress());
+        IsPlayerInside = inside;
         float before = stayTime;
 
         if (inside) stayTime += Time.deltaTime;

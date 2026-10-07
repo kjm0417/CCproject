@@ -52,11 +52,14 @@ MonoBehaviour:
   cooldown: 0
   hpRatioRange: {x: 0, y: 1}
   animTrigger: NatureCall
-  rootPrefab: {fileID: 0}
-  spawnPoints: []
+  rootPrefab: {fileID: 5864229627801795318, guid: 3a9a3f6fd33ac774b8ae821d35460ee1, type: 3}
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   baseSortingOrder: 10
   spawnInterval: 0.2
-  rootLifetime: 0
+  rootLifetime: 10
   clearPreviousRoots: 1
   afterSpawnDelay: 1
 --- !u!114 &62946144509799594
@@ -78,28 +81,29 @@ MonoBehaviour:
   animTrigger: 
   lanes:
   - anchor: {fileID: 0}
-    offset: {x: 1.63, y: -2}
-    size: {x: 8.92, y: 15.9}
+    offset: {x: 1.63, y: 0.08}
+    size: {x: 8.92, y: 33.9}
     angle: 0
   telegraphStyle:
     color: {r: 1, g: 0, b: 0, a: 1}
     width: 0.08
-    sortingLayerName: Default
+    sortingLayerName: Gimik
     sortingOrder: 100
     material: {fileID: 0}
   blinkCount: 3
   blinkOnTime: 0.25
   blinkOffTime: 0.2
-  passDuration: 1.2
+  passDuration: 0.4
   damage: 20
   tickInterval: 0.5
-  dragonVisual: {fileID: 0}
+  dragonVisual: {fileID: 6021450874588918539}
   visualMode: 0
   visualAnimTrigger: 
   showVisualDuringWarning: 1
   windupDuration: 0.8
   exitDuration: 0.4
-  hideWhileVisual: []
+  hideWhileVisual:
+  - {fileID: 9066398721956673926}
 --- !u!114 &7666310831108929454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,7 +129,7 @@ MonoBehaviour:
   telegraphStyle:
     color: {r: 1, g: 0, b: 0, a: 1}
     width: 0.08
-    sortingLayerName: Default
+    sortingLayerName: Gimik
     sortingOrder: 100
     material: {fileID: 0}
   warningDuration: 1.2
@@ -151,12 +155,24 @@ MonoBehaviour:
   cooldown: 0
   hpRatioRange: {x: 0, y: 1}
   animTrigger: Waterspout
-  rings: []
+  rings:
+  - anchor: {fileID: 0}
+    offset: {x: 0, y: 0}
+    size: {x: 14, y: 14}
+    angle: 45
+  - anchor: {fileID: 0}
+    offset: {x: 0, y: 0}
+    size: {x: 10, y: 10}
+    angle: 45
+  - anchor: {fileID: 0}
+    offset: {x: 0, y: 0}
+    size: {x: 6, y: 6}
+    angle: 45
   ringOnly: 1
   telegraphStyle:
     color: {r: 1, g: 0, b: 0, a: 1}
     width: 0.08
-    sortingLayerName: Default
+    sortingLayerName: Gimik
     sortingOrder: 100
     material: {fileID: 0}
   blinkCount: 3
@@ -177,13 +193,14 @@ GameObject:
   m_Component:
   - component: {fileID: 6021450874588918539}
   - component: {fileID: 8719718595125724113}
+  - component: {fileID: 3887410304938132757}
   m_Layer: 0
   m_Name: PassDragonVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6021450874588918539
 Transform:
   m_ObjectHideFlags: 0
@@ -244,21 +261,43 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1258410405
+  m_SortingLayer: 4
+  m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 5593616781440073409, guid: 8f1399ab3f0026a4a9e037a003fced1d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 16.08, y: 9.633486}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!95 &3887410304938132757
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739684082877356231}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 45ac8c41a6ee37443ba51d4e893e381c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4714908585790209494
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,14 +368,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: 0}
-  m_BlackboardVariableOverridesList: []
-  m_OriginalGraph: {fileID: 0}
+  m_Graph: {fileID: -2329324235211944681, guid: 7419d31e97fc1ca41a47979d32d33fbc, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 8248930005281669422
+  m_OriginalGraph: {fileID: -2329324235211944681, guid: 7419d31e97fc1ca41a47979d32d33fbc, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8248930005281669422
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 4714908585790209494}
 --- !u!61 &3893533336670354340
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -111,7 +111,10 @@ public class DungeonSpring1F
         for (int i = 0; i < dungeonSpring.EnemyCount1F; i++)
         {
             Transform spawnPoint = spawnPoints[i % spawnPoints.Length];
-            EnemyBase slime = UnityEngine.Object.Instantiate(dungeonSpring.SlimePrefab, spawnPoint.position, Quaternion.identity);
+            EnemyBase slime = ObjectPoolManager.Spawn(dungeonSpring.SlimePrefab, spawnPoint.position, Quaternion.identity);
+            #region [이전] Instantiate / Destroy
+            // EnemyBase slime = UnityEngine.Object.Instantiate(dungeonSpring.SlimePrefab, spawnPoint.position, Quaternion.identity);
+            #endregion
             slime.OnEnemyDied += OnSlimeDied;
         }
     }
@@ -411,7 +414,10 @@ public class DungeonSpring3F
                 Debug.LogError($"[DungeonSpring3F] {prefabs[i].name} DungeonEnemySeedDrop 부착 필요");
             }
 
-            UnityEngine.Object.Instantiate(prefabs[i], spawnPoints[i].position, Quaternion.identity);
+            ObjectPoolManager.Spawn(prefabs[i], spawnPoints[i].position, Quaternion.identity);
+            #region [이전] Instantiate / Destroy
+            // UnityEngine.Object.Instantiate(prefabs[i], spawnPoints[i].position, Quaternion.identity);
+            #endregion
         }
     }
 
@@ -570,7 +576,10 @@ public class DungeonSpring4F
         EnemyBase prefab = current.EnemyPrefabs[UnityEngine.Random.Range(0, current.EnemyPrefabs.Length)];
         if (prefab == null || spawnPoint == null) return;
 
-        EnemyBase enemy = UnityEngine.Object.Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        EnemyBase enemy = ObjectPoolManager.Spawn(prefab, spawnPoint.position, Quaternion.identity);
+        #region [이전] Instantiate / Destroy
+        // EnemyBase enemy = UnityEngine.Object.Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        #endregion
         enemy.OnEnemyDied += OnEnemyDied;
     }
 

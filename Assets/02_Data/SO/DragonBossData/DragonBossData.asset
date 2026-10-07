@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossData
   bossName: Dragon
   maxHp: 1000
-  invulnerableUnlessStunned: 1
+  invulnerableUnlessStunned: 0
   stunDamageMultiplier: 1
   avoidRepeatPattern: 1
   idleIntervalRange: {x: 1.5, y: 2.5}

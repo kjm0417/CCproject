@@ -33,7 +33,10 @@ public abstract class FieldObjectDropper : MonoBehaviour
         for (int i = 0; i < drops.Count; i++)
         {
             Vector2 offset = Random.insideUnitCircle * scatterRadius;
-            PickupItem pickup = Instantiate(item, origin, Quaternion.identity);
+            PickupItem pickup = ObjectPoolManager.Spawn(item, origin, Quaternion.identity);
+            #region [이전] Instantiate / Destroy
+            // PickupItem pickup = Instantiate(item, origin, Quaternion.identity);
+            #endregion
             pickup.Initialize(drops[i].Item, drops[i].Count);
             pickup.PrefabName = item.name;
 
@@ -58,7 +61,10 @@ public abstract class FieldObjectDropper : MonoBehaviour
                 t.rotation = Quaternion.identity;
                 col.enabled = true;
             })
-            .SetLink(pickup.gameObject);
+            .SetLink(pickup.gameObject, LinkBehaviour.KillOnDisable); //풀 반납 ( 비활성 ) 시 연출 종료
+            #region [이전] 파괴 시에만 연출 종료
+            // .SetLink(pickup.gameObject);
+            #endregion
     }
 
     public void DropFinal(int dropGroupId, Vector3 origin)

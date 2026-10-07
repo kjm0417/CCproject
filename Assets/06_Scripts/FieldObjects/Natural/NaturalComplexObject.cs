@@ -69,6 +69,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     private readonly List<GameObject> spawnedBlossoms = new();
 
     private GrowthController growth;
+    private bool hasStarted; //Start 실행 여부 ( 풀 재사용 판정 )
 
     protected override void Awake()
     {
@@ -92,6 +93,39 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         fieldComplexObjData = Data as FieldComplexObjData;
 
         // 로드 시 GrowthStage/IsGrowthComplete가 Start 전에 채워지므로 그 단계부터 이어서 성장
+        ApplyStageSprite(growth.CurrentStage);
+        RefreshBlossoms(growth.CurrentStage);
+        growth.StartGrowth();
+        hasStarted = true;
+    }
+
+    /// <summary>
+    /// 풀 재사용 - 1단계부터 다시 성장 ( 로드 시 단계 세팅 후 시작되게 Start 와 같이 다음 프레임 )
+    /// </summary>
+    public override void OnSpawned()
+    {
+        base.OnSpawned();
+
+        if (!hasStarted) return; //첫 생성은 Start 에서 시작
+
+        growth.Stop();
+        growth.CurrentStage = 1;
+        growth.IsGrowthComplete = false;
+        StartCoroutine(BeginGrowthNextFrame());
+    }
+
+    public override void OnDespawned()
+    {
+        base.OnDespawned();
+
+        growth.Stop();
+        ClearBlossoms();
+    }
+
+    private IEnumerator BeginGrowthNextFrame()
+    {
+        yield return null;
+
         ApplyStageSprite(growth.CurrentStage);
         RefreshBlossoms(growth.CurrentStage);
         growth.StartGrowth();
@@ -217,27 +251,49 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
         if (!shouldBloom)
         {
-            foreach (GameObject blossom in spawnedBlossoms)
-            {
-                if (blossom != null) Destroy(blossom);
-            }
-            spawnedBlossoms.Clear();
+            ClearBlossoms();
             return;
         }
+        #region [이전] Destroy
+        // if (!shouldBloom)
+        // {
+        //     foreach (GameObject blossom in spawnedBlossoms)
+        //     {
+        //         if (blossom != null) Destroy(blossom);
+        //     }
+        //     spawnedBlossoms.Clear();
+        //     return;
+        // }
+        #endregion
 
         if (spawnedBlossoms.Count > 0) return; // 이미 생성됨
 
         foreach (Transform point in blossomPoints)
         {
             if (point == null) continue;
-            spawnedBlossoms.Add(Instantiate(blossomPrefab, point.position, Quaternion.identity, point));
+            spawnedBlossoms.Add(ObjectPoolManager.Spawn(blossomPrefab, point.position, Quaternion.identity, point));
+            #region [이전] Instantiate / Destroy
+            // spawnedBlossoms.Add(Instantiate(blossomPrefab, point.position, Quaternion.identity, point));
+            #endregion
         }
+    }
+
+    private void ClearBlossoms()
+    {
+        foreach (GameObject blossom in spawnedBlossoms)
+        {
+            if (blossom != null) ObjectPoolManager.Despawn(blossom);
+        }
+        spawnedBlossoms.Clear();
     }
 
     protected override void OnDepleted()
     {
         DropOnDepleted();
         growth.Stop();
-        Destroy(gameObject);
+        ObjectPoolManager.Despawn(gameObject);
+        #region [이전] Instantiate / Destroy
+        // Destroy(gameObject);
+        #endregion
     }
 }
