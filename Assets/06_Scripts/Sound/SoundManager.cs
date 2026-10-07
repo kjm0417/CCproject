@@ -37,6 +37,8 @@ public class SoundManager : MonoBehaviour
     private BGMType currentBGM = BGMType.None;
     private Coroutine bgmFadeCoroutine;
 
+    public BGMType CurrentBGM => currentBGM;
+
     private void Awake()
     {
         #region 싱글톤

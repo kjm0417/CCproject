@@ -12,12 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6bdfef1470a2c42986661a5e3c9818, type: 3}
   m_Name: SoundDatabase
   m_EditorClassIdentifier: Assembly-CSharp::SoundDatabase
-  bgmList: []
-  sfxList: []
+  bgmList:
+  - type: 2
+    clip: {fileID: 8300000, guid: 9fa5b29ec727b0b4fa4c01eb70616713, type: 3}
+    volume: 0.014
+  - type: 3
+    clip: {fileID: 8300000, guid: 5051144a3ab49744ba82fa82b34029a4, type: 3}
+    volume: 0.014
+  - type: 4
+    clip: {fileID: 8300000, guid: 7b5e1e267aaec4b41aef7cc654671729, type: 3}
+    volume: 0.014
+  sfxList:
+  - type: 0
+    clip: {fileID: 0}
+    volume: 0
   sceneBGMList:
-  - sceneName: 
-    bgm: 0
-  - sceneName: 
-    bgm: 0
-  - sceneName: 
-    bgm: 0
+  - sceneName: KJ_Scene
+    bgm: 2
+  - sceneName: KJ_DungeonScene
+    bgm: 3

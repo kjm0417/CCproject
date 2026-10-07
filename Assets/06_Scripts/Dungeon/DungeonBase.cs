@@ -12,6 +12,9 @@ public abstract class DungeonBase : MonoBehaviour
     [SerializeField, Tooltip("맵 이동 시 바운드 영역을 바꿀 시네머신 Confiner2D. 비우면 씬에서 자동 탐색")]
     private CinemachineConfiner2D confiner;
 
+    private CinemachineCamera cinemachineCamera;
+    private Transform cameraTarget; //보스 맵 외 카메라 타겟 ( 플레이어 )
+
     public DungeonMap CurrentMap { get; private set; }
     public int CurrentDungeonFloor => CurrentMap != null ? CurrentMap.Floor : 0; //현재 던전 몇층에 있는지 ( 시작 맵 없으면 0층 )
 
@@ -34,7 +37,15 @@ public abstract class DungeonBase : MonoBehaviour
         //시작 맵도 층별 처리 ( 하위 클래스 Awake 에서 층 객체 생성 후라 Start 에서 호출 )
         if (CurrentMap != null)
         {
+            //테스트용 - 시작 맵에 도착 위치가 있으면 플레이어를 그 위치로 ( 없으면 씬에 배치된 위치 )
+            PlayerContext player = FindAnyObjectByType<PlayerContext>();
+            if (CurrentMap.HasArrivalPoint)
+            {
+                TeleportPlayer(player, CurrentMap.ArrivalPoint.position);
+            }
+
             ApplyCamBound(CurrentMap);
+            ApplyCameraTarget(CurrentMap, player);
             OnMapEntered(CurrentMap);
         }
     }
@@ -57,6 +68,7 @@ public abstract class DungeonBase : MonoBehaviour
 
         ApplyCamBound(map);
         TeleportPlayer(player, map.ArrivalPoint.position);
+        ApplyCameraTarget(map, player);
 
         Debug.Log($"[Dungeon] 맵 이동 : {map.Floor}층 {map.MapID}");
         OnMapEntered(map);
@@ -91,6 +103,45 @@ public abstract class DungeonBase : MonoBehaviour
 
         confiner.BoundingShape2D = map.CamBound;
         confiner.InvalidateBoundingShapeCache();
+    }
+
+    /// <summary>
+    /// 보스 맵 : 카메라 타겟 null + CamBound 중앙 고정 / 그 외 : 플레이어 추적
+    /// </summary>
+    private void ApplyCameraTarget(DungeonMap map, PlayerContext player)
+    {
+        if (cinemachineCamera == null)
+        {
+            cinemachineCamera = confiner != null ? confiner.GetComponent<CinemachineCamera>() : null;
+            if (cinemachineCamera == null) cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
+        }
+
+        if (cinemachineCamera == null)
+        {
+            Debug.LogError("[Dungeon] CinemachineCamera 없음");
+            return;
+        }
+
+        //씬에 할당된 타겟 ( 플레이어 ) 기억 - 보스 맵에서 나올 때 복구용
+        if (cameraTarget == null)
+        {
+            cameraTarget = cinemachineCamera.Follow != null ? cinemachineCamera.Follow : (player != null ? player.transform : null);
+        }
+
+        if (!map.IsBossMap)
+        {
+            cinemachineCamera.Follow = cameraTarget;
+            return;
+        }
+
+        cinemachineCamera.Follow = null;
+
+        if (map.CamBound != null)
+        {
+            Vector3 center = map.CamBound.bounds.center;
+            center.z = cinemachineCamera.transform.position.z;
+            cinemachineCamera.ForceCameraPosition(center, cinemachineCamera.transform.rotation);
+        }
     }
 
     private void TeleportPlayer(PlayerContext player, Vector3 position)

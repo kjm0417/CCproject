@@ -90,10 +90,10 @@ MonoBehaviour:
     sortingLayerName: Gimik
     sortingOrder: 100
     material: {fileID: 0}
-  blinkCount: 3
-  blinkOnTime: 0.25
+  blinkCount: 2
+  blinkOnTime: 0.1
   blinkOffTime: 0.2
-  passDuration: 0.4
+  passDuration: 0.2
   damage: 20
   tickInterval: 0.5
   dragonVisual: {fileID: 6021450874588918539}
@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: 1866921419161459230}
   - component: {fileID: 6066344498680904947}
   - component: {fileID: 3893533336670354340}
+  - component: {fileID: 6684281638386794939}
   m_Layer: 11
   m_Name: Dragon
   m_TagString: Untagged
@@ -431,6 +432,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6684281638386794939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4714908585790209494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ab8b41d1223764286d38b0e6df0251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossBGMPlayer
+  bossBGM: 4
 --- !u!1 &9066398721956673926
 GameObject:
   m_ObjectHideFlags: 0

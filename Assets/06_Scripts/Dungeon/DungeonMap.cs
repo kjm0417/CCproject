@@ -14,12 +14,16 @@ public class DungeonMap : MonoBehaviour
     private Transform arrivalPoint;
     [SerializeField, Tooltip("이 맵 카메라 바운드 영역. 비우면 자식 중 이름이 CamBound 인 콜라이더 사용")]
     private Collider2D camBound;
+    [SerializeField, Tooltip("보스 맵 - 카메라가 플레이어를 따라가지 않고 CamBound 중앙에 고정")]
+    private bool isBossMap;
 
     private const string CamBoundName = "CamBound";
 
     public int Floor => floor;
     public string MapID => mapID;
     public Transform ArrivalPoint => arrivalPoint != null ? arrivalPoint : transform;
+    public bool IsBossMap => isBossMap;
+    public bool HasArrivalPoint => arrivalPoint != null;
 
     public Collider2D CamBound
     {

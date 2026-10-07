@@ -11752,6 +11752,7 @@ MonoBehaviour:
   mapID: Boss
   arrivalPoint: {fileID: 1661181408}
   camBound: {fileID: 56812562}
+  isBossMap: 0
 --- !u!4 &783990707
 Transform:
   m_ObjectHideFlags: 0
@@ -15830,6 +15831,7 @@ MonoBehaviour:
   mapID: 3F_B
   arrivalPoint: {fileID: 1925200308}
   camBound: {fileID: 1134907140}
+  isBossMap: 0
 --- !u!4 &846727908
 Transform:
   m_ObjectHideFlags: 0
@@ -17090,6 +17092,7 @@ MonoBehaviour:
   mapID: 2F_A
   arrivalPoint: {fileID: 1163816161}
   camBound: {fileID: 535500610}
+  isBossMap: 0
 --- !u!4 &943895138
 Transform:
   m_ObjectHideFlags: 0
@@ -24675,6 +24678,7 @@ MonoBehaviour:
   mapID: 3F_A
   arrivalPoint: {fileID: 1781473122}
   camBound: {fileID: 906123582}
+  isBossMap: 0
 --- !u!4 &1366919148
 Transform:
   m_ObjectHideFlags: 0
@@ -25464,6 +25468,7 @@ MonoBehaviour:
   mapID: 0F_A
   arrivalPoint: {fileID: 1382652561}
   camBound: {fileID: 1427807339}
+  isBossMap: 0
 --- !u!4 &1416389814
 Transform:
   m_ObjectHideFlags: 0
@@ -30210,6 +30215,7 @@ MonoBehaviour:
   mapID: 4F
   arrivalPoint: {fileID: 433391161}
   camBound: {fileID: 960406922}
+  isBossMap: 0
 --- !u!4 &1532098824
 Transform:
   m_ObjectHideFlags: 0
@@ -37250,6 +37256,7 @@ MonoBehaviour:
   mapID: 1F_A
   arrivalPoint: {fileID: 659195751}
   camBound: {fileID: 1215548439}
+  isBossMap: 0
 --- !u!1 &1593444645
 GameObject:
   m_ObjectHideFlags: 0
@@ -46805,6 +46812,7 @@ MonoBehaviour:
   mapID: 2F_C
   arrivalPoint: {fileID: 1515222358}
   camBound: {fileID: 777658704}
+  isBossMap: 0
 --- !u!4 &1771203522
 Transform:
   m_ObjectHideFlags: 0
@@ -52172,6 +52180,7 @@ MonoBehaviour:
   mapID: 2F_B
   arrivalPoint: {fileID: 1810934899}
   camBound: {fileID: 535500610}
+  isBossMap: 0
 --- !u!4 &2006712125
 Transform:
   m_ObjectHideFlags: 0
@@ -60581,22 +60590,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 783990707}
     m_Modifications:
-    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
-      propertyPath: blinkCount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
-      propertyPath: blinkOnTime
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
-      propertyPath: blinkOffTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
-      propertyPath: passDuration
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: lanes.Array.data[0].anchor
       value: 
