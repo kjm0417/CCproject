@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2192,6 +2192,7 @@ MonoBehaviour:
   inventoryIcon: {fileID: 0}
   foodSubType: "\uC74C\uC2DD \uC544\uC774\uD15C"
   defaultFoodHungerRecovery: 20
+  seedSubType: "\uC528\uC557 \uC544\uC774\uD15C"
 --- !u!1 &7289035622369250010
 GameObject:
   m_ObjectHideFlags: 0
