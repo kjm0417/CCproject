@@ -14,6 +14,7 @@ public abstract class DungeonBase : MonoBehaviour
 
     private CinemachineCamera cinemachineCamera;
     private Transform cameraTarget; //보스 맵 외 카메라 타겟 ( 플레이어 )
+    private BossBase watchedBoss; //보스 맵 보스 - 처치 시 던전 클리어
 
     public DungeonMap CurrentMap { get; private set; }
     public int CurrentDungeonFloor => CurrentMap != null ? CurrentMap.Floor : 0; //현재 던전 몇층에 있는지 ( 시작 맵 없으면 0층 )
@@ -46,6 +47,7 @@ public abstract class DungeonBase : MonoBehaviour
 
             ApplyCamBound(CurrentMap);
             ApplyCameraTarget(CurrentMap, player);
+            WatchBoss(CurrentMap);
             OnMapEntered(CurrentMap);
         }
     }
@@ -69,6 +71,7 @@ public abstract class DungeonBase : MonoBehaviour
         ApplyCamBound(map);
         TeleportPlayer(player, map.ArrivalPoint.position);
         ApplyCameraTarget(map, player);
+        WatchBoss(map);
 
         Debug.Log($"[Dungeon] 맵 이동 : {map.Floor}층 {map.MapID}");
         OnMapEntered(map);
@@ -103,6 +106,43 @@ public abstract class DungeonBase : MonoBehaviour
 
         confiner.BoundingShape2D = map.CamBound;
         confiner.InvalidateBoundingShapeCache();
+    }
+
+    /// <summary>
+    /// 보스 맵 진입 시 보스 사망 감시 -> 던전 클리어 ( 보상 후 영지 씬 복귀 )
+    /// </summary>
+    private void WatchBoss(DungeonMap map)
+    {
+        if (!map.IsBossMap || watchedBoss != null) return;
+
+        watchedBoss = map.GetComponentInChildren<BossBase>(true);
+        if (watchedBoss == null) watchedBoss = FindAnyObjectByType<BossBase>(FindObjectsInactive.Include);
+
+        if (watchedBoss == null)
+        {
+            Debug.LogError($"[Dungeon] {map.MapID} 보스 없음");
+            return;
+        }
+
+        watchedBoss.OnDiedEvent += OnBossDied;
+    }
+
+    private void OnBossDied()
+    {
+        watchedBoss.OnDiedEvent -= OnBossDied;
+
+        if (DungeonProgressManager.Instance == null)
+        {
+            Debug.LogError("[Dungeon] DungeonProgressManager 없음 - 클리어 처리 불가");
+            return;
+        }
+
+        DungeonProgressManager.Instance.ClearDungeon();
+    }
+
+    private void OnDestroy()
+    {
+        if (watchedBoss != null) watchedBoss.OnDiedEvent -= OnBossDied;
     }
 
     /// <summary>

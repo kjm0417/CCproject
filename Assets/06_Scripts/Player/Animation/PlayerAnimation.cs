@@ -53,6 +53,15 @@ public class PlayerAnimation : MonoBehaviour, IPlayerComponent
         interactionRoutine = StartCoroutine(PlayToolInteractionRoutine(stateHash));
     }
 
+    /// <summary>
+    /// 걷기 애니메이션 이벤트에서 호출 (발이 땅에 닿는 프레임)
+    /// </summary>
+    public void OnFootstep()
+    {
+        if (SoundManager.Instance == null) return;
+        SoundManager.Instance.PlaySFX(SFXType.Footstep);
+    }
+
     private void LateUpdate()
     {
         if (movement == null || animator == null) return;

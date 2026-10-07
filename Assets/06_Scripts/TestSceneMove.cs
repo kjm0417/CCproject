@@ -8,6 +8,6 @@ public class TestSceneMove : MonoBehaviour
 {
     public void MovePlayScene()
     {
-        SceneManager.LoadSceneAsync("KJ_Scene");
+        SceneFader.LoadScene("KJ_Scene");
     }
 }

@@ -33,6 +33,7 @@ public class SoundManager : MonoBehaviour
 
     private AudioSource bgmSource;
     private AudioSource sfxSource;
+    private AudioSource sfxPitchSource;
 
     private BGMType currentBGM = BGMType.None;
     private Coroutine bgmFadeCoroutine;
@@ -72,6 +73,13 @@ public class SoundManager : MonoBehaviour
         sfxSource.loop = false;
         sfxSource.playOnAwake = false;
         sfxSource.outputAudioMixerGroup = sfxGroup;
+
+        sfxPitchSource = gameObject.AddComponent<AudioSource>();
+        sfxPitchSource.loop = false;
+        sfxPitchSource.playOnAwake = false;
+        sfxPitchSource.outputAudioMixerGroup = sfxGroup;
+
+        gameObject.AddComponent<UIClickSoundPlayer>();
     }
 
     // 시작 씬(TitleScene)도 Awake/OnEnable 이후 sceneLoaded가 호출되므로 별도 처리 불필요
@@ -190,13 +198,22 @@ public class SoundManager : MonoBehaviour
         if (type == SFXType.None) return;
 
         SoundDatabase.SFXEntry entry = database != null ? database.GetSFX(type) : null;
-        if (entry == null || entry.clip == null)
+        AudioClip clip = entry != null ? entry.GetClip() : null;
+        if (clip == null)
         {
             Debug.LogWarning($"[SoundManager] SFX 클립 없음: {type}");
             return;
         }
 
-        sfxSource.PlayOneShot(entry.clip, entry.volume);
+        if (entry.pitchRandom > 0f)
+        {
+            // 피치 변경은 공용 소스에 영향 주지 않도록 별도 소스 사용
+            sfxPitchSource.pitch = 1f + Random.Range(-entry.pitchRandom, entry.pitchRandom);
+            sfxPitchSource.PlayOneShot(clip, entry.volume);
+            return;
+        }
+
+        sfxSource.PlayOneShot(clip, entry.volume);
     }
     #endregion
 

@@ -37,6 +37,7 @@ public class SceneHandlerUI : MonoBehaviour
 
     private void OnInteractionClick(PlayerContext playerContext)
     {
+        if (SceneFader.IsTransitioning) return; // block duplicate entry during fade
         //던전 입장 아이템 체크 및 소모 - 부족하면 입장 불가
         if (type == SceneMoveStrucutreType.Dungeon && dungeonData != null)
         {
@@ -61,7 +62,7 @@ public class SceneHandlerUI : MonoBehaviour
             case SceneMoveStrucutreType.Dungeon:
                 string sceneName = dungeonData != null && !string.IsNullOrEmpty(dungeonData.SceneName)
                     ? dungeonData.SceneName : "KJ_DungeonScene";
-                SceneManager.LoadSceneAsync(sceneName);
+                SceneFader.LoadScene(sceneName);
                 break;
             
         }

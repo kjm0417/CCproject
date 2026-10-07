@@ -139,7 +139,29 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
         context.Animation?.PlayToolInteraction(toolType);
         CurrentTarget.Interact(interactionContext);
+        PlayToolHitSFX(toolType);
         return true;
+    }
+
+    /// <summary>
+    /// 도구로 오브젝트 타격 시 효과음
+    /// </summary>
+    private void PlayToolHitSFX(ToolType toolType)
+    {
+        if (SoundManager.Instance == null) return;
+
+        switch (toolType)
+        {
+            case ToolType.Axe:
+                SoundManager.Instance.PlaySFX(SFXType.AxeHit);
+                break;
+            case ToolType.Pickaxe:
+                SoundManager.Instance.PlaySFX(SFXType.PickaxeHit);
+                break;
+            case ToolType.Shovel:
+                SoundManager.Instance.PlaySFX(SFXType.ShovelHit);
+                break;
+        }
     }
 
     private bool TryInteractTile(ToolType toolType)
@@ -149,6 +171,7 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         if (!tileModifier.TryConvertTile(tileCheckOrigin.position, toolType)) return false;
 
         context.Animation?.PlayToolInteraction(toolType);
+        PlayToolHitSFX(toolType);
         return true;
     }
 

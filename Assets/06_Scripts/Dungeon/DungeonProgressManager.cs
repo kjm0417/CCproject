@@ -297,7 +297,7 @@ public class DungeonProgressManager : MonoBehaviour
             SaveManager.Instance.Save(saveData);
         }
 
-        SceneManager.LoadSceneAsync(returnSceneName);
+        SceneFader.LoadScene(returnSceneName);
     }
 
     private void SaveRecord()
