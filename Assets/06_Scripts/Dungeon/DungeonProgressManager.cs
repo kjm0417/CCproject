@@ -24,6 +24,8 @@ public class DungeonResult
     public DungeonState State;
     public bool IsFirstClear;
     public int ClearCount;
+    public float ClearTime; //클리어까지 걸린 시간 ( 초 )
+    public bool RewardClaimed; //보상 수령 여부 ( 결과 UI 영지로 돌아가기 시 수령 )
 
     public List<CurrencyAmount> RewardCurrencies = new List<CurrencyAmount>();
     public float RewardExp;
@@ -74,9 +76,28 @@ public class DungeonProgressManager : MonoBehaviour
     private DungeonSaveData dungeonSaveData;
     private DungeonRecordData record;
 
+    private float startTime;
+    private float clearTime;
+
     public DungeonData Dungeon => dungeon;
     public DungeonState State => state;
     public DungeonResult LastResult { get; private set; }
+
+    /// <summary>
+    /// 진행 시간 ( 초 ) - 클리어 후에는 클리어 시간으로 고정
+    /// </summary>
+    public float ElapsedTime
+    {
+        get
+        {
+            switch (state)
+            {
+                case DungeonState.InProgress: return Time.time - startTime;
+                case DungeonState.Cleared: return clearTime;
+                default: return 0f;
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -134,10 +155,18 @@ public class DungeonProgressManager : MonoBehaviour
             }
         }
 
-        dungeonSaveData = SaveManager.Instance != null ? SaveManager.Instance.LoadDungeon() : new DungeonSaveData();
+        //던전 씬을 바로 실행하면 SaveManager ( 영지 씬에서 생성 ) 가 없어 클리어 기록이 저장/로드되지 않음 -> 생성
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogWarning("[Dungeon] SaveManager 없음 ( 던전 씬 직접 실행 ) - 임시 생성");
+            new GameObject("SaveManager").AddComponent<SaveManager>();
+        }
+
+        dungeonSaveData = SaveManager.Instance.LoadDungeon();
         record = dungeonSaveData.GetOrCreate(dungeon.DungeonID);
 
         state = DungeonState.InProgress;
+        startTime = Time.time;
         Debug.Log($"[Dungeon] 시작 : {dungeon.DungeonName} ( 클리어 기록 {record.ClearCount}회 )");
         OnDungeonStarted?.Invoke(dungeon);
 
@@ -148,11 +177,12 @@ public class DungeonProgressManager : MonoBehaviour
     #region 클리어
     /// <summary>
     /// 던전 클리어 - 최초 클리어면 최초 보상, 이후는 반복 보상
-    /// 스테이지 진행 로직에서 클리어 조건 달성 시 호출
+    /// 보상은 결과 UI 에 먼저 표시하고, 영지로 돌아가기 ( ClaimRewardAndExit ) 시 지급
     /// </summary>
     public void ClearDungeon()
     {
         if (state != DungeonState.InProgress) return;
+        clearTime = Time.time - startTime;
         state = DungeonState.Cleared;
 
         bool isFirstClear = !record.FirstRewardClaimed;
@@ -160,53 +190,102 @@ public class DungeonProgressManager : MonoBehaviour
 
         DungeonResult result = CreateResult();
         result.IsFirstClear = isFirstClear;
-        GiveReward(reward, result);
-        Debug.Log($"[Dungeon] 보상 : {string.Join(", ", result.RewardCurrencies.ConvertAll(c => $"{c.Type} +{c.Amount}"))} / Exp +{result.RewardExp} / 아이템 {result.RewardItems.Count}종");
+        result.ClearTime = clearTime;
+        result.ClearCount = record.ClearCount + 1;
+        PrepareReward(reward, result);
+        LastResult = result;
 
-        record.ClearCount++;
-        record.FirstRewardClaimed = true;
-        result.ClearCount = record.ClearCount;
-        SaveRecord();
+        Debug.Log($"[Dungeon] 클리어 : {dungeon.DungeonName} ( {(isFirstClear ? "최초" : "반복")} / {clearTime:0.0}초 )");
 
-        Debug.Log($"[Dungeon] 클리어 : {dungeon.DungeonName} ( {(isFirstClear ? "최초" : "반복")} 보상 / 누적 {record.ClearCount}회 )");
-        FinishDungeon(result);
-        OnDungeonCleared?.Invoke(result);
+        //결과 UI 없으면 바로 지급 후 자동 퇴장
+        if (OnDungeonCleared == null)
+        {
+            ClaimReward();
+            FinishDungeon(result);
+            return;
+        }
+
+        OnDungeonCleared.Invoke(result);
     }
 
     /// <summary>
-    /// 보상 지급 ( 재화 / 경험치 / 아이템 / 랜덤 테이블 )
+    /// 결과 UI - 영지로 돌아가기 : 보상 수령 후 영지 씬으로
     /// </summary>
-    private void GiveReward(DungeonReward reward, DungeonResult result)
+    public void ClaimRewardAndExit()
     {
-        if (reward == null || player == null) return;
+        if (state != DungeonState.Cleared) return;
 
-        if (player.Wallet != null)
-        {
-            foreach (CurrencyAmount currency in reward.Currencies)
-            {
-                player.Wallet.Add(currency.Type, currency.Amount);
-                result.RewardCurrencies.Add(currency);
-            }
-        }
+        ClaimReward();
+        DungeonSession.End();
+        ExitDungeon();
+    }
 
-        if (reward.Exp > 0f && player.Progression != null)
-        {
-            player.Progression.AddExp(reward.Exp);
-            result.RewardExp = reward.Exp;
-        }
+    /// <summary>
+    /// 지급할 보상 목록 확정 ( 재화 / 경험치 / 아이템 / 랜덤 테이블 ) - 아직 지급 X
+    /// </summary>
+    private void PrepareReward(DungeonReward reward, DungeonResult result)
+    {
+        if (reward == null) return;
+
+        result.RewardCurrencies.AddRange(reward.Currencies);
+        result.RewardExp = reward.Exp;
 
         foreach (DungeonItemAmount item in reward.Items)
         {
-            AddItem(item.Item, item.Count, result.RewardItems);
+            if (item.Item == null || item.Count <= 0) continue;
+            result.RewardItems.Add(new DungeonItemAmount { Item = item.Item, Count = item.Count });
         }
 
         if (reward.DropTable != null)
         {
             foreach (ItemDrop drop in reward.DropTable.Roll(reward.DropGroupID))
             {
-                AddItem(drop.Item, drop.Count, result.RewardItems);
+                if (drop.Item == null || drop.Count <= 0) continue;
+                result.RewardItems.Add(new DungeonItemAmount { Item = drop.Item, Count = drop.Count });
             }
         }
+    }
+
+    /// <summary>
+    /// 확정된 보상 지급 + 클리어 기록 저장 ( 1회만 )
+    /// </summary>
+    private void ClaimReward()
+    {
+        DungeonResult result = LastResult;
+        if (result == null || result.RewardClaimed) return;
+        result.RewardClaimed = true;
+
+        if (player != null)
+        {
+            if (player.Wallet != null)
+            {
+                foreach (CurrencyAmount currency in result.RewardCurrencies)
+                {
+                    player.Wallet.Add(currency.Type, currency.Amount);
+                }
+            }
+
+            if (result.RewardExp > 0f && player.Progression != null)
+            {
+                player.Progression.AddExp(result.RewardExp);
+            }
+
+            foreach (DungeonItemAmount item in result.RewardItems)
+            {
+                int left = DungeonInventoryBridge.Add(inventory, item.Item, item.Count);
+                if (left > 0)
+                {
+                    //TODO KJ - 인벤토리 가득 찼을 때 처리 ( 우편함 / 바닥 드롭 등 ) 미정
+                    Debug.LogWarning($"[Dungeon] 인벤토리 부족 - {item.Item.ItemName} {left}개 지급 못함");
+                }
+            }
+        }
+
+        record.ClearCount++;
+        record.FirstRewardClaimed = true;
+        SaveRecord();
+
+        Debug.Log($"[Dungeon] 보상 수령 : {string.Join(", ", result.RewardCurrencies.ConvertAll(c => $"{c.Type} +{c.Amount}"))} / Exp +{result.RewardExp} / 아이템 {result.RewardItems.Count}종 ( 누적 {record.ClearCount}회 )");
     }
     #endregion
 
@@ -282,6 +361,12 @@ public class DungeonProgressManager : MonoBehaviour
         {
             //진행 중 퇴장 = 포기
             FailDungeon();
+        }
+        else if (state == DungeonState.Cleared && LastResult != null && !LastResult.RewardClaimed)
+        {
+            //결과 UI 거치지 않고 퇴장해도 클리어 보상은 지급
+            ClaimReward();
+            DungeonSession.End();
         }
 
         if (player != null && SaveManager.Instance != null)

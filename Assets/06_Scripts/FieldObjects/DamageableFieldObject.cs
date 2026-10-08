@@ -104,10 +104,18 @@ public abstract class DamageableFieldObject : FieldObjectBase, IInteractable, ID
         if (CurrentHp <= 0)
         {
             IsDepleted = true;
-            OnDepleted();
 
+            // OnDepleted -> 풀 반납(OnDespawned)에서 OnDestroyed 구독이 끊기므로 스포너 알림을 먼저
             float respawnTime = UnityEngine.Random.Range(Data.RespawnTimeMin, Data.RespawnTimeMax);
             OnDestroyed?.Invoke(this.gameObject,ResourceEntry, respawnTime);
+
+            OnDepleted();
+            #region [이전] OnDepleted 후 알림 ( 반납 시 구독 해제돼 알림 누락 )
+            // OnDepleted();
+            //
+            // float respawnTime = UnityEngine.Random.Range(Data.RespawnTimeMin, Data.RespawnTimeMax);
+            // OnDestroyed?.Invoke(this.gameObject,ResourceEntry, respawnTime);
+            #endregion
         }
     }
 

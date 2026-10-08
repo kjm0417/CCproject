@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public abstract class DungeonBase : MonoBehaviour
 
     private CinemachineCamera cinemachineCamera;
     private Transform cameraTarget; //보스 맵 외 카메라 타겟 ( 플레이어 )
-    private BossBase watchedBoss; //보스 맵 보스 - 처치 시 던전 클리어
+    private readonly List<BossBase> watchedBosses = new List<BossBase>(); //씬의 보스 - 처치 시 던전 클리어
 
     public DungeonMap CurrentMap { get; private set; }
     public int CurrentDungeonFloor => CurrentMap != null ? CurrentMap.Floor : 0; //현재 던전 몇층에 있는지 ( 시작 맵 없으면 0층 )
@@ -47,9 +48,10 @@ public abstract class DungeonBase : MonoBehaviour
 
             ApplyCamBound(CurrentMap);
             ApplyCameraTarget(CurrentMap, player);
-            WatchBoss(CurrentMap);
             OnMapEntered(CurrentMap);
         }
+
+        WatchBosses();
     }
 
     /// <summary>
@@ -71,7 +73,6 @@ public abstract class DungeonBase : MonoBehaviour
         ApplyCamBound(map);
         TeleportPlayer(player, map.ArrivalPoint.position);
         ApplyCameraTarget(map, player);
-        WatchBoss(map);
 
         Debug.Log($"[Dungeon] 맵 이동 : {map.Floor}층 {map.MapID}");
         OnMapEntered(map);
@@ -109,27 +110,35 @@ public abstract class DungeonBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 보스 맵 진입 시 보스 사망 감시 -> 던전 클리어 ( 보상 후 영지 씬 복귀 )
+    /// 씬의 보스 ( 비활성 맵 포함 ) 사망 감시 -> 던전 클리어 ( 결과 UI -> 보상 후 영지 씬 복귀 )
+    /// 보스 맵 체크 ( isBossMap ) 와 무관하게 동작
     /// </summary>
-    private void WatchBoss(DungeonMap map)
+    private void WatchBosses()
     {
-        if (!map.IsBossMap || watchedBoss != null) return;
-
-        watchedBoss = map.GetComponentInChildren<BossBase>(true);
-        if (watchedBoss == null) watchedBoss = FindAnyObjectByType<BossBase>(FindObjectsInactive.Include);
-
-        if (watchedBoss == null)
+        foreach (BossBase boss in FindObjectsByType<BossBase>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
-            Debug.LogError($"[Dungeon] {map.MapID} 보스 없음");
-            return;
+            boss.OnDiedEvent += OnBossDied;
+            watchedBosses.Add(boss);
         }
 
-        watchedBoss.OnDiedEvent += OnBossDied;
+        if (watchedBosses.Count == 0)
+        {
+            Debug.LogWarning("[Dungeon] 씬에 보스 없음 - 보스 처치 클리어 불가");
+        }
+    }
+
+    private void UnwatchBosses()
+    {
+        foreach (BossBase boss in watchedBosses)
+        {
+            if (boss != null) boss.OnDiedEvent -= OnBossDied;
+        }
+        watchedBosses.Clear();
     }
 
     private void OnBossDied()
     {
-        watchedBoss.OnDiedEvent -= OnBossDied;
+        UnwatchBosses();
 
         if (DungeonProgressManager.Instance == null)
         {
@@ -142,7 +151,7 @@ public abstract class DungeonBase : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (watchedBoss != null) watchedBoss.OnDiedEvent -= OnBossDied;
+        UnwatchBosses();
     }
 
     /// <summary>

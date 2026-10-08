@@ -123,9 +123,32 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
     public bool TryInteract()
     {
+        // 락 없이 도끼/곡괭이 대상이 있으면 오브젝트 먼저, 실패하면 삽질
+        if (ShouldPrioritizeTarget())
+        {
+            if (TryInteractTarget()) return true;
+            return currentToolType == ToolType.Shovel && TryInteractTile(currentToolType);
+        }
+
         // 삽을 들고 있으면 발밑 타일 먼저 시도, 실패하면 오브젝트 상호작용
         if (currentToolType == ToolType.Shovel && TryInteractTile(currentToolType)) return true;
 
+        return TryInteractTarget();
+    }
+
+    /// <summary>
+    /// 락 없는 상태에서 도끼/곡괭이를 쓸 수 있는 대상인지 - 삽질보다 우선
+    /// </summary>
+    private bool ShouldPrioritizeTarget()
+    {
+        if (isCurrentToolLocked || CurrentTarget == null) return false;
+
+        ToolType toolType = ResolveToolType(CurrentTarget);
+        return toolType == ToolType.Axe || toolType == ToolType.Pickaxe;
+    }
+
+    private bool TryInteractTarget()
+    {
         if (CurrentTarget == null) return false;
 
         IInteractable target = FindNearestInteractable();

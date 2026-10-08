@@ -2,6 +2,20 @@
   {
     "StructID":50001,
     "StructName":"던전 입구",
-    "InteractionDetail":"던전 입장"
+    "InteractionDetail":"던전 입장",
+    "DungeonID":9000,
+    "DungeonName":"봄 던전",
+    "SceneName":"KJ_DungeonScene",
+    "RecommendLevel":3,
+    "MonsterInfo":"슬라임 Lv1 · 해골 Lv1",
+    "RequireSubmit":1,
+    "SubmitItems":"11001:3;11002:1",
+    "FailRefundRatio":0.5,
+    "FirstExp":50,
+    "FirstGold":100,
+    "FirstItems":"13001:2",
+    "RepeatExp":5,
+    "RepeatGold":10,
+    "RepeatItems":""
   }
 ]

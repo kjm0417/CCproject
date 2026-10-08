@@ -16,6 +16,15 @@ public class GroundTileModifier : MonoBehaviour
     [SerializeField]
     private bool debugLog;
 
+    [Tooltip("발밑 칸이 변환 불가일 때 상하좌우 인접 칸을 찾을 거리 (칸 단위, 칸 중심까지 거리). 0이면 발밑 칸만")]
+    [SerializeField]
+    private float neighborReach = 1f;
+
+    private static readonly Vector3Int[] NeighborOffsets =
+    {
+        Vector3Int.left, Vector3Int.right, Vector3Int.up, Vector3Int.down
+    };
+
     private TerritoryManager territoryManager;
     private TerritoryManager Manager
     {
@@ -28,18 +37,44 @@ public class GroundTileModifier : MonoBehaviour
     }
 
     // ZoneId -> (바뀐 칸 -> 바뀐 후 타일)
-    private Dictionary<int, Dictionary<Vector3Int, TileBase>> modifiedCells = new Dictionary<int, Dictionary<Vector3Int, TileBase>>();
+    private struct ModifiedCell
+    {
+        public TileBase Original; //변환 전 타일 (되돌릴 때 사용)
+        public TileBase Result;   //변환 후 타일
+    }
+
+    private Dictionary<int, Dictionary<Vector3Int, ModifiedCell>> modifiedCells = new Dictionary<int, Dictionary<Vector3Int, ModifiedCell>>();
 
     /// <summary>
     /// 월드 좌표가 속한 칸의 타일을 도구에 맞게 변환 시도
     /// </summary>
     public bool TryConvertTile(Vector3 worldPosition, ToolType toolType)
     {
-        if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
+        // 발밑 칸이 이미 변환됐거나 불가하면 가장 가까운 인접 칸
+        if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile)
+            && !TryFindNeighborConversion(worldPosition, toolType, out zone, out cell, out resultTile))
             return false;
+        #region [이전] 발밑 칸만 변환
+        // if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
+        //     return false;
+        #endregion
 
+        TileBase originalTile = zone.TerritoryTileMapGround.GetTile(cell);
         zone.TerritoryTileMapGround.SetTile(cell, resultTile);
-        RecordCell(zone.TerritoryZoneData.ZoneId, cell, resultTile);
+        RecordCell(zone.TerritoryZoneData.ZoneId, cell, originalTile, resultTile);
+        return true;
+    }
+
+    /// <summary>
+    /// 변환된 칸을 변환 전 타일로 되돌리고 기록 삭제
+    /// </summary>
+    public bool TryRevertTile(TerritoryZone zone, Vector3Int cell)
+    {
+        if (!modifiedCells.TryGetValue(zone.TerritoryZoneData.ZoneId, out var cells)) return false;
+        if (!cells.TryGetValue(cell, out ModifiedCell modified)) return false;
+
+        zone.TerritoryTileMapGround.SetTile(cell, modified.Original);
+        cells.Remove(cell);
         return true;
     }
 
@@ -48,7 +83,45 @@ public class GroundTileModifier : MonoBehaviour
     /// </summary>
     public bool CanConvertTile(Vector3 worldPosition, ToolType toolType)
     {
-        return TryFindConversion(worldPosition, toolType, false, out _, out _, out _);
+        return TryFindConversion(worldPosition, toolType, false, out _, out _, out _)
+            || TryFindNeighborConversion(worldPosition, toolType, out _, out _, out _);
+    }
+
+    /// <summary>
+    /// 발밑 칸 기준 상하좌우 인접 칸 중 neighborReach 안에서 가까운 순으로 변환 가능한 칸 찾기
+    /// </summary>
+    private bool TryFindNeighborConversion(Vector3 worldPosition, ToolType toolType,
+        out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile)
+    {
+        zone = null;
+        cell = default;
+        resultTile = null;
+
+        if (neighborReach <= 0f) return false;
+
+        TerritoryZone footZone = FindUnlockedZoneAt(worldPosition, out Vector3Int footCell);
+        if (footZone == null) return false;
+
+        Tilemap ground = footZone.TerritoryTileMapGround;
+        float maxDistance = neighborReach * ground.layoutGrid.cellSize.x;
+
+        List<(float distance, Vector3 center)> candidates = new List<(float, Vector3)>();
+        foreach (Vector3Int offset in NeighborOffsets)
+        {
+            Vector3 center = ground.GetCellCenterWorld(footCell + offset);
+            float distance = Vector2.Distance(worldPosition, center);
+            if (distance <= maxDistance) candidates.Add((distance, center));
+        }
+        candidates.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+        // 인접 칸이 다른 구역일 수 있어 칸 중심 월드 좌표로 다시 판정
+        foreach (var candidate in candidates)
+        {
+            if (TryFindConversion(candidate.center, toolType, false, out zone, out cell, out resultTile))
+                return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -135,14 +208,19 @@ public class GroundTileModifier : MonoBehaviour
         if (debugLog) Debug.Log($"[GroundTileModifier] {message}");
     }
 
-    private void RecordCell(int zoneId, Vector3Int cell, TileBase tile)
+    private void RecordCell(int zoneId, Vector3Int cell, TileBase originalTile, TileBase resultTile)
     {
         if (!modifiedCells.TryGetValue(zoneId, out var cells))
         {
-            cells = new Dictionary<Vector3Int, TileBase>();
+            cells = new Dictionary<Vector3Int, ModifiedCell>();
             modifiedCells.Add(zoneId, cells);
         }
-        cells[cell] = tile;
+
+        // 여러 번 변환돼도 최초 원본 타일 유지
+        if (cells.TryGetValue(cell, out ModifiedCell existing))
+            originalTile = existing.Original;
+
+        cells[cell] = new ModifiedCell { Original = originalTile, Result = resultTile };
     }
 
     #region 저장 및 불러오기
@@ -158,7 +236,7 @@ public class GroundTileModifier : MonoBehaviour
                     ZoneId = zonePair.Key,
                     CellX = cellPair.Key.x,
                     CellY = cellPair.Key.y,
-                    TileName = cellPair.Value.name
+                    TileName = cellPair.Value.Result.name
                 });
             }
         }
@@ -183,8 +261,10 @@ public class GroundTileModifier : MonoBehaviour
             }
 
             Vector3Int cell = new Vector3Int(tileData.CellX, tileData.CellY, 0);
+            // 씬에 배치된 타일이 원본 (저장 데이터에는 결과 타일만 있음)
+            TileBase originalTile = zone.TerritoryTileMapGround.GetTile(cell);
             zone.TerritoryTileMapGround.SetTile(cell, tile);
-            RecordCell(tileData.ZoneId, cell, tile);
+            RecordCell(tileData.ZoneId, cell, originalTile, tile);
         }
     }
     #endregion

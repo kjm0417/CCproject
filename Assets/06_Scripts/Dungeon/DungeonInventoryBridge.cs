@@ -42,9 +42,6 @@ public static class DungeonInventoryBridge
     {
         if (inventory == null || item == null || count <= 0) return 0;
 
-        //TODO KJ - 인벤토리 병합 후 inventory.Remove(item, count) 로 교체
-        //현재 PlayerInventory.Remove는 ItemData 타입을 받아 InvenItemData 소모 불가 -> 임시로 소모하지 않음
-        Debug.LogWarning($"[Dungeon] 인벤토리 소모 API 미연결 - {item.ItemName} {count}개 소모 생략");
-        return 0;
+        return inventory.Remove(item, count);
     }
 }

@@ -39,6 +39,14 @@ public class CropPlanter : MonoBehaviour
         = new Dictionary<(int, Vector3Int), (PlantedCropObject, string)>();
 
     /// <summary>
+    /// 해당 구역의 칸에 작물이 심겨 있는지
+    /// </summary>
+    public bool IsPlanted(TerritoryZone zone, Vector3Int cell)
+    {
+        return plantedCells.ContainsKey((zone.TerritoryZoneData.ZoneId, cell));
+    }
+
+    /// <summary>
     /// 해당 씨앗을 심을 수 있는 작물이 등록되어 있는지
     /// </summary>
     public bool IsPlantable(InvenItemData seed)
@@ -79,6 +87,14 @@ public class CropPlanter : MonoBehaviour
         if (plantedCells.ContainsKey(cellKey))
         {
             Log($"{zone.name} {cell} 이미 작물이 심겨 있음");
+            return false;
+        }
+
+        // 흙 위에 자원이 재생성돼 있으면 심기 불가
+        ResourceSpawner spawner = zone.GetComponent<ResourceSpawner>();
+        if (spawner != null && spawner.IsOccupied(cell))
+        {
+            Log($"{zone.name} {cell} 자원이 있어 심기 불가");
             return false;
         }
 

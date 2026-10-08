@@ -318,6 +318,13 @@ public class TerritoryManager : MonoBehaviour
 
             if (targetEntry == null) continue;
 
+            // 예전 세이브에 남은 파괴 상태 자원 ( 재생성 예약 누락분 ) -> 새 자원으로 생성
+            if (objState.IsDepleted || objState.CurrentHp <= 0)
+            {
+                spawner.SpawnResourceAtPosition(targetEntry, objState.Position);
+                continue;
+            }
+
             // 특정 위치에 자원 생성
             GameObject resourceObj = spawner.SpawnResourceAtPosition(targetEntry, objState.Position);
             if (resourceObj == null) continue;
