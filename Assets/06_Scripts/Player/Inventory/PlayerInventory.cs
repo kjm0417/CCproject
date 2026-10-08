@@ -83,28 +83,41 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
 
         if (savedItems != null)
         {
-            Dictionary<string, InvenItemData> resolvedItems = new Dictionary<string, InvenItemData>();
             for (int i = 0; i < savedItems.Count; i++)
             {
                 InventoryItemSaveData savedItem = savedItems[i];
-                if (savedItem == null || string.IsNullOrEmpty(savedItem.ItemID) || savedItem.Count <= 0) continue;
+                if (savedItem == null || savedItem.Count <= 0) continue;
 
-                if (!resolvedItems.TryGetValue(savedItem.ItemID, out InvenItemData item))
-                {
-                    item = itemDatabase != null ? itemDatabase.FindById(savedItem.ItemID) : null;
-                    if (item == null)
-                    {
-                        item = CreateRuntimeItem(savedItem);
-                        runtimeLoadedItems.Add(item);
-                    }
-                    resolvedItems.Add(savedItem.ItemID, item);
-                }
+                InvenItemData item = ResolveSavedItem(savedItem);
+                if (item == null) continue;
 
                 AddInternal(item, savedItem.Count, false);
             }
         }
 
         OnInventoryChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 저장 데이터 -> 아이템 SO. ItemDatabase 우선, 없으면 런타임 아이템 생성 (같은 ID는 같은 인스턴스 재사용).
+    /// 상자 등 다른 보관함도 이걸로 찾아야 인벤토리와 같은 아이템으로 취급된다.
+    /// </summary>
+    public InvenItemData ResolveSavedItem(InventoryItemSaveData savedItem)
+    {
+        if (savedItem == null || string.IsNullOrEmpty(savedItem.ItemID)) return null;
+
+        InvenItemData item = itemDatabase != null ? itemDatabase.FindById(savedItem.ItemID) : null;
+        if (item != null) return item;
+
+        for (int i = 0; i < runtimeLoadedItems.Count; i++)
+        {
+            if (runtimeLoadedItems[i] != null && runtimeLoadedItems[i].ItemID == savedItem.ItemID)
+                return runtimeLoadedItems[i];
+        }
+
+        item = CreateRuntimeItem(savedItem);
+        runtimeLoadedItems.Add(item);
+        return item;
     }
 
     private static InvenItemData CreateRuntimeItem(InventoryItemSaveData data)

@@ -197,6 +197,16 @@ public class TerritoryManager : MonoBehaviour
             territorySaveData.plantedCrops = CropPlanter.Save();
         }
 
+        // 상자 보관 아이템 저장
+        foreach (ChestObject chest in FindObjectsByType<ChestObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            territorySaveData.chests.Add(new ChestSaveData
+            {
+                ChestKey = chest.SaveKey,
+                Items = chest.CreateSaveData()
+            });
+        }
+
         // 바닥에 떨어진 드랍 아이템 저장
         foreach (PickupItem pickup in FindObjectsByType<PickupItem>(FindObjectsSortMode.None))
         {
@@ -376,6 +386,27 @@ public class TerritoryManager : MonoBehaviour
             if (respawningData.Count > 0)
             {
                 spawner.RestartRespawnCoroutines(respawningData);
+            }
+        }
+
+        // 상자 보관 아이템 복원 (플레이어 인벤토리 로드 이후 - 같은 아이템 인스턴스 공유)
+        if (data.chests != null && data.chests.Count > 0)
+        {
+            PlayerInventory inventory = FindAnyObjectByType<PlayerInventory>();
+            if (inventory == null)
+            {
+                Debug.LogWarning("PlayerInventory를 찾을 수 없어 상자 아이템 로드를 건너뜀");
+            }
+            else
+            {
+                foreach (ChestObject chest in FindObjectsByType<ChestObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    ChestSaveData chestData = data.chests.Find(c => c.ChestKey == chest.SaveKey);
+                    if (chestData != null)
+                    {
+                        chest.Load(chestData.Items, inventory.ResolveSavedItem);
+                    }
+                }
             }
         }
 

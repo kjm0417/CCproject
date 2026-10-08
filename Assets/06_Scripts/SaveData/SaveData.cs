@@ -152,6 +152,17 @@ public class TerritorySaveData
     public List<ModifiedTileData> modifiedTiles = new List<ModifiedTileData>();
     public List<DroppedItemData> droppedItems = new List<DroppedItemData>();
     public List<PlantedCropData> plantedCrops = new List<PlantedCropData>();
+    public List<ChestSaveData> chests = new List<ChestSaveData>();
+}
+
+/// <summary>
+/// 상자 보관 아이템 저장 데이터
+/// </summary>
+[System.Serializable]
+public class ChestSaveData
+{
+    public string ChestKey; //ChestObject.SaveKey
+    public List<InventoryItemSaveData> Items = new List<InventoryItemSaveData>();
 }
 
 /// <summary>

@@ -25,6 +25,11 @@ public class ChestObject : MonoBehaviour, IInteractable
     [SerializeField, Min(1)]
     private int maxItemTypes = 20;
 
+    [Header("저장")]
+    [Tooltip("저장/불러오기용 고유 ID. 비우면 오브젝트 이름 + 위치로 구분 (상자가 여러 개면 지정 권장)")]
+    [SerializeField]
+    private string chestId;
+
     [Header("UI (상자 1 : ChestUI 1)")]
     [Tooltip("이 상자 전용 ChestUI. 상자마다 다른 ChestUI를 연결")]
     [SerializeField]
@@ -52,6 +57,13 @@ public class ChestObject : MonoBehaviour, IInteractable
     /// 넣을 수 있는 아이템 종류 수 (= 칸 수)
     /// </summary>
     public int Capacity => maxItemTypes;
+
+    /// <summary>
+    /// 저장 데이터에서 이 상자를 찾는 키
+    /// </summary>
+    public string SaveKey => !string.IsNullOrEmpty(chestId)
+        ? chestId
+        : $"{name}_{transform.position.x:F1}_{transform.position.y:F1}";
 
     /// <summary>
     /// SpriteRenderer 자동 할당, 닫힘 Sprite 기본값 설정
@@ -212,6 +224,47 @@ public class ChestObject : MonoBehaviour, IInteractable
         }
         return total;
     }
+
+    #region 저장 및 불러오기
+    /// <summary>
+    /// 보관 아이템 저장 데이터 생성
+    /// </summary>
+    public List<InventoryItemSaveData> CreateSaveData()
+    {
+        List<InventoryItemSaveData> data = new List<InventoryItemSaveData>();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].Item == null || slots[i].Count <= 0) continue;
+            data.Add(InventoryItemSaveData.FromSlot(slots[i]));
+        }
+        return data;
+    }
+
+    /// <summary>
+    /// 저장된 보관 아이템 복원. resolveItem으로 저장 데이터 -> 아이템 SO 변환
+    /// </summary>
+    public void Load(List<InventoryItemSaveData> savedItems, Func<InventoryItemSaveData, InvenItemData> resolveItem)
+    {
+        slots.Clear();
+
+        if (savedItems != null && resolveItem != null)
+        {
+            foreach (InventoryItemSaveData savedItem in savedItems)
+            {
+                if (savedItem == null || savedItem.Count <= 0) continue;
+
+                InvenItemData item = resolveItem(savedItem);
+                if (item == null) continue;
+
+                InventorySlot slot = FindSlot(item);
+                if (slot != null) slot.Count += savedItem.Count;
+                else slots.Add(new InventorySlot(item, savedItem.Count));
+            }
+        }
+
+        OnStorageChanged?.Invoke();
+    }
+    #endregion
 
     /// <summary>
     /// 비활성화 시 열려 있으면 닫아서 UI가 남지 않게 한다.
