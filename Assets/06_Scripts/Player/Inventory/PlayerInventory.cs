@@ -7,9 +7,11 @@ using UnityEngine;
 // 인벤토리 UI는 Slots를 그리고 OnInventoryChanged로 갱신, 제작은 GetCount/HasEnough로 조회한다.
 public class PlayerInventory : MonoBehaviour, IPlayerComponent
 {
-    [Header("슬롯 상한 (0 = 무제한)")]
-    [SerializeField]
-    private int maxSlots = 0;
+    public const int SlotLimit = 100;
+
+    [Header("슬롯 상한 (최대 100칸)")]
+    [SerializeField, Range(1, SlotLimit)]
+    private int maxSlots = SlotLimit;
     [SerializeField]
     private ItemDatabase itemDatabase;
 
@@ -21,6 +23,8 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
 
     // UI가 읽을 수 있게 슬롯 목록을 읽기 전용으로 노출
     public IReadOnlyList<InventorySlot> Slots => slots;
+    // 기존 프리팹/씬의 0(무제한) 설정도 현재 최대 용량으로 처리한다.
+    public int MaxSlots => maxSlots <= 0 ? SlotLimit : Mathf.Min(maxSlots, SlotLimit);
 
     public void Initialize(PlayerContext context)
     {
@@ -53,7 +57,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         }
 
         // 2) 남은 건 새 칸에 (슬롯 상한이 있으면 그만큼만).
-        while (remaining > 0 && (maxSlots <= 0 || slots.Count < maxSlots))
+        while (remaining > 0 && slots.Count < MaxSlots)
         {
             int put = Mathf.Min(item.MaxStack, remaining);
             slots.Add(new InventorySlot(item, put));

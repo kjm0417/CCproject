@@ -28,8 +28,9 @@ public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget, IPo
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         activeRoots.Add(this);
         RefreshAll();
     }

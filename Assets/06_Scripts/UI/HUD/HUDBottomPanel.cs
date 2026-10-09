@@ -208,21 +208,20 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void RefreshQuickSlots()
     {
         ValidateSelectedQuickSlotItem();
-        HashSet<InvenItemData> registeredItems = PopulateQuickSlotSet(quickSlots);
+        PopulateQuickSlotSet(quickSlots);
 
         if (inventoryQuickSlots != null)
         {
             PopulateQuickSlotSet(inventoryQuickSlots);
         }
 
-        RefreshInventoryItems(registeredItems);
+        RefreshInventoryItems();
         RefreshInteractionButton();
     }
 
-    private HashSet<InvenItemData> PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
+    private void PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
     {
-        HashSet<InvenItemData> registeredItems = new HashSet<InvenItemData>();
-        if (targetSlots == null) return registeredItems;
+        if (targetSlots == null) return;
 
         for (int i = 0; i < targetSlots.Length; i++)
         {
@@ -247,12 +246,10 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                 targetSlots[i].SetItem(item, displayCount, icon, () => SelectQuickSlotItem(item));
 
                 targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
-                registeredItems.Add(item);
             }
         }
 
         SetInventorySlot(targetSlots);
-        return registeredItems;
     }
 
     private void AutoAssignReferences()
@@ -376,27 +373,29 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         inventoryItemSlotTemplate = inventoryPanelView.ItemSlotTemplate;
     }
 
-    private void RefreshInventoryItems(HashSet<InvenItemData> registeredItems)
+    private void RefreshInventoryItems()
     {
         if (inventoryItemsContent == null || inventory == null) return;
 
-        int visibleCount = 0;
-        for (int i = 0; i < inventory.Slots.Count; i++)
+        // 퀵슬롯은 바로가기이며, 하단에는 빈 칸까지 전체 인벤토리를 표시한다.
+        for (int i = 0; i < inventory.MaxSlots; i++)
         {
+            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(i);
+            slot.gameObject.SetActive(true);
+
+            if (i >= inventory.Slots.Count || inventory.Slots[i].Item == null)
+            {
+                slot.Clear();
+                continue;
+            }
+
             InventorySlot inventorySlot = inventory.Slots[i];
             InvenItemData item = inventorySlot.Item;
-            if (item == null || registeredItems.Contains(item)) continue;
-
-            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
-            slot.gameObject.SetActive(true);
-            slot.Initialize(0);
-            slot.SetNumberVisible(false);
             slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item));
-            slot.SetItemName(item.ItemName);
-            visibleCount++;
+            slot.SetItemName(string.Empty);
         }
 
-        for (int i = visibleCount; i < inventoryItemSlots.Count; i++)
+        for (int i = inventory.MaxSlots; i < inventoryItemSlots.Count; i++)
         {
             inventoryItemSlots[i].Clear();
             inventoryItemSlots[i].gameObject.SetActive(false);

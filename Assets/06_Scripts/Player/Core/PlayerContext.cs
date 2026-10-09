@@ -41,6 +41,8 @@ public class PlayerContext : MonoBehaviour
 
     private void Awake()
     {
+        YAxisSorting.EnsureAttached(gameObject);
+
         // 루트 오브젝트에 붙은 필수 컴포넌트는 TryGetComponent로 캐싱한다.
         Stats = GetRequiredComponent<PlayerStats>();
         Movement = GetRequiredComponent<PlayerMovement>();
