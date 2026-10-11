@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87222d535c46d954d82d95c4c7b36245, type: 3}
+  m_Name: FourRoots
+  m_EditorClassIdentifier: 
+  displayName: "기본 스킬 트리 (4종 샘플)"
+  nodes:
+  - skill: {fileID: 11400000, guid: 7e52c6fb3d334086b0df855effbf055b, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: b21da32e37e74258ac4b065c58438b55, type: 2}
+    parent: {fileID: 11400000, guid: 7e52c6fb3d334086b0df855effbf055b, type: 2}
+  - skill: {fileID: 11400000, guid: f59a6b1ee3534bfb82291ed8c4886f05, type: 2}
+    parent: {fileID: 11400000, guid: 7e52c6fb3d334086b0df855effbf055b, type: 2}
+  - skill: {fileID: 11400000, guid: 63ddd19535534a66838ad6db9cbe94e3, type: 2}
+    parent: {fileID: 11400000, guid: b21da32e37e74258ac4b065c58438b55, type: 2}
+  - skill: {fileID: 11400000, guid: 6175c9822a8548ab86e5569adb94a8e3, type: 2}
+    parent: {fileID: 11400000, guid: b21da32e37e74258ac4b065c58438b55, type: 2}
+  - skill: {fileID: 11400000, guid: 7802798bd70446adaf42b36f7ab13b74, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: c033be8d1fab44b3b9e085aabd9af690, type: 2}
+    parent: {fileID: 11400000, guid: 7802798bd70446adaf42b36f7ab13b74, type: 2}
+  - skill: {fileID: 11400000, guid: fc390830dcbc4397ae9824eb20ebbb59, type: 2}
+    parent: {fileID: 11400000, guid: 7802798bd70446adaf42b36f7ab13b74, type: 2}
+  - skill: {fileID: 11400000, guid: 6269a36a7dac4b6aa99c07cd59be56a2, type: 2}
+    parent: {fileID: 11400000, guid: c033be8d1fab44b3b9e085aabd9af690, type: 2}
+  - skill: {fileID: 11400000, guid: f7426b0bfaf34cc99319ef5df6bd997c, type: 2}
+    parent: {fileID: 11400000, guid: c033be8d1fab44b3b9e085aabd9af690, type: 2}
+  - skill: {fileID: 11400000, guid: 4dffe248c84e4acb8829955e00f409db, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: 58efbb00c0ce43f29e252d8ffdac1334, type: 2}
+    parent: {fileID: 11400000, guid: 4dffe248c84e4acb8829955e00f409db, type: 2}
+  - skill: {fileID: 11400000, guid: 3022906519bd462d90795a7c7c186bd8, type: 2}
+    parent: {fileID: 11400000, guid: 4dffe248c84e4acb8829955e00f409db, type: 2}
+  - skill: {fileID: 11400000, guid: e718229f2bb1496688450abd316a9baf, type: 2}
+    parent: {fileID: 11400000, guid: 58efbb00c0ce43f29e252d8ffdac1334, type: 2}
+  - skill: {fileID: 11400000, guid: 899b1373b06f47a49917c3188c68262e, type: 2}
+    parent: {fileID: 11400000, guid: 58efbb00c0ce43f29e252d8ffdac1334, type: 2}
+  - skill: {fileID: 11400000, guid: 81a43e70e0224be083481d4f3895a80c, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: f8681bb577854bf481909af92c60a510, type: 2}
+    parent: {fileID: 11400000, guid: 81a43e70e0224be083481d4f3895a80c, type: 2}
+  - skill: {fileID: 11400000, guid: 712a627478f54b6ca682aae2831d68e1, type: 2}
+    parent: {fileID: 11400000, guid: 81a43e70e0224be083481d4f3895a80c, type: 2}
+  - skill: {fileID: 11400000, guid: ed42179bbd974f3d902965d571b9738d, type: 2}
+    parent: {fileID: 11400000, guid: f8681bb577854bf481909af92c60a510, type: 2}
+  - skill: {fileID: 11400000, guid: e2354f79f952460788a28fae5b6723d4, type: 2}
+    parent: {fileID: 11400000, guid: f8681bb577854bf481909af92c60a510, type: 2}
