@@ -17,4 +17,12 @@ public enum SFXType
 {
     None,
     ButtonClick,
+
+    // 도구로 오브젝트 타격
+    AxeHit,
+    PickaxeHit,
+    ShovelHit,
+
+    // 플레이어 이동
+    Footstep,
 }

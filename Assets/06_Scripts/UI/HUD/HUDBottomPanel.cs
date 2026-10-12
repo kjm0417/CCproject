@@ -53,6 +53,9 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private InvenItemData selectedQuickSlotItem;
     private string selectedQuickSlotItemId;
 
+    // 상자 등 외부 UI가 열려 있을 때 인벤토리 칸 클릭 동작을 대체 (null이면 기본 동작)
+    private Action<InventorySlot> itemClickOverride;
+
     public event Action OnInventoryRequested;
     public bool IsInventoryOpen => isInventoryOpen;
 
@@ -243,7 +246,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                     ? inventorySlot.Count
                     : 0;
                 Sprite icon = ResolveInventoryIcon(item);
-                targetSlots[i].SetItem(item, displayCount, icon, () => SelectQuickSlotItem(item));
+                targetSlots[i].SetItem(item, displayCount, icon, () => OnQuickSlotItemClicked(inventorySlot, item));
 
                 targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
             }
@@ -390,9 +393,20 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             }
 
             InventorySlot inventorySlot = inventory.Slots[i];
-            InvenItemData item = inventorySlot.Item;
+
             slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item));
             slot.SetItemName(string.Empty);
+
+            if (item == null || registeredItems.Contains(item)) continue;
+
+            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
+            slot.gameObject.SetActive(true);
+            slot.Initialize(0);
+            slot.SetNumberVisible(false);
+            UnityEngine.Events.UnityAction onClick = itemClickOverride != null ? () => itemClickOverride?.Invoke(inventorySlot) : null;
+            slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item), onClick);
+            slot.SetItemName(item.ItemName);
+            visibleCount++;
         }
 
         for (int i = inventory.MaxSlots; i < inventoryItemSlots.Count; i++)
@@ -459,6 +473,29 @@ public class HUDBottomPanel : PlayerHUDPanelBase
 
         targetSlots[InventorySlotIndex].SetCommand(icon, ToggleInventory);
         targetSlots[InventorySlotIndex].SetSelected(false);
+    }
+
+    /// <summary>
+    /// 외부 UI(상자 등)가 인벤토리 칸 클릭 동작을 대체하도록 등록. null이면 기본 동작(퀵슬롯 선택)으로 복구.
+    /// </summary>
+    public void SetItemClickOverride(Action<InventorySlot> handler)
+    {
+        itemClickOverride = handler;
+        RefreshQuickSlots();
+    }
+
+    /// <summary>
+    /// 퀵슬롯 아이템 클릭. 대체 동작이 등록돼 있으면 그쪽으로, 아니면 아이템 선택.
+    /// </summary>
+    private void OnQuickSlotItemClicked(InventorySlot inventorySlot, InvenItemData item)
+    {
+        if (itemClickOverride != null)
+        {
+            itemClickOverride.Invoke(inventorySlot);
+            return;
+        }
+
+        SelectQuickSlotItem(item);
     }
 
     private void SelectQuickSlotItem(InvenItemData item)
@@ -664,6 +701,14 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         return loadedIcon != null ? loadedIcon : GetFoodFallbackIcon();
     }
 
+    /// <summary>
+    /// 외부 UI(상자 등)에서 인벤토리와 같은 아이콘을 쓰기 위한 공개 진입점
+    /// </summary>
+    public Sprite GetItemIcon(InvenItemData item)
+    {
+        return ResolveInventoryIcon(item);
+    }
+
     private Sprite ResolveInventoryIcon(InvenItemData item)
     {
         if (item == null) return null;
@@ -746,7 +791,8 @@ public class HUDBottomPanel : PlayerHUDPanelBase
 
         if (Context != null && Context.Movement != null)
         {
-            Context.Movement.SetInputBlocked(isOpen);
+            // 상자 등 외부 UI가 열려 있으면 인벤토리를 닫아도 이동 정지 유지
+            Context.Movement.SetInputBlocked(isOpen || itemClickOverride != null);
         }
     }
 }

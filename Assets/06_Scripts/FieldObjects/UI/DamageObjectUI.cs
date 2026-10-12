@@ -19,6 +19,7 @@ public class DamageObjectUI : MonoBehaviour
 
     private void OnEnable()
     {
+        hpSlider.value = 1f; // reset on pool respawn
         damageableFieldObject.OnDamaged += OnEventDamaged;
     }
 

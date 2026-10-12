@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: DungeonData
   m_EditorClassIdentifier: Assembly-CSharp::DungeonData
   DungeonID: 9000
-  DungeonName: "\uBD04_\uB358\uC804"
+  DungeonName: "\uBD04 \uB358\uC804"
   SceneName: KJ_DungeonScene
+  RecommendLevel: 3
+  MonsterInfo: "\uC2AC\uB77C\uC784 Lv1 \xB7 \uD574\uACE8 Lv1"
+  BossSprite: {fileID: 1845081991133998016, guid: 49c916ec58ee60e449913f9818521f6e, type: 3}
+  RequireSubmitBeforeFirstClear: 1
   EntryCosts:
-  - Item: {fileID: 0}
-    Count: 0
+  - Item: {fileID: 11400000, guid: 47aa57cc8972cf8489ebca0636c6869c, type: 2}
+    Count: 3
+  - Item: {fileID: 11400000, guid: 60d1cacc84328f049be9966b6a5e72bb, type: 2}
+    Count: 1
   FailRefundRatio: 0.5
   FirstClearReward:
     Currencies:
@@ -25,8 +31,8 @@ MonoBehaviour:
       Amount: 100
     Exp: 50
     Items:
-    - Item: {fileID: 0}
-      Count: 0
+    - Item: {fileID: 11400000, guid: 9d60871ab9004ef4e91db1ee9b5bbc11, type: 2}
+      Count: 2
     DropTable: {fileID: 0}
     DropGroupID: 0
   RepeatClearReward:

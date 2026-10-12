@@ -190,6 +190,16 @@ public abstract class BossBase : MonoBehaviour, IEnemyDamageable
         OnDiedEvent?.Invoke();
     }
 
+    /// <summary> 즉시 사망 ( 디버그 / 연출용 ) - 무적 / 스턴 조건 무시 </summary>
+    public void Kill()
+    {
+        if (isDead) return;
+
+        currentHp = 0;
+        OnHpChanged?.Invoke(currentHp, data.maxHp);
+        Die();
+    }
+
     public void DamagePlayer(float damage)
     {
         if (HasPlayer) player.TakeDamage(damage);

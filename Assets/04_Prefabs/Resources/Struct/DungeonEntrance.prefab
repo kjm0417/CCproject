@@ -11,9 +11,7 @@ GameObject:
   - component: {fileID: 3823772516441208793}
   - component: {fileID: 2658861109355306181}
   - component: {fileID: 4477422957402332141}
-  - component: {fileID: 4768691631987294995}
-  - component: {fileID: 8870758542004402842}
-  - component: {fileID: 8608418807362007684}
+  - component: {fileID: 2079349259278450884}
   m_Layer: 0
   m_Name: DungeonEntrance
   m_TagString: Untagged
@@ -142,7 +140,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4768691631987294995
+--- !u!114 &2079349259278450884
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,34 +149,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4568179222172417323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: face23c8a3ef19b4ea8c5ecac6b0ea47, type: 3}
+  m_Script: {fileID: 11500000, guid: 26709002e4bd9f14b90b2d15011f5519, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionStructureObject
-  structObjData: {fileID: 11400000, guid: 75718b387d63fad4da513166083172a9, type: 2}
-  size: {x: 3.51, y: 2.56}
---- !u!114 &8870758542004402842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4568179222172417323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 348344e34c6c48a1b3383ff17d50bf0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractiveFixedStructureObject
---- !u!114 &8608418807362007684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4568179222172417323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebe6f96928e8a6a42975351b7139498c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneHandlerUI
-  type: 0
+  m_EditorClassIdentifier: Assembly-CSharp::DungeonEntrance
   dungeonData: {fileID: 11400000, guid: f09d1892a66266941ac657026d74e5eb, type: 2}
+  entryUI: {fileID: 0}

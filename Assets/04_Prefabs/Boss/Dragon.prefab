@@ -311,6 +311,7 @@ GameObject:
   - component: {fileID: 6066344498680904947}
   - component: {fileID: 3893533336670354340}
   - component: {fileID: 6684281638386794939}
+  - component: {fileID: 234679188280435083}
   m_Layer: 11
   m_Name: Dragon
   m_TagString: Untagged
@@ -445,6 +446,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossBGMPlayer
   bossBGM: 4
+--- !u!114 &234679188280435083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4714908585790209494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056ba29bc6124fe449637f213ee3f777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossDebugGUI
+  boss: {fileID: 0}
+  buttonSize: {x: 140, y: 50}
+  margin: 10
 --- !u!1 &9066398721956673926
 GameObject:
   m_ObjectHideFlags: 0

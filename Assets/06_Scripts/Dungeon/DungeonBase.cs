@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public abstract class DungeonBase : MonoBehaviour
 
     private CinemachineCamera cinemachineCamera;
     private Transform cameraTarget; //보스 맵 외 카메라 타겟 ( 플레이어 )
+    private readonly List<BossBase> watchedBosses = new List<BossBase>(); //씬의 보스 - 처치 시 던전 클리어
 
     public DungeonMap CurrentMap { get; private set; }
     public int CurrentDungeonFloor => CurrentMap != null ? CurrentMap.Floor : 0; //현재 던전 몇층에 있는지 ( 시작 맵 없으면 0층 )
@@ -48,6 +50,8 @@ public abstract class DungeonBase : MonoBehaviour
             ApplyCameraTarget(CurrentMap, player);
             OnMapEntered(CurrentMap);
         }
+
+        WatchBosses();
     }
 
     /// <summary>
@@ -103,6 +107,51 @@ public abstract class DungeonBase : MonoBehaviour
 
         confiner.BoundingShape2D = map.CamBound;
         confiner.InvalidateBoundingShapeCache();
+    }
+
+    /// <summary>
+    /// 씬의 보스 ( 비활성 맵 포함 ) 사망 감시 -> 던전 클리어 ( 결과 UI -> 보상 후 영지 씬 복귀 )
+    /// 보스 맵 체크 ( isBossMap ) 와 무관하게 동작
+    /// </summary>
+    private void WatchBosses()
+    {
+        foreach (BossBase boss in FindObjectsByType<BossBase>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            boss.OnDiedEvent += OnBossDied;
+            watchedBosses.Add(boss);
+        }
+
+        if (watchedBosses.Count == 0)
+        {
+            Debug.LogWarning("[Dungeon] 씬에 보스 없음 - 보스 처치 클리어 불가");
+        }
+    }
+
+    private void UnwatchBosses()
+    {
+        foreach (BossBase boss in watchedBosses)
+        {
+            if (boss != null) boss.OnDiedEvent -= OnBossDied;
+        }
+        watchedBosses.Clear();
+    }
+
+    private void OnBossDied()
+    {
+        UnwatchBosses();
+
+        if (DungeonProgressManager.Instance == null)
+        {
+            Debug.LogError("[Dungeon] DungeonProgressManager 없음 - 클리어 처리 불가");
+            return;
+        }
+
+        DungeonProgressManager.Instance.ClearDungeon();
+    }
+
+    private void OnDestroy()
+    {
+        UnwatchBosses();
     }
 
     /// <summary>

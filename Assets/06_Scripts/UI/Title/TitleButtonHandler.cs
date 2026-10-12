@@ -38,7 +38,7 @@ public class TitleButtonHandler : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadSceneAsync(startSceneName);
+        SceneFader.LoadScene(startSceneName);
     }
 
     private void OnClickOption()

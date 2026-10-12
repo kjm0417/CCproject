@@ -231,7 +231,7 @@ public class HUDQuickSlot : MonoBehaviour
         countText.enableAutoSizing = true;
         countText.fontSizeMin = 12f;
         countText.fontSizeMax = 22f;
-        countText.color = Color.white;
+        countText.color = Color.black;
         countText.raycastTarget = false;
         countObject.SetActive(false);
         return countText;
@@ -256,7 +256,7 @@ public class HUDQuickSlot : MonoBehaviour
         nameText.enableAutoSizing = true;
         nameText.fontSizeMin = 8f;
         nameText.fontSizeMax = 14f;
-        nameText.color = Color.white;
+        nameText.color = Color.black;
         nameText.raycastTarget = false;
         nameObject.SetActive(false);
         return nameText;

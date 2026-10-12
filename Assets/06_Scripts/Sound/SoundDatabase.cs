@@ -22,6 +22,25 @@ public class SoundDatabase : ScriptableObject
         public SFXType type;
         public AudioClip clip;
         [Range(0f, 1f)] public float volume = 1f;
+
+        [Tooltip("여러 개 넣으면 clip 대신 이 중 랜덤 재생 (직전 클립 제외)")]
+        public AudioClip[] randomClips;
+        [Tooltip("피치 랜덤 폭. 0.1이면 0.9~1.1")]
+        [Range(0f, 0.5f)] public float pitchRandom = 0f;
+
+        [NonSerialized] private int lastIndex = -1;
+
+        public AudioClip GetClip()
+        {
+            if (randomClips == null || randomClips.Length == 0) return clip;
+            if (randomClips.Length == 1) return randomClips[0];
+
+            // 직전 인덱스를 제외하고 뽑기
+            int index = UnityEngine.Random.Range(0, randomClips.Length - 1);
+            if (index >= lastIndex && lastIndex >= 0) index++;
+            lastIndex = index;
+            return randomClips[index];
+        }
     }
 
     [Serializable]

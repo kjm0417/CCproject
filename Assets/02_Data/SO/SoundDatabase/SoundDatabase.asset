@@ -15,17 +15,37 @@ MonoBehaviour:
   bgmList:
   - type: 2
     clip: {fileID: 8300000, guid: 9fa5b29ec727b0b4fa4c01eb70616713, type: 3}
-    volume: 0.014
+    volume: 0.041
   - type: 3
     clip: {fileID: 8300000, guid: 5051144a3ab49744ba82fa82b34029a4, type: 3}
-    volume: 0.014
+    volume: 0.041
   - type: 4
     clip: {fileID: 8300000, guid: 7b5e1e267aaec4b41aef7cc654671729, type: 3}
-    volume: 0.014
+    volume: 0.041
   sfxList:
-  - type: 0
+  - type: 1
+    clip: {fileID: 8300000, guid: a05e2393c0667fc4b83c07ff0b585016, type: 3}
+    volume: 1
+  - type: 2
+    clip: {fileID: 8300000, guid: 2cbbcd5d4b0e4444188b673eab05406b, type: 3}
+    volume: 1
+  - type: 3
+    clip: {fileID: 8300000, guid: 7acb88c77bf6ab74691f604eeb3167c4, type: 3}
+    volume: 1
+  - type: 4
+    clip: {fileID: 8300000, guid: e64b5f5716870c647a3c98a27ab0dd31, type: 3}
+    volume: 1
+  - type: 5
     clip: {fileID: 0}
-    volume: 0
+    volume: 0.6
+    randomClips:
+    - {fileID: 8300000, guid: cefb94d545c1c744cae67f46aaee162e, type: 3}
+    - {fileID: 8300000, guid: aa488c1d6f707ef4c81cc97f1e9cb568, type: 3}
+    - {fileID: 8300000, guid: 62a432cf1f7688e468c776c215107b94, type: 3}
+    - {fileID: 8300000, guid: 69c95180393fc694799b9eaca51a535a, type: 3}
+    - {fileID: 8300000, guid: 8f3ec3ce7bd580249890b6ee498ee67f, type: 3}
+    - {fileID: 8300000, guid: bac8cf8f40b0569448f17bd454328ae3, type: 3}
+    pitchRandom: 0.1
   sceneBGMList:
   - sceneName: KJ_Scene
     bgm: 2

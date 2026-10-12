@@ -20,11 +20,30 @@ public static class DungeonSession
     public static bool IsInDungeon => CurrentDungeon != null;
 
     /// <summary>
+    /// 클리어 기록 ( 저장 데이터 기준 )
+    /// </summary>
+    public static DungeonRecordData GetRecord(DungeonData dungeon)
+    {
+        DungeonSaveData saveData = SaveManager.Instance != null ? SaveManager.Instance.LoadDungeon() : new DungeonSaveData();
+        return saveData.GetOrCreate(dungeon.DungeonID);
+    }
+
+    /// <summary>
+    /// 입장 시 아이템 제출 필요 여부 - 제출 던전 ( A 유형 ) 이면서 첫 클리어 전일 때만
+    /// </summary>
+    public static bool RequiresSubmit(DungeonData dungeon)
+    {
+        if (dungeon == null || !dungeon.RequireSubmitBeforeFirstClear) return false;
+        return !GetRecord(dungeon).HasCleared;
+    }
+
+    /// <summary>
     /// 입장 가능 여부 ( 입장 아이템 보유 체크 )
     /// </summary>
     public static bool CanEnter(DungeonData dungeon, PlayerInventory inventory)
     {
         if (dungeon == null) return false;
+        if (!RequiresSubmit(dungeon)) return true;
 
         foreach (DungeonItemAmount cost in dungeon.EntryCosts)
         {
@@ -42,8 +61,10 @@ public static class DungeonSession
         if (!CanEnter(dungeon, inventory)) return false;
 
         consumedItems.Clear();
+        bool requiresSubmit = RequiresSubmit(dungeon);
         foreach (DungeonItemAmount cost in dungeon.EntryCosts)
         {
+            if (!requiresSubmit) break; //클리어 후 무료 재입장
             if (cost.Item == null || cost.Count <= 0) continue;
 
             int removed = DungeonInventoryBridge.Remove(inventory, cost.Item, cost.Count);

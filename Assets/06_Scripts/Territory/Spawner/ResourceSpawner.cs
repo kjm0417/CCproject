@@ -204,6 +204,23 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// 자원이 차지한 칸 중 파낸 흙은 원래 타일로 되돌림 (작물 칸은 CanSpawnAt에서 이미 걸러짐)
+    /// </summary>
+    private void RevertModifiedTiles(Vector3Int originCell, int gridWidth, int gridHeight)
+    {
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier == null) return;
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                tileModifier.TryRevertTile(territoryZone, originCell + new Vector3Int(x, y, 0));
+            }
+        }
+    }
+
+    /// <summary>
     /// 자원 재생성
     /// </summary>
     /// <param name="resourceObj"></param>
@@ -221,6 +238,7 @@ public class ResourceSpawner : MonoBehaviour
                 Vector3 spawnPos = territoryZone.TerritoryTileMapGround.GetCellCenterWorld(pickedCell);
                 GameObject resourceObj = CreateResourceAtPosition(entry, spawnPos);
                 RegisterResource(resourceObj, entry, pickedCell);
+                RevertModifiedTiles(pickedCell, entry.GridWidth, entry.GridHeight);
                 return;
             }
 
@@ -255,9 +273,9 @@ public class ResourceSpawner : MonoBehaviour
                 if (occupiedCells.ContainsKey(checkCell))
                     return false;
 
-                // 도구로 변환한 타일(파낸 흙 등)이면 불가
-                GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
-                if (tileModifier != null && tileModifier.IsModified(territoryZone, checkCell))
+                // 파낸 흙은 허용, 작물이 심긴 칸이면 불가
+                CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
+                if (cropPlanter != null && cropPlanter.IsPlanted(territoryZone, checkCell))
                     return false;
 
                 // 구조물 셀 주변 structBlockRadius칸 안이면 불가
