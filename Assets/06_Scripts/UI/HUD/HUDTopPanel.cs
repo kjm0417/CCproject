@@ -19,6 +19,47 @@ public class HUDTopPanel : PlayerHUDPanelBase
     [SerializeField] private TMP_Text txtHealth;
     [SerializeField] private TMP_Text txtHunger;
 
+    [Header("Skill Window")]
+    [SerializeField] private GameObject skillTreeCanvasPrefab;
+
+    private GameObject skillTreeCanvasInstance;
+    private SkillTreePanelUI skillTreePanel;
+
+    public void OpenSkills()
+    {
+        if (!IsInitialized) return;
+
+        if (skillTreePanel == null)
+        {
+            if (skillTreeCanvasPrefab == null)
+            {
+                Debug.LogWarning("HUDTopPanel: 스킬 창 프리팹이 연결되지 않았습니다.", this);
+                return;
+            }
+
+            skillTreeCanvasInstance = Instantiate(skillTreeCanvasPrefab);
+            skillTreePanel = skillTreeCanvasInstance.GetComponentInChildren<SkillTreePanelUI>(true);
+            if (skillTreePanel == null)
+            {
+                Destroy(skillTreeCanvasInstance);
+                Debug.LogError("HUDTopPanel: 스킬 창 프리팹에 SkillTreePanelUI가 없습니다.", this);
+                return;
+            }
+        }
+
+        skillTreePanel.Open(Context.Skills);
+    }
+
+    protected override void OnRelease()
+    {
+        if (skillTreePanel != null) skillTreePanel.Close();
+    }
+
+    private void OnDestroy()
+    {
+        if (skillTreeCanvasInstance != null) Destroy(skillTreeCanvasInstance);
+    }
+
     protected override void SubscribeEvents()
     {
         if (Context.Progression != null)
@@ -37,6 +78,7 @@ public class HUDTopPanel : PlayerHUDPanelBase
 
     protected override void UnsubscribeEvents()
     {
+        if (skillTreePanel != null) skillTreePanel.Close();
         if (Context == null) return;
 
         if (Context.Progression != null)

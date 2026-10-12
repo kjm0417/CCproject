@@ -6,6 +6,7 @@ public class InvenItemData : ScriptableObject
 {
     public string ItemID;
     public string ItemName;
+    public Sprite Icon;
     public string ItemType;
     public string SubType;
     public string Description;

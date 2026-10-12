@@ -86,6 +86,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 730400000000000001}
   - component: {fileID: 4146911235499842538}
   - component: {fileID: 2961492841383623564}
   - component: {fileID: 3464707478484731131}
@@ -100,6 +101,7 @@ GameObject:
   - component: {fileID: 2546596406338274135}
   - component: {fileID: 7112345678901234567}
   - component: {fileID: 8388086851876454058}
+  - component: {fileID: 8126804809284526011}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -169,6 +171,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerContext
   baseData: {fileID: 11400000, guid: ef40399788ae4284db9a1f3eaec8bef5, type: 2}
+--- !u!114 &8126804809284526011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3392514085708701532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43413f7b38125c4429821c42cada678c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkills
+  skillTrees:
+  - {fileID: 11400000, guid: 6a062f1ca61846ec91f73eb5547c8801, type: 2}
 --- !u!50 &3094627112729577535
 Rigidbody2D:
   serializedVersion: 5
@@ -628,3 +644,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &730400000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3392514085708701532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e4bbe95173ecab5723b816b136ec3e3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCooking
+  cookingData: {fileID: 11400000, guid: b6c222924f60c86a04fc9d19b8c7b0d0, type: 2}

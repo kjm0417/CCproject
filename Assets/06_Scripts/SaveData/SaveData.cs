@@ -33,6 +33,7 @@ public class PlayerSaveData
 
     //PlayerInventory 클래스
     public List<InventoryItemSaveData> InventoryItems = new();
+    public List<CookingRecordData> CookingRecords = new();
 
     /// <summary>
     /// 플레이어 데이터 저장
@@ -73,6 +74,9 @@ public class PlayerSaveData
             data.InventoryItems = playerContext.Inventory.CreateSaveData();
         }
 
+        if (playerContext.Cooking != null)
+            data.CookingRecords = playerContext.Cooking.CreateSaveData();
+
         return data;
     }
 
@@ -102,6 +106,8 @@ public class PlayerSaveData
         {
             playerContext.Inventory.Load(data.InventoryItems);
         }
+        if (playerContext.Cooking != null)
+            playerContext.Cooking.Load(data.CookingRecords);
     }
 }
 #endregion

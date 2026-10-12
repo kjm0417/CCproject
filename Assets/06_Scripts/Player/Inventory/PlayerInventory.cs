@@ -211,4 +211,87 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
     {
         return GetCount(item) >= count;
     }
+
+    // 저장 복원으로 생성된 아이템도 같은 ID면 같은 재료로 취급한다.
+    public int GetCount(InvenItemData item)
+    {
+        if (item == null) return 0;
+        int total = 0;
+        foreach (InventorySlot slot in slots)
+            if (SameItem(slot.Item, item)) total += slot.Count;
+        return total;
+    }
+
+    public bool CanCook(RecipeData recipe, out string reason) => BuildCookingResult(recipe, out _, out reason);
+
+    // 복사본에서 재료 차감과 결과 공간을 모두 확인한 뒤 한 번에 반영한다.
+    public bool TryCook(RecipeData recipe, out string reason)
+    {
+        if (!BuildCookingResult(recipe, out List<InventorySlot> result, out reason)) return false;
+        slots.Clear();
+        slots.AddRange(result);
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    private bool BuildCookingResult(RecipeData recipe, out List<InventorySlot> result, out string reason)
+    {
+        result = new List<InventorySlot>();
+        reason = string.Empty;
+        if (recipe == null || recipe.ResultItem == null || recipe.ResultCount <= 0
+            || recipe.ResultItem.MaxStack <= 0 || recipe.Ingredients == null || recipe.Ingredients.Count == 0)
+        {
+            reason = "레시피 데이터를 확인해 주세요.";
+            return false;
+        }
+        foreach (InventorySlot slot in slots) result.Add(new InventorySlot(slot.Item, slot.Count));
+        foreach (RecipeIngredient ingredient in recipe.Ingredients)
+        {
+            if (ingredient == null || ingredient.Item == null || ingredient.Count <= 0)
+            {
+                reason = "재료 데이터를 확인해 주세요.";
+                return false;
+            }
+            int remaining = ingredient.Count;
+            for (int i = result.Count - 1; i >= 0 && remaining > 0; i--)
+            {
+                if (!SameItem(result[i].Item, ingredient.Item)) continue;
+                int take = Mathf.Min(result[i].Count, remaining);
+                result[i].Count -= take;
+                remaining -= take;
+                if (result[i].Count == 0) result.RemoveAt(i);
+            }
+            if (remaining > 0)
+            {
+                reason = $"{ingredient.Item.ItemName} 재료가 부족합니다.";
+                return false;
+            }
+        }
+        int toAdd = recipe.ResultCount;
+        foreach (InventorySlot slot in result)
+        {
+            if (!SameItem(slot.Item, recipe.ResultItem)) continue;
+            int add = Mathf.Min(Mathf.Max(0, slot.SpaceLeft), toAdd);
+            slot.Count += add;
+            toAdd -= add;
+        }
+        while (toAdd > 0 && result.Count < MaxSlots)
+        {
+            int add = Mathf.Min(recipe.ResultItem.MaxStack, toAdd);
+            result.Add(new InventorySlot(recipe.ResultItem, add));
+            toAdd -= add;
+        }
+        if (toAdd > 0)
+        {
+            reason = "완성된 음식을 담을 공간이 부족합니다.";
+            return false;
+        }
+        return true;
+    }
+
+    private static bool SameItem(InvenItemData left, InvenItemData right)
+    {
+        return left != null && right != null && (left == right
+            || (!string.IsNullOrEmpty(left.ItemID) && left.ItemID == right.ItemID));
+    }
 }

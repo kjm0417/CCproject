@@ -38,6 +38,8 @@ public class PlayerContext : MonoBehaviour
 
     // 적 탐색과 공격 판정
     public PlayerCombat Combat { get; private set; }
+    public PlayerSkills Skills { get; internal set; }
+    public PlayerCooking Cooking { get; private set; }
 
     private void Awake()
     {
@@ -52,6 +54,10 @@ public class PlayerContext : MonoBehaviour
         Interaction = GetRequiredComponent<PlayerInteraction>();
         Inventory = GetRequiredComponent<PlayerInventory>();
         Combat = GetRequiredComponent<PlayerCombat>();
+
+        // 스킬을 사용하는 플레이어에 붙은 컴포넌트를 UI에서 참조한다.
+        Skills = GetComponent<PlayerSkills>();
+        Cooking = GetComponent<PlayerCooking>();
 
         // TryGetComponent는 현재 GameObject만 검색하므로 자식 컴포넌트는 별도로 찾는다.
         Animation = GetComponentInChildren<PlayerAnimation>(true);

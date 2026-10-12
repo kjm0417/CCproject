@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5074336919464319451}
   - component: {fileID: 1086619006746655123}
   m_Layer: 5
-  m_Name: Btn_Pass
+  m_Name: Btn_Skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.5613208, b: 0.5613208, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -196,7 +196,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5074336919464319451}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 779523581306505459}
+        m_TargetAssemblyTypeName: HUDTopPanel, Assembly-CSharp
+        m_MethodName: OpenSkills
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1352302298444680126
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +832,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2101613247662143752}
   m_Layer: 5
-  m_Name: PnlLeft
+  m_Name: PnlRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1863,6 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f30cc83d4c5064eade63ae057c864b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDTopPanel
+  skillTreeCanvasPrefab: {fileID: 1000, guid: 053b60bc1107450d9ee5230f0a2e3e00, type: 3}
   imgExpFill: {fileID: 3076426993899318323}
   imgHealthFill: {fileID: 7927758229747824061}
   imgHungerFill: {fileID: 3517914745511318420}
@@ -2019,7 +2032,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5219059973422800266}
   m_Layer: 5
-  m_Name: PnlRight
+  m_Name: PnlLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

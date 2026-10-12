@@ -393,20 +393,10 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             }
 
             InventorySlot inventorySlot = inventory.Slots[i];
-
-            slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item));
-            slot.SetItemName(string.Empty);
-
-            if (item == null || registeredItems.Contains(item)) continue;
-
-            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
-            slot.gameObject.SetActive(true);
-            slot.Initialize(0);
-            slot.SetNumberVisible(false);
+            InvenItemData item = inventorySlot.Item;
             UnityEngine.Events.UnityAction onClick = itemClickOverride != null ? () => itemClickOverride?.Invoke(inventorySlot) : null;
             slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item), onClick);
             slot.SetItemName(item.ItemName);
-            visibleCount++;
         }
 
         for (int i = inventory.MaxSlots; i < inventoryItemSlots.Count; i++)

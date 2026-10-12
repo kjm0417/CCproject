@@ -24,9 +24,11 @@ public class SkillTreePanelUI : MonoBehaviour
     private SkillTreeNodeUI[] manualNodes;
     private PlayerSkills subscribedPlayer;
     private float deepestY;
+    private bool isInitialized;
 
     private void Start()
     {
+        if (isInitialized) return;
         if (playerSkills == null)
         {
             PlayerContext context = FindFirstObjectByType<PlayerContext>();
@@ -39,6 +41,7 @@ public class SkillTreePanelUI : MonoBehaviour
 
     public void Initialize(PlayerSkills player)
     {
+        isInitialized = true;
         Unsubscribe();
         playerSkills = player;
         if (playerSkills != null && playerSkills.SkillTrees.Count == 0 && defaultTrees != null)
@@ -201,6 +204,12 @@ public class SkillTreePanelUI : MonoBehaviour
             line.sizeDelta = new Vector2(delta.magnitude, 4f);
             line.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
         }
+    }
+
+    public void Open(PlayerSkills player)
+    {
+        if (!isInitialized || playerSkills != player) Initialize(player);
+        Open();
     }
 
     public void Open() => gameObject.SetActive(true);
