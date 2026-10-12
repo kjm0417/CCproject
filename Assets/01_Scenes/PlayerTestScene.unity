@@ -11784,10 +11784,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Cook
       objectReference: {fileID: 0}
-    - target: {fileID: 1692709704214550966, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2651937915229719645, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -11810,14 +11806,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3007950155774615375, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000028048018
+      value: -317.02618
       objectReference: {fileID: 0}
     - target: {fileID: 3146237822701285155, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_Size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3146237822701285155, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
-      propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3570749439534313726, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
@@ -11936,10 +11928,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5744737626542691779, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
-      propertyPath: m_text
-      value: AutoCook
-      objectReference: {fileID: 0}
     - target: {fileID: 5801651504470019297, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -11966,7 +11954,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7449793515412789340, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000021789843
+      value: -0.0000055591822
       objectReference: {fileID: 0}
     - target: {fileID: 8097369249884272791, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_AnchorMax.x
@@ -11979,10 +11967,6 @@ PrefabInstance:
     - target: {fileID: 8097369249884272791, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016115936390943830, guid: 1955c571633f44546bb145ba5bcd8bbd, type: 3}
-      propertyPath: m_VerticalScrollbar
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
