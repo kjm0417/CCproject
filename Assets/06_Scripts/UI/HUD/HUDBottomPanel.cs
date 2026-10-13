@@ -211,21 +211,22 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void RefreshQuickSlots()
     {
         ValidateSelectedQuickSlotItem();
-        HashSet<InvenItemData> registeredItems = PopulateQuickSlotSet(quickSlots);
+        HashSet<InventorySlot> registeredSlots = PopulateQuickSlotSet(quickSlots);
 
         if (inventoryQuickSlots != null)
         {
             PopulateQuickSlotSet(inventoryQuickSlots);
         }
 
-        RefreshInventoryItems(registeredItems);
+        RefreshInventoryItems(registeredSlots);
         RefreshInteractionButton();
     }
 
-    private HashSet<InvenItemData> PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
+    // 퀵슬롯에 표시한 인벤토리 칸 목록 반환 (같은 아이템이 여러 칸이어도 칸 단위로 구분)
+    private HashSet<InventorySlot> PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
     {
-        HashSet<InvenItemData> registeredItems = new HashSet<InvenItemData>();
-        if (targetSlots == null) return registeredItems;
+        HashSet<InventorySlot> registeredSlots = new HashSet<InventorySlot>();
+        if (targetSlots == null) return registeredSlots;
 
         for (int i = 0; i < targetSlots.Length; i++)
         {
@@ -250,12 +251,12 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                 targetSlots[i].SetItem(item, displayCount, icon, () => OnQuickSlotItemClicked(inventorySlot, item));
 
                 targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
-                registeredItems.Add(item);
+                registeredSlots.Add(inventorySlot);
             }
         }
 
         SetInventorySlot(targetSlots);
-        return registeredItems;
+        return registeredSlots;
     }
 
     private void AutoAssignReferences()
@@ -379,7 +380,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         inventoryItemSlotTemplate = inventoryPanelView.ItemSlotTemplate;
     }
 
-    private void RefreshInventoryItems(HashSet<InvenItemData> registeredItems)
+    private void RefreshInventoryItems(HashSet<InventorySlot> registeredSlots)
     {
         if (inventoryItemsContent == null || inventory == null) return;
 
@@ -388,7 +389,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         {
             InventorySlot inventorySlot = inventory.Slots[i];
             InvenItemData item = inventorySlot.Item;
-            if (item == null || registeredItems.Contains(item)) continue;
+            if (item == null || registeredSlots.Contains(inventorySlot)) continue;
 
             HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
             slot.gameObject.SetActive(true);

@@ -29540,7 +29540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eaea7770c39beb4893dffb627da3624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonSpring
-  startMap: {fileID: 783990706}
+  startMap: {fileID: 1416389813}
   confiner: {fileID: 182130445}
   enemyCount1F: 4
   slimePrefab: {fileID: 3947759421036759213, guid: fac420a2396770044890d8a9f412b795, type: 3}

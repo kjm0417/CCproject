@@ -25,4 +25,13 @@ public class MonsterSkeletonData : ScriptableObject
 
     [Tooltip("슬라임 스킬 공격 후 기절 시간")]
     public float StunDuration = 2f;
+
+    [Header("스킬 이펙트")]
+    [Tooltip("스킬 공격 시 생성되는 이펙트 (닿은 플레이어 피격)")]
+    public SkeletonSkillFX SkillFXPrefab;
+    [Tooltip("Skill 애니메이션 진행도(0~1) 중 이펙트 생성 시점 - 뼈다귀 내려치는 프레임(6프레임 중 5번째)")]
+    [Range(0f, 1f)]
+    public float SkillFXSpawnTime = 0.66f;
+    [Tooltip("스켈레톤 기준 이펙트 생성 위치 - 왼쪽 바라볼 때 기준, 오른쪽이면 x 반전")]
+    public Vector2 SkillFXOffset = new Vector2(-0.6f, 0f);
 }

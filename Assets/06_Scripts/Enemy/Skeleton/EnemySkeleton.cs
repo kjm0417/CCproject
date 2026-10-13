@@ -442,6 +442,10 @@ public class SkeletonInflateSkill : EnemySkill
     private RigidbodyConstraints2D originConstraints;
     private const float StartTimeout = 0.5f;
 
+    private SkeletonSkillFX skillFXPrefab;
+    private float skillFXSpawnTime;
+    private Vector2 skillFXOffset;
+
     public SkeletonInflateSkill(EnemyContext ctx, MonoBehaviour owner, MonsterSkeletonData monsterSkeletonData) : base(ctx, owner)
     {
         skeletonctx = (EnemySkeltetonContext)ctx;
@@ -451,6 +455,10 @@ public class SkeletonInflateSkill : EnemySkill
         chargeSpeed = monsterSkeletonData.ChargeSpeed;
 
         SkillAttackCoolDown = monsterSkeletonData.SkillAttackCooldown;
+
+        skillFXPrefab = monsterSkeletonData.SkillFXPrefab;
+        skillFXSpawnTime = monsterSkeletonData.SkillFXSpawnTime;
+        skillFXOffset = monsterSkeletonData.SkillFXOffset;
     }
 
     // public override float GetCooldown() => 6f; //TODO KJ - Excel
@@ -468,11 +476,30 @@ public class SkeletonInflateSkill : EnemySkill
         skeletonctx.Animator.SetTrigger(EnemyAnimHash.SkillTrigger);
         Debug.Log("스켈레톤 전방베기!");
 
-        bool hasAttack = false;
-
-        if (!hasAttack)
+        //Skill 애니메이션 진입 대기
+        float t = 0f;
+        while (!IsSkillPlaying())
         {
-            hasAttack = skeletonDetector.SpinningSlash();
+            t += Time.deltaTime;
+            if (t >= StartTimeout)
+                break;
+            yield return null;
+        }
+
+        //내려치는 프레임까지 대기 후 이펙트 생성 - 피격은 이펙트가 처리
+        while (IsSkillPlaying() &&
+               skeletonctx.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < skillFXSpawnTime)
+        {
+            yield return null;
+        }
+
+        SpawnSkillFX();
+
+        //Skill 애니메이션 끝날 때까지 대기
+        while (IsSkillPlaying() &&
+               skeletonctx.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
         }
 
         //공격 끝
@@ -491,5 +518,27 @@ public class SkeletonInflateSkill : EnemySkill
     private bool IsSkillPlaying()
     {
         return skeletonctx.Animator.GetCurrentAnimatorStateInfo(0).shortNameHash == EnemyAnimHash.Skill;
+    }
+
+    /// <summary>
+    /// 바라보는 방향 앞에 스킬 이펙트 생성
+    /// </summary>
+    private void SpawnSkillFX()
+    {
+        if (skillFXPrefab == null)
+        {
+            Debug.LogWarning("스켈레톤 스킬 이펙트 프리팹이 SO에 없음");
+            return;
+        }
+
+        //스프라이트 기본 왼쪽, flipX면 오른쪽
+        Vector2 facing = skeletonctx.SpriteRenderer.flipX ? Vector2.right : Vector2.left;
+
+        Vector2 offset = skillFXOffset;
+        if (facing.x > 0)
+            offset.x = -offset.x;
+
+        SkeletonSkillFX fx = Object.Instantiate(skillFXPrefab, skeletonctx.Rigidbody2D.position + offset, Quaternion.identity);
+        fx.Init(skeletonctx.MonsterData.ATK, facing);
     }
 }
