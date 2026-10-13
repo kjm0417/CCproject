@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7957918774876778519}
   - component: {fileID: 2054280092945966050}
   - component: {fileID: 2777377052541371640}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: "14004_\uC591\uD30C_SeedTile"
   m_TagString: Untagged
   m_Icon: {fileID: 0}

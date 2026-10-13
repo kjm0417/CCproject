@@ -164,6 +164,9 @@ public class SkeletonWalkState : EnemyState
 
     private float walkDuration;
     private float walkTimer = 0f;
+
+    private EnemyPathfinder pathfinder; //벽 막힘 체크
+    private const float WallCheckDistance = 0.3f; //진행 방향 앞 벽 감지 거리
     public SkeletonWalkState(EnemyContext ctx, EnemySkillManager skillManager, EnemyFSM fsm, MonoBehaviour mono, MonsterSkeletonData monsterSkeletonData)
        : base(ctx, skillManager, fsm, mono)
     {
@@ -172,6 +175,7 @@ public class SkeletonWalkState : EnemyState
         walkSpeed = monsterSkeletonData.WalkSpeed;
         patrolDistance = monsterSkeletonData.PatrolDistance;
         walkDuration = monsterSkeletonData.WalkDruation;
+        pathfinder = mono.GetComponent<EnemyPathfinder>();
     }
 
     public override void Enter()
@@ -180,6 +184,9 @@ public class SkeletonWalkState : EnemyState
 
         walkTimer = 0f;
         patrolStart = skeletonctx.Rigidbody2D.position;
+
+        //추격/공격 후 돌아왔을 때 바라보는 방향과 이동 방향 맞추기 - 지금 바라보는 방향으로 순찰 시작
+        walkDirection = skeletonctx.SpriteRenderer.flipX ? Vector2.right : Vector2.left;
     }
 
     public override void Update()
@@ -187,9 +194,10 @@ public class SkeletonWalkState : EnemyState
         //이동
         skeletonctx.Rigidbody2D.linearVelocity = walkDirection * walkSpeed;
 
-        //거리 체크 - 반대 방향으로
+        //거리 체크 / 앞에 벽 - 반대 방향으로
         float distance = Vector2.Distance(skeletonctx.Rigidbody2D.position, patrolStart);
-        if (distance >= patrolDistance)
+        bool blocked = pathfinder != null && pathfinder.IsBlocked(walkDirection, WallCheckDistance);
+        if (distance >= patrolDistance || blocked)
         {
             walkDirection *= -1; // 방향 전환
             patrolStart = skeletonctx.Rigidbody2D.position; // 기준점 갱신
@@ -226,6 +234,7 @@ public class SkeletonWalkState : EnemyState
 public class SkeletonChargeState : EnemyState
 {
     private EnemySkeltetonContext skeletonctx;
+    private EnemyPathfinder pathfinder; //벽 돌아가는 추격
 
     private float chargeSpeed;
     public SkeletonChargeState(EnemyContext ctx, EnemySkillManager skillManager, EnemyFSM fsm, MonoBehaviour mono, MonsterSkeletonData monsterSkeletonData)
@@ -234,6 +243,7 @@ public class SkeletonChargeState : EnemyState
         skeletonctx = (EnemySkeltetonContext)ctx;
 
         chargeSpeed = monsterSkeletonData.ChargeSpeed;
+        pathfinder = mono.GetComponent<EnemyPathfinder>();
     }
 
     public override void Enter()
@@ -246,10 +256,17 @@ public class SkeletonChargeState : EnemyState
         if (skeletonctx.EnemyDetector.chargeToPlayer != null)
         {
             // 플레이어 쫓아가기
-            Vector2 direction = ((Vector2)skeletonctx.EnemyDetector.chargeToPlayer.transform.position - skeletonctx.Rigidbody2D.position).normalized;
+            //벽이 있으면 돌아가는 방향, 없으면 직선
+            Vector2 target = skeletonctx.EnemyDetector.chargeToPlayer.transform.position;
+            Vector2 direction = pathfinder != null
+                ? pathfinder.GetChaseDirection(target)
+                : (target - skeletonctx.Rigidbody2D.position).normalized;
 
             skeletonctx.Rigidbody2D.linearVelocity = direction * chargeSpeed;
-            skeletonctx.SpriteRenderer.flipX = direction.x > 0;
+
+            //위/아래로 돌아갈 때 좌우가 떨리지 않게 x 이동이 있을 때만 방향 전환
+            if (Mathf.Abs(direction.x) > 0.1f)
+                skeletonctx.SpriteRenderer.flipX = direction.x > 0;
 
             //공격 범위 안 - 스킬 우선, 스킬 불가능하면 기본 공격
             if (skeletonctx.EnemyDetector.IsAttack())
