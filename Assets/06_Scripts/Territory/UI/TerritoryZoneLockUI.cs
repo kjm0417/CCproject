@@ -125,7 +125,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
     }
 
     /// <summary>
-    /// 골드 부족 연출 (색상 변경, 부족액 표시, 흔들기, 자동 종료)
+    /// 골드 부족 연출 (색상 변경, 부족액 표시, 흔들기)
     /// </summary>
     private IEnumerator ShowInsufficientGoldUI(int insufficientAmount)
     {
@@ -151,7 +151,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
         // 4. 1초 대기
         yield return new WaitForSeconds(1f);
 
-        // 5. UI 꺼기
+        // 5. 부족 텍스트만 꺼기
         if (insufficientGoldText != null)
         {
             insufficientGoldText.gameObject.SetActive(false);
@@ -163,24 +163,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
             priceTMP.color = originalPriceColor;
         }
 
-        // 7. 상태 초기화 및 모든 UI 꺼기 (뒤로가기 버튼 않 누르면 자동 종료)
-        HideAllUI();
-    }
-
-    /// <summary>
-    /// 모든 UI 제거 및 카메라 원상태로
-    /// </summary>
-    private void HideAllUI()
-    {
-        FocusingIconUI(false);
-        FocusingImageUI(false);
-        buyBtn.gameObject.SetActive(false);
-        UnLockUI();
-        IsZoomInClicked = false;
-
-        // 카메라 및 줌 상태 초기화
-        TerritoryDirectionManager.Instance?.ResetBackClicked(
-            this.GetComponentInParent<TerritoryZone>(), false);
+        // 뒤로가기 버튼을 유저가 직접 눌러야 함
     }
 
     public void BuyBtnAcitve(bool value)
