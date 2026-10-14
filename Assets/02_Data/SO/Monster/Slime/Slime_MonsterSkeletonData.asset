@@ -21,3 +21,6 @@ MonoBehaviour:
   SkillAttackCooldown: 6
   PatrolDistance: 3
   StunDuration: 2
+  SkillFXPrefab: {fileID: 7075972657934291706, guid: d63ec4832b861244cb8e40b8706af252, type: 3}
+  SkillFXSpawnTime: 0.66
+  SkillFXOffset: {x: -0.6, y: 0}

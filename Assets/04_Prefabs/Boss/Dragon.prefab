@@ -61,6 +61,15 @@ MonoBehaviour:
   spawnInterval: 0.2
   rootLifetime: 10
   clearPreviousRoots: 1
+  warningDuration: 0.6
+  warningBlinkCount: 2
+  warningStyle:
+    color: {r: 1, g: 0, b: 0, a: 1}
+    width: 0.08
+    sortingLayerName: Default
+    sortingOrder: 100
+    material: {fileID: 0}
+  riseDuration: 0.25
   afterSpawnDelay: 1
 --- !u!114 &62946144509799594
 MonoBehaviour:
@@ -104,6 +113,12 @@ MonoBehaviour:
   exitDuration: 0.4
   hideWhileVisual:
   - {fileID: 9066398721956673926}
+  windupPoint: {fileID: 0}
+  passAnimLength: 0
+  returnPoint: {fileID: 0}
+  returnNormalizedTime: 0.5
+  returnDuration: 0.42
+  reappearFadeDuration: 0.4
 --- !u!114 &7666310831108929454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +141,8 @@ MonoBehaviour:
   darkOverlay: {fileID: 0}
   darkAlpha: 0.45
   darkenDuration: 0.5
+  bossRenderers: []
+  bossDarkColor: {r: 0.2, g: 0.2, b: 0.28, a: 1}
   telegraphStyle:
     color: {r: 1, g: 0, b: 0, a: 1}
     width: 0.08
@@ -138,6 +155,9 @@ MonoBehaviour:
   damage: 10
   tickInterval: 1
   lightningVfx: {fileID: 0}
+  strikeFlashColor: {r: 1, g: 1, b: 0.75, a: 0.95}
+  strikeZoneColor: {r: 1, g: 0.9, b: 0.3, a: 0.35}
+  strikeFlashTime: 0.2
 --- !u!114 &6271359932746931147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +203,9 @@ MonoBehaviour:
   damage: 15
   tickInterval: 0.5
   waterspoutVfx: {fileID: 0}
+  eruptFlashColor: {r: 0.85, g: 0.95, b: 1, a: 0.9}
+  eruptZoneColor: {r: 0.3, g: 0.6, b: 1, a: 0.45}
+  eruptFlashTime: 0.2
 --- !u!1 &3739684082877356231
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +296,7 @@ SpriteRenderer:
   m_Size: {x: 16.08, y: 9.633486}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!95 &3887410304938132757
@@ -417,11 +440,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.8, y: 8.6}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -431,7 +454,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 14, y: 4.5}
   m_EdgeRadius: 0
 --- !u!114 &6684281638386794939
 MonoBehaviour:
@@ -551,7 +574,7 @@ SpriteRenderer:
   m_Size: {x: 16.08, y: 9.653086}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!95 &4197852798897000778

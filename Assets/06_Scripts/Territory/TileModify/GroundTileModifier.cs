@@ -45,25 +45,92 @@ public class GroundTileModifier : MonoBehaviour
 
     private Dictionary<int, Dictionary<Vector3Int, ModifiedCell>> modifiedCells = new Dictionary<int, Dictionary<Vector3Int, ModifiedCell>>();
 
+    // 미리보기로 보여준 칸 / 타일 ( 결과 후보가 랜덤이라 실제 변환 때 같은 타일을 쓰기 위해 기억 )
+    private TerritoryZone previewZone;
+    private Vector3Int previewCell;
+    private TileBase previewTile;
+
+    private GroundTilePreview preview;
+    private GroundTilePreview Preview
+    {
+        get
+        {
+            if (preview == null) preview = GetComponent<GroundTilePreview>();
+            return preview;
+        }
+    }
+
     /// <summary>
     /// 월드 좌표가 속한 칸의 타일을 도구에 맞게 변환 시도
     /// </summary>
     public bool TryConvertTile(Vector3 worldPosition, ToolType toolType)
     {
-        // 발밑 칸이 이미 변환됐거나 불가하면 가장 가까운 인접 칸
-        if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile)
-            && !TryFindNeighborConversion(worldPosition, toolType, out zone, out cell, out resultTile))
+        if (!TryFindTarget(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
             return false;
         #region [이전] 발밑 칸만 변환
         // if (!TryFindConversion(worldPosition, toolType, true, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
         //     return false;
         #endregion
 
+        // 미리보기로 보여준 칸이면 보여준 타일로 변환
+        if (zone == previewZone && cell == previewCell && previewTile != null)
+            resultTile = previewTile;
+        ClearPreview();
+
         TileBase originalTile = zone.TerritoryTileMapGround.GetTile(cell);
         zone.TerritoryTileMapGround.SetTile(cell, resultTile);
         RecordCell(zone.TerritoryZoneData.ZoneId, cell, originalTile, resultTile);
         return true;
     }
+
+    /// <summary>
+    /// 발밑 칸 -> 인접 칸 순으로 변환할 칸 찾기
+    /// </summary>
+    private bool TryFindTarget(Vector3 worldPosition, ToolType toolType, bool logFailure,
+        out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile)
+    {
+        // 발밑 칸이 이미 변환됐거나 불가하면 가장 가까운 인접 칸
+        return TryFindConversion(worldPosition, toolType, logFailure, out zone, out cell, out resultTile)
+            || TryFindNeighborConversion(worldPosition, toolType, out zone, out cell, out resultTile);
+    }
+
+    #region 변환 미리보기
+    /// <summary>
+    /// 변환될 칸에 결과 타일 잔상 표시 ( 변환 불가면 숨김 )
+    /// </summary>
+    public void UpdatePreview(Vector3 worldPosition, ToolType toolType)
+    {
+        if (!TryFindTarget(worldPosition, toolType, false, out TerritoryZone zone, out Vector3Int cell, out TileBase resultTile))
+        {
+            HidePreview();
+            return;
+        }
+
+        // 같은 칸을 계속 보고 있으면 처음 뽑은 타일 유지
+        if (zone != previewZone || cell != previewCell || previewTile == null)
+        {
+            previewZone = zone;
+            previewCell = cell;
+            previewTile = resultTile;
+        }
+
+        if (Preview != null) Preview.Show(zone.TerritoryTileMapGround, previewCell, previewTile);
+    }
+
+    public void HidePreview()
+    {
+        if (previewZone == null) return;
+
+        ClearPreview();
+    }
+
+    private void ClearPreview()
+    {
+        previewZone = null;
+        previewTile = null;
+        if (Preview != null) Preview.Hide();
+    }
+    #endregion
 
     /// <summary>
     /// 변환된 칸을 변환 전 타일로 되돌리고 기록 삭제
@@ -83,8 +150,7 @@ public class GroundTileModifier : MonoBehaviour
     /// </summary>
     public bool CanConvertTile(Vector3 worldPosition, ToolType toolType)
     {
-        return TryFindConversion(worldPosition, toolType, false, out _, out _, out _)
-            || TryFindNeighborConversion(worldPosition, toolType, out _, out _, out _);
+        return TryFindTarget(worldPosition, toolType, false, out _, out _, out _);
     }
 
     /// <summary>

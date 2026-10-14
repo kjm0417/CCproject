@@ -211,12 +211,17 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void RefreshQuickSlots()
     {
         ValidateSelectedQuickSlotItem();
+
         PopulateQuickSlotSet(quickSlots);
+
+        HashSet<InventorySlot> registeredSlots = PopulateQuickSlotSet(quickSlots);
+
 
         if (inventoryQuickSlots != null)
         {
             PopulateQuickSlotSet(inventoryQuickSlots);
         }
+
 
         RefreshInventoryItems();
         RefreshInteractionButton();
@@ -225,6 +230,17 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
     {
         if (targetSlots == null) return;
+
+        RefreshInventoryItems(registeredSlots);
+        RefreshInteractionButton();
+    }
+
+    // 퀵슬롯에 표시한 인벤토리 칸 목록 반환 (같은 아이템이 여러 칸이어도 칸 단위로 구분)
+    private HashSet<InventorySlot> PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
+    {
+        HashSet<InventorySlot> registeredSlots = new HashSet<InventorySlot>();
+        if (targetSlots == null) return registeredSlots;
+
 
         for (int i = 0; i < targetSlots.Length; i++)
         {
@@ -249,10 +265,16 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                 targetSlots[i].SetItem(item, displayCount, icon, () => OnQuickSlotItemClicked(inventorySlot, item));
 
                 targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
+
+                registeredSlots.Add(inventorySlot);
+
             }
         }
 
         SetInventorySlot(targetSlots);
+
+        return registeredSlots;
+
     }
 
     private void AutoAssignReferences()
@@ -376,7 +398,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         inventoryItemSlotTemplate = inventoryPanelView.ItemSlotTemplate;
     }
 
+
     private void RefreshInventoryItems()
+
+    private void RefreshInventoryItems(HashSet<InventorySlot> registeredSlots)
+
     {
         if (inventoryItemsContent == null || inventory == null) return;
 
@@ -394,7 +420,19 @@ public class HUDBottomPanel : PlayerHUDPanelBase
 
             InventorySlot inventorySlot = inventory.Slots[i];
             InvenItemData item = inventorySlot.Item;
+
             UnityEngine.Events.UnityAction onClick = itemClickOverride != null ? () => itemClickOverride?.Invoke(inventorySlot) : null;
+
+            if (item == null || registeredSlots.Contains(inventorySlot)) continue;
+
+            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
+            slot.gameObject.SetActive(true);
+            slot.Initialize(0);
+            slot.SetNumberVisible(false);
+            UnityEngine.Events.UnityAction onClick = itemClickOverride != null
+                ? () => itemClickOverride?.Invoke(inventorySlot)
+                : null;
+
             slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item), onClick);
             slot.SetItemName(item.ItemName);
         }
@@ -721,6 +759,12 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         if (item.ItemID == shovelItemId || item.ItemName == "삽")
         {
             return GetIcon(shovelIcon, "Equipment/Shovel");
+        }
+
+        // 던전 기믹 씨앗은 SO에 지정한 아이콘
+        if (item is GimmickSeedData gimmickSeed && gimmickSeed.Icon != null)
+        {
+            return gimmickSeed.Icon;
         }
 
         if (IsSeed(item))

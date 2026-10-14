@@ -12,6 +12,8 @@ public abstract class DungeonBase : MonoBehaviour
     private DungeonMap startMap;
     [SerializeField, Tooltip("맵 이동 시 바운드 영역을 바꿀 시네머신 Confiner2D. 비우면 씬에서 자동 탐색")]
     private CinemachineConfiner2D confiner;
+    [SerializeField, Tooltip("맵 이동 시 길찾기 그리드를 다시 스캔할 DungeonPathGrid. 비우면 씬에서 자동 탐색")]
+    private DungeonPathGrid pathGrid;
 
     private CinemachineCamera cinemachineCamera;
     private Transform cameraTarget; //보스 맵 외 카메라 타겟 ( 플레이어 )
@@ -48,6 +50,7 @@ public abstract class DungeonBase : MonoBehaviour
 
             ApplyCamBound(CurrentMap);
             ApplyCameraTarget(CurrentMap, player);
+            ScanPathGrid(CurrentMap);
             OnMapEntered(CurrentMap);
         }
 
@@ -75,6 +78,7 @@ public abstract class DungeonBase : MonoBehaviour
         ApplyCameraTarget(map, player);
 
         Debug.Log($"[Dungeon] 맵 이동 : {map.Floor}층 {map.MapID}");
+        ScanPathGrid(map);
         OnMapEntered(map);
     }
 
@@ -82,6 +86,25 @@ public abstract class DungeonBase : MonoBehaviour
     /// 층/맵 진입 시 처리 ( 던전별로 구현 )
     /// </summary>
     protected abstract void OnMapEntered(DungeonMap map);
+
+    /// <summary>
+    /// 맵 범위로 길찾기 그리드 다시 스캔 ( 적이 벽을 돌아서 추격 ) - 적 스폰 ( OnMapEntered ) 전에 호출
+    /// </summary>
+    private void ScanPathGrid(DungeonMap map)
+    {
+        if (pathGrid == null)
+        {
+            pathGrid = FindAnyObjectByType<DungeonPathGrid>();
+        }
+
+        if (pathGrid == null)
+        {
+            Debug.LogWarning("[Dungeon] DungeonPathGrid 없음 - 적 길찾기 비활성");
+            return;
+        }
+
+        pathGrid.ScanMap(map);
+    }
 
     /// <summary>
     /// 맵의 CamBound 로 시네머신 바운드 영역 변경

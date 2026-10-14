@@ -8,38 +8,6 @@ using UnityEngine;
 /// </summary>
 public class EnemySlime : EnemyBase
 {
-    private void OnGUI()
-    {
-        if (enemyContext == null) return;
-
-        Camera cam = Camera.main;
-        if (cam == null) return;
-
-        //슬라임 위치 기준으로 GUI 배치 - 여러 마리여도 겹치지 않게
-        Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
-        if (screenPos.z < 0) return; //카메라 뒤쪽이면 표시 안 함
-
-        const float width = 160f;
-        const float height = 120f;
-        const float headOffset = 40f; //머리 위로 띄우는 거리(px)
-
-        //GUI 좌표는 위쪽이 0이라 y 반전
-        Rect rect = new Rect(screenPos.x - width * 0.5f, Screen.height - screenPos.y - height - headOffset, width, height);
-
-        GUILayout.BeginArea(rect, GUI.skin.box);
-
-        GUILayout.Label($"{name}");
-        GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
-        GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
-
-        if (GUILayout.Button("TakeDamage 10"))
-            TakeDamage(10);
-
-        if (GUILayout.Button("TakeDamage 100"))
-            TakeDamage(100);
-
-        GUILayout.EndArea();
-    }
 
     private EnemySlimeContext slimeContext;
 
@@ -183,6 +151,9 @@ public class SlimeWalkState : EnemyState
 
     private float walkDuration;
     private float walkTimer = 0f;
+
+    private EnemyPathfinder pathfinder; //벽 막힘 체크
+    private const float WallCheckDistance = 0.3f; //진행 방향 앞 벽 감지 거리
     public SlimeWalkState(EnemyContext ctx, EnemySkillManager skillManager, EnemyFSM fsm, MonoBehaviour mono,MonsterSlimeData monsterSlimeData)
        : base(ctx, skillManager, fsm, mono)
     {
@@ -191,6 +162,7 @@ public class SlimeWalkState : EnemyState
         walkSpeed = monsterSlimeData.WalkSpeed;
         patrolDistance = monsterSlimeData.PatrolDistance;
         walkDuration = monsterSlimeData.WalkDruation;
+        pathfinder = mono.GetComponent<EnemyPathfinder>();
     }
 
     public override void Enter()
@@ -199,6 +171,9 @@ public class SlimeWalkState : EnemyState
 
         walkTimer = 0f;
         patrolStart = slimectx.Rigidbody2D.position;
+
+        //추격/공격 후 돌아왔을 때 바라보는 방향과 이동 방향 맞추기 - 지금 바라보는 방향으로 순찰 시작
+        walkDirection = slimectx.SpriteRenderer.flipX ? Vector2.right : Vector2.left;
     }
 
     public override void Update()
@@ -206,9 +181,10 @@ public class SlimeWalkState : EnemyState
         //이동
         slimectx.Rigidbody2D.linearVelocity = walkDirection * walkSpeed;
 
-        //거리 체크 - 반대 방향으로
+        //거리 체크 / 앞에 벽 - 반대 방향으로
         float distance = Vector2.Distance(slimectx.Rigidbody2D.position, patrolStart);
-        if (distance >= patrolDistance)
+        bool blocked = pathfinder != null && pathfinder.IsBlocked(walkDirection, WallCheckDistance);
+        if (distance >= patrolDistance || blocked)
         {
             walkDirection *= -1; // 방향 전환
             patrolStart = slimectx.Rigidbody2D.position; // 기준점 갱신
@@ -245,6 +221,7 @@ public class SlimeWalkState : EnemyState
 public class SlimeChargeState : EnemyState
 {
     private EnemySlimeContext slimectx;
+    private EnemyPathfinder pathfinder; //벽 돌아가는 추격
 
     private float chargeSpeed;
     public SlimeChargeState(EnemyContext ctx, EnemySkillManager skillManager, EnemyFSM fsm, MonoBehaviour mono,MonsterSlimeData monsterSlimeData)
@@ -253,6 +230,7 @@ public class SlimeChargeState : EnemyState
         slimectx = (EnemySlimeContext)ctx;
 
         chargeSpeed = monsterSlimeData.ChargeSpeed;
+        pathfinder = mono.GetComponent<EnemyPathfinder>();
     }
 
     public override void Enter()
@@ -265,10 +243,17 @@ public class SlimeChargeState : EnemyState
         if (slimectx.EnemyDetector.chargeToPlayer != null)
         {
             // 플레이어 쫓아가기
-            Vector2 direction = ((Vector2)slimectx.EnemyDetector.chargeToPlayer.transform.position - slimectx.Rigidbody2D.position).normalized;
+            //벽이 있으면 돌아가는 방향, 없으면 직선
+            Vector2 target = slimectx.EnemyDetector.chargeToPlayer.transform.position;
+            Vector2 direction = pathfinder != null
+                ? pathfinder.GetChaseDirection(target)
+                : (target - slimectx.Rigidbody2D.position).normalized;
 
             slimectx.Rigidbody2D.linearVelocity = direction * chargeSpeed;
-            slimectx.SpriteRenderer.flipX = direction.x > 0;
+
+            //위/아래로 돌아갈 때 좌우가 떨리지 않게 x 이동이 있을 때만 방향 전환
+            if (Mathf.Abs(direction.x) > 0.1f)
+                slimectx.SpriteRenderer.flipX = direction.x > 0;
 
             //공격 범위 안 - 스킬 우선, 스킬 불가능하면 기본 공격
             if (slimectx.EnemyDetector.IsAttack())

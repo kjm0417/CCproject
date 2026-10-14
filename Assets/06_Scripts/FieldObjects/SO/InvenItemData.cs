@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "InvenItemData", menuName = "Game/InvenItemData")]

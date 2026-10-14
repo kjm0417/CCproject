@@ -285,9 +285,7 @@ public class TerritoryManager : MonoBehaviour
         {
             if (zone.TerritoryZoneData.ZoneId == 1) continue;
 
-            Debug.Log($"Zone {zone.TerritoryZoneData.ZoneId} 처리. IsLocked: {zone.IsLocked}");
             bool shouldBeUnlocked = data.UnlockedZoneIds.Contains(zone.TerritoryZoneData.ZoneId);
-            Debug.Log($"  shouldBeUnlocked: {shouldBeUnlocked}");
 
             if (shouldBeUnlocked && zone.IsLocked)
             {

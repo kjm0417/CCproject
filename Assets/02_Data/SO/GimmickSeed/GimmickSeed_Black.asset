@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3f8a002d6634e86a13c23080470f7ba, type: 3}
+  m_Name: GimmickSeed_Black
+  m_EditorClassIdentifier: Assembly-CSharp::GimmickSeedData
+  ItemID: 14901
+  ItemName: "\uAC80\uC740 \uC528\uC557"
+  ItemType: "\uAE30\uBBF9 \uC544\uC774\uD15C"
+  SubType: "\uC528\uC557 \uC544\uC774\uD15C"
+  Description: "\uB358\uC804 \uAE30\uBBF9\uC6A9 \uC528\uC557"
+  MaxStack: 99
+  SellPrice: 0
+  MinBuyGold: 0
+  MaxBuyGold: 0
+  BuyDiamond: 0
+  HungerRecovery: 0
+  Icon: {fileID: -1361722186968712527, guid: 5cfb7f50443857d4c85f216823ae4571, type: 3}

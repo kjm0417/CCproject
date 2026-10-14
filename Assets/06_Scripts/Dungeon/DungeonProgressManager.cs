@@ -369,6 +369,8 @@ public class DungeonProgressManager : MonoBehaviour
             DungeonSession.End();
         }
 
+        RemoveGimmickSeeds();
+
         if (player != null && SaveManager.Instance != null)
         {
             PlayerSaveData saveData = PlayerSaveData.Save(player);
@@ -383,6 +385,23 @@ public class DungeonProgressManager : MonoBehaviour
         }
 
         SceneFader.LoadScene(returnSceneName);
+    }
+
+    /// <summary>
+    /// 던전 기믹 씨앗은 영지로 가져가지 않음 - 퇴장 시 인벤토리에서 제거
+    /// </summary>
+    private void RemoveGimmickSeeds()
+    {
+        if (inventory == null) return;
+
+        List<InventorySlot> slots = new List<InventorySlot>(inventory.Slots);
+        foreach (InventorySlot slot in slots)
+        {
+            if (slot.Item is GimmickSeedData gimmickSeed)
+            {
+                inventory.Remove(gimmickSeed, slot.Count);
+            }
+        }
     }
 
     private void SaveRecord()

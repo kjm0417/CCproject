@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2ae2ba313daed34784661f20ef61721, type: 3}
   m_Name: PlayerBaseData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBaseData
-  MoveSpeed: 5
+  MoveSpeed: 7
   AttackPower: 10
   AttackRange: 2
   MaxHp: 100
+  AttackCooldown: 0.4
   StartingLevel: 1
   StartingCurrencies:
   - Type: 0

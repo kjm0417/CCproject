@@ -6,7 +6,7 @@
     "ToolGrade":"common",
     "Description":"",
     "Power":1.5,
-    "CraftRecipeID":""
+    "CraftRecipeID":61001
   },
   {
     "ToolID":22101,
@@ -15,7 +15,7 @@
     "ToolGrade":"common",
     "Description":"",
     "Power":1.5,
-    "CraftRecipeID":""
+    "CraftRecipeID":61002
   },
   {
     "ToolID":23101,
@@ -24,7 +24,7 @@
     "ToolGrade":"common",
     "Description":"",
     "Power":1.5,
-    "CraftRecipeID":""
+    "CraftRecipeID":61004
   },
   {
     "ToolID":25101,
@@ -33,6 +33,33 @@
     "ToolGrade":"common",
     "Description":"",
     "Power":2,
-    "CraftRecipeID":""
+    "CraftRecipeID":61003
+  },
+  {
+    "ToolID":23102,
+    "ToolName":"괭이",
+    "ToolType":"Hoe",
+    "ToolGrade":"common",
+    "Description":"",
+    "Power":1.5,
+    "CraftRecipeID":61005
+  },
+  {
+    "ToolID":24101,
+    "ToolName":"낚싯대",
+    "ToolType":"FishingRod",
+    "ToolGrade":"common",
+    "Description":"",
+    "Power":1,
+    "CraftRecipeID":61006
+  },
+  {
+    "ToolID":25102,
+    "ToolName":"마법 지팡이",
+    "ToolType":"Staff",
+    "ToolGrade":"common",
+    "Description":"",
+    "Power":2,
+    "CraftRecipeID":61007
   }
 ]

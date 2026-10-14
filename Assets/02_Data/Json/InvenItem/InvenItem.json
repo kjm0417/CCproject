@@ -185,5 +185,89 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":""
+  },
+  {
+    "ItemID":21101,
+    "ItemName":"곡괭이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":22101,
+    "ItemName":"도끼",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":23101,
+    "ItemName":"삽",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":23102,
+    "ItemName":"괭이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":24101,
+    "ItemName":"낚싯대",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":25101,
+    "ItemName":"칼",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":25102,
+    "ItemName":"마법 지팡이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
   }
 ]
