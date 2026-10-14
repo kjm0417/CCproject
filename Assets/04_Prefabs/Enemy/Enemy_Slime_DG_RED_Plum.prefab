@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonEnemySeedDrop
   finalDropTable: {fileID: 0}
-  finalPickupPrefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}
+  finalPickupPrefab: {fileID: 7672621953354016798, guid: ab6fc333576645e5a45f6cb075beb960, type: 3}
   scatterRadius: 0.35
   jumpPower: 0.8
   jumpDuration: 0.5
@@ -214,7 +214,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2013605566495981930}
@@ -269,7 +269,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5606235672744479607, guid: 4494cd58ec45ec84c971cbfebfd1035f, type: 3}
+  m_Sprite: {fileID: -6223603112133458131, guid: a03e12d1fbeafe648a1a9a4a90ce3e94, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -290,7 +290,7 @@ Animator:
   m_GameObject: {fileID: 8821267218433236044}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 278b968c9bd6c9446b3c0fc7bd322536, type: 2}
+  m_Controller: {fileID: 9100000, guid: aada0f75781ffbc49ae90c2e04474081, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

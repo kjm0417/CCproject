@@ -727,6 +727,12 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return GetIcon(shovelIcon, "Equipment/Shovel");
         }
 
+        // 던전 기믹 씨앗은 SO에 지정한 아이콘
+        if (item is GimmickSeedData gimmickSeed && gimmickSeed.Icon != null)
+        {
+            return gimmickSeed.Icon;
+        }
+
         if (IsSeed(item))
         {
             // 씨앗은 심을 작물 prefab의 Sprite로 표시

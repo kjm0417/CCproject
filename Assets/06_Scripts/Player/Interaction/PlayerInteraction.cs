@@ -76,6 +76,8 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     {
         if (!context) return;
 
+        UpdateTilePreview();
+
         scanTimer -= Time.deltaTime;
         if (scanTimer > 0f) return;
         scanTimer = scanInterval;
@@ -185,6 +187,26 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
                 SoundManager.Instance.PlaySFX(SFXType.ShovelHit);
                 break;
         }
+    }
+
+    /// <summary>
+    /// 삽을 들고 있으면 바뀔 흙 타일 잔상 표시 ( TryInteract 의 삽 조건과 동일 )
+    /// </summary>
+    private void UpdateTilePreview()
+    {
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier == null) return;
+
+        if (currentToolType == ToolType.Shovel)
+            tileModifier.UpdatePreview(tileCheckOrigin.position, currentToolType);
+        else
+            tileModifier.HidePreview();
+    }
+
+    private void OnDisable()
+    {
+        GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
+        if (tileModifier != null) tileModifier.HidePreview();
     }
 
     private bool TryInteractTile(ToolType toolType)

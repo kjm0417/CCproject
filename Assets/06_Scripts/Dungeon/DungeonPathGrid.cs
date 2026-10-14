@@ -10,8 +10,8 @@ public class DungeonPathGrid : MonoBehaviour
 {
     [SerializeField, Tooltip("칸 크기 - 적 몸 크기 정도")]
     private float nodeSize = 0.5f;
-    [SerializeField, Tooltip("적 몸 지름 ( 칸 단위, 1 = 칸 하나 ) - 적이 벽 모서리에 걸리면 키우기")]
-    private float diameter = 1.2f;
+    [SerializeField, Tooltip("적 몸 지름 ( 칸 단위, 1 = 칸 하나 ) - 가장 큰 적의 WallBody 지름 / nodeSize 이상. 적이 벽 모서리에 걸리면 키우기")]
+    private float diameter = 2.6f;
     [SerializeField, Tooltip("벽/구조물 레이어")]
     private LayerMask obstacleMask;
     [SerializeField, Tooltip("맵 범위 바깥 여유 거리")]

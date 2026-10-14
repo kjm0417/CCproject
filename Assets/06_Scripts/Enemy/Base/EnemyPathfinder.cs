@@ -13,12 +13,15 @@ public class EnemyPathfinder : MonoBehaviour
     private float repathInterval = 0.3f;
     [SerializeField, Tooltip("다음 지점 도착 판정 거리")]
     private float nextWaypointDistance = 0.3f;
-    [SerializeField, Tooltip("몸 반지름 - 직선 이동 / 막힘 판정용 ( 벽 충돌 콜라이더 크기와 맞추기 )")]
-    private float bodyRadius = 0.3f;
+    private const float DefaultBodyRadius = 0.3f; //WallBody 없을 때
 
     private Seeker seeker;
     private Rigidbody2D rb;
     private int obstacleMask;
+
+    //몸 반지름 ( 월드 기준 ) - 직선 이동 / 막힘 판정용, WallBody 콜라이더 실제 크기에서 계산
+    //프리팹 크기를 바꿔도 자동으로 따라가도록 직접 입력하지 않음
+    private float bodyRadius = DefaultBodyRadius;
 
     private readonly List<Vector3> path = new List<Vector3>();
     private int waypointIndex;
@@ -29,6 +32,18 @@ public class EnemyPathfinder : MonoBehaviour
         seeker = GetComponent<Seeker>();
         rb = GetComponentInChildren<Rigidbody2D>();
         obstacleMask = LayerMask.GetMask("Obstacle");
+
+        Transform wallBody = rb != null ? rb.transform.Find("WallBody") : null;
+        CircleCollider2D body = wallBody != null ? wallBody.GetComponent<CircleCollider2D>() : null;
+        if (body != null)
+        {
+            Vector3 scale = body.transform.lossyScale;
+            bodyRadius = body.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
+        }
+        else
+        {
+            Debug.LogWarning($"[EnemyPathfinder] {name} WallBody 없음 - 기본 반지름 {DefaultBodyRadius} 사용");
+        }
     }
 
     private void OnDisable()
