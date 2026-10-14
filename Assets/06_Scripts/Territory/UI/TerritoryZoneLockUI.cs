@@ -27,6 +27,16 @@ public class TerritoryZoneLockUI : MonoBehaviour
     [SerializeField]
     GameObject focusingImages;
 
+    [Header("부족 골드 연출")]
+    [SerializeField]
+    private float shakeDuration = 0.5f;
+    [SerializeField]
+    private Vector3 shakeStrength = new Vector3(10f, 0, 0);
+    [SerializeField]
+    private int shakeVibrato = 10;
+    [SerializeField]
+    private float shakeRandomness = 90f;
+
     private bool IsZoomInClicked = false; // 줌인 버튼 클릭 여부
     private Color originalPriceColor; // 가격 텍스트 원래 색상
 
@@ -145,7 +155,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
         // 3. 버튼 흔들기 (DoTween)
         if (buyBtn != null)
         {
-            buyBtn.transform.DOShakePosition(0.5f, new Vector3(10f, 0, 0), 10, 90f);
+            buyBtn.transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness);
         }
 
         // 4. 1초 대기
