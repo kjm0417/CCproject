@@ -10,8 +10,8 @@ public class RecipeIngredient
 }
 
 // 음식의 이름/회복량은 ResultItem에, 만드는 방법은 이 SO에 저장한다.
-[CreateAssetMenu(fileName = "RecipeData", menuName = "Game/Cooking/Recipe")]
-public class RecipeData : ScriptableObject
+[CreateAssetMenu(fileName = "CookingRecipeData", menuName = "Game/Cooking/Recipe")]
+public class CookingRecipeData : ScriptableObject
 {
     public int CraftRecipeID;
     public InvenItemData ResultItem;

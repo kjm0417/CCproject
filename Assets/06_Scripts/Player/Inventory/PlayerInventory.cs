@@ -222,10 +222,10 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         return total;
     }
 
-    public bool CanCook(RecipeData recipe, out string reason) => BuildCookingResult(recipe, out _, out reason);
+    public bool CanCook(CookingRecipeData recipe, out string reason) => BuildCookingResult(recipe, out _, out reason);
 
     // 복사본에서 재료 차감과 결과 공간을 모두 확인한 뒤 한 번에 반영한다.
-    public bool TryCook(RecipeData recipe, out string reason)
+    public bool TryCook(CookingRecipeData recipe, out string reason)
     {
         if (!BuildCookingResult(recipe, out List<InventorySlot> result, out reason)) return false;
         slots.Clear();
@@ -234,7 +234,7 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         return true;
     }
 
-    private bool BuildCookingResult(RecipeData recipe, out List<InventorySlot> result, out string reason)
+    private bool BuildCookingResult(CookingRecipeData recipe, out List<InventorySlot> result, out string reason)
     {
         result = new List<InventorySlot>();
         reason = string.Empty;

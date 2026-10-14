@@ -17,7 +17,7 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
     [SerializeField] private CookingData cookingData;
     private readonly Dictionary<int, int> successes = new Dictionary<int, int>();
     private PlayerInventory inventory;
-    private RecipeData pendingRecipe;
+    private CookingRecipeData pendingRecipe;
     private Coroutine autoRoutine;
     private int sessionID;
     private bool isAutomatic;
@@ -30,12 +30,12 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
 
     public void Initialize(PlayerContext context) => inventory = context.Inventory;
 
-    public int GetSuccessCount(RecipeData recipe) => recipe != null
+    public int GetSuccessCount(CookingRecipeData recipe) => recipe != null
         && successes.TryGetValue(recipe.CraftRecipeID, out int count) ? count : 0;
 
-    public bool CanAutoCook(RecipeData recipe) => GetSuccessCount(recipe) > 0;
+    public bool CanAutoCook(CookingRecipeData recipe) => GetSuccessCount(recipe) > 0;
 
-    public bool CanCook(RecipeData recipe, bool automatic, out string reason)
+    public bool CanCook(CookingRecipeData recipe, bool automatic, out string reason)
     {
         reason = string.Empty;
         if (IsBusy) { reason = "조리 중입니다."; return false; }
@@ -48,7 +48,7 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
         return inventory.CanCook(recipe, out reason);
     }
 
-    public bool TryStartManual(RecipeData recipe, out int requestID, out string reason)
+    public bool TryStartManual(CookingRecipeData recipe, out int requestID, out string reason)
     {
         requestID = 0;
         if (!CanCook(recipe, false, out reason)) return false;
@@ -66,7 +66,7 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
         Complete(success);
     }
 
-    public bool TryAutoCook(RecipeData recipe, out string reason)
+    public bool TryAutoCook(CookingRecipeData recipe, out string reason)
     {
         if (!CanCook(recipe, true, out reason)) return false;
         pendingRecipe = recipe;
@@ -88,7 +88,7 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
     private void Complete(bool success)
     {
         isCompleting = true;
-        RecipeData recipe = pendingRecipe;
+        CookingRecipeData recipe = pendingRecipe;
         try
         {
             if (!success) LastMessage = "조리에 실패했습니다. 재료는 소모되지 않았습니다.";

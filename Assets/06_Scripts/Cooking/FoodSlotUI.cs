@@ -12,7 +12,7 @@ public class FoodSlotUI : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     private Action onSelected;
     private Color normalColor;
-    public RecipeData Recipe { get; private set; }
+    public CookingRecipeData Recipe { get; private set; }
 
     private void Awake()
     {
@@ -21,7 +21,7 @@ public class FoodSlotUI : MonoBehaviour
         button.onClick.AddListener(Select);
     }
 
-    public void Bind(RecipeData recipe, Action onClick)
+    public void Bind(CookingRecipeData recipe, Action onClick)
     {
         Recipe = recipe;
         onSelected = onClick;

@@ -212,24 +212,12 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     {
         ValidateSelectedQuickSlotItem();
 
-        PopulateQuickSlotSet(quickSlots);
-
         HashSet<InventorySlot> registeredSlots = PopulateQuickSlotSet(quickSlots);
-
 
         if (inventoryQuickSlots != null)
         {
             PopulateQuickSlotSet(inventoryQuickSlots);
         }
-
-
-        RefreshInventoryItems();
-        RefreshInteractionButton();
-    }
-
-    private void PopulateQuickSlotSet(HUDQuickSlot[] targetSlots)
-    {
-        if (targetSlots == null) return;
 
         RefreshInventoryItems(registeredSlots);
         RefreshInteractionButton();
@@ -399,10 +387,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     }
 
 
-    private void RefreshInventoryItems()
-
     private void RefreshInventoryItems(HashSet<InventorySlot> registeredSlots)
-
     {
         if (inventoryItemsContent == null || inventory == null) return;
 
@@ -421,14 +406,6 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             InventorySlot inventorySlot = inventory.Slots[i];
             InvenItemData item = inventorySlot.Item;
 
-            UnityEngine.Events.UnityAction onClick = itemClickOverride != null ? () => itemClickOverride?.Invoke(inventorySlot) : null;
-
-            if (item == null || registeredSlots.Contains(inventorySlot)) continue;
-
-            HUDQuickSlot slot = GetOrCreateInventoryItemSlot(visibleCount);
-            slot.gameObject.SetActive(true);
-            slot.Initialize(0);
-            slot.SetNumberVisible(false);
             UnityEngine.Events.UnityAction onClick = itemClickOverride != null
                 ? () => itemClickOverride?.Invoke(inventorySlot)
                 : null;
