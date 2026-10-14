@@ -15780,6 +15780,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!1 &1314324970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314324972}
+  - component: {fileID: 1314324971}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1314324971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314324970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e563bb24e0b790b45a324893c1237723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  database: {fileID: 11400000, guid: ad7c6c1e79be06947bd62bb80e09e9ed, type: 2}
+  mixer: {fileID: 24100000, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  bgmGroup: {fileID: 4703349280584466112, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  sfxGroup: {fileID: 7071901938993071732, guid: 4f305cd95f80c3747938a3fd76c41507, type: 2}
+  bgmFadeTime: 1
+--- !u!4 &1314324972
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314324970}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1337184588
 GameObject:
   m_ObjectHideFlags: 0
@@ -17945,7 +17994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eaea7770c39beb4893dffb627da3624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonSpring
-  startMap: {fileID: 783990706}
+  startMap: {fileID: 1584795265}
   confiner: {fileID: 182130445}
   pathGrid: {fileID: 130939008}
   enemyCount1F: 4
@@ -32782,6 +32831,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 783990707}
     m_Modifications:
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
+      propertyPath: bossVisual
+      value: 
+      objectReference: {fileID: 1095488323}
+    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: visualMode
       value: 1
       objectReference: {fileID: 0}
@@ -32799,7 +32852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: passDuration
-      value: 0.6
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: passAnimLength
@@ -32843,11 +32896,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2954306591377237761, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.81
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 2954306591377237761, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.9506
+      value: 13.67
       objectReference: {fileID: 0}
     - target: {fileID: 3739684082877356231, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_IsActive
@@ -33762,3 +33815,4 @@ SceneRoots:
   - {fileID: 877464830}
   - {fileID: 6818350229696453993}
   - {fileID: 1138468539244629014}
+  - {fileID: 1314324972}

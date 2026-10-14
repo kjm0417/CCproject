@@ -114,7 +114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPathfinder
   repathInterval: 0.3
   nextWaypointDistance: 0.3
-  bodyRadius: 0.3
 --- !u!1 &8734218356325795486
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,6 +196,7 @@ GameObject:
   - component: {fileID: 4505502565647948232}
   - component: {fileID: 8763966595547520707}
   - component: {fileID: 5288446143993876612}
+  - component: {fileID: 2205648537132037156}
   m_Layer: 0
   m_Name: Slime_Black
   m_TagString: Untagged
@@ -382,3 +382,19 @@ MonoBehaviour:
   attackRadius: 0.46
   splashRadius: 0.78
   baseAttackRadius: 0.63
+--- !u!114 &2205648537132037156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8821267218433236044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da17247811fcb4409fe16f191867f15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySFX
+  attackSFX: 6
+  skillSFX: 7
+  hitSFX: 8
+  dieSFX: 9

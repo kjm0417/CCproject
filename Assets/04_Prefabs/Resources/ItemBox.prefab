@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5456019313988743660}
   - component: {fileID: 1543305580405440202}
   - component: {fileID: 6148984627933128935}
+  - component: {fileID: 5564966789137064863}
   m_Layer: 0
   m_Name: ItemBox
   m_TagString: Untagged
@@ -139,3 +140,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.61, y: 0.62}
   m_EdgeRadius: 0
+--- !u!114 &5564966789137064863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304877567646651685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4fb17c55f5064843947af1cef0ff885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChestObject
+  spriteRenderer: {fileID: 1543305580405440202}
+  closedSprite: {fileID: 8379081787980949884, guid: 6bd7cfdd7e824db4484480e2a1760db9, type: 3}
+  openedSprite: {fileID: 896703487732004790, guid: 923a9afba457e62499c1c2322ad03043, type: 3}
+  maxItemTypes: 12
+  chestId: 
+  chestUI: {fileID: 0}

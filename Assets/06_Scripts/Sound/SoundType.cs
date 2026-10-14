@@ -25,4 +25,10 @@ public enum SFXType
 
     // 플레이어 이동
     Footstep,
+
+    // 슬라임
+    SlimeAttack,
+    SlimeSkill,
+    SlimeHit,
+    SlimeDie,
 }

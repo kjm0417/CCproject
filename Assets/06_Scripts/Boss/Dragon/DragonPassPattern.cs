@@ -5,8 +5,8 @@ using UnityEngine.Serialization;
 
 /// <summary>
 /// 1번 지나가용
-/// 세로 구역 빨간 테두리 blinkCount 회 점멸 -> 용이 위에서 아래로 지나가며 지나간 구역에 피해
-/// 연출 : 시작점 ( Lane 윗변 ) 에서 내리꽂는 애니메이션 재생 or 경로따라 이동
+/// 세로 구역 빨간 테두리 blinkCount 회 점멸 -> 보스 본체가 제자리 준비 동작 후 구역 위 -> 아래로 지나가며 피해
+/// 연출 : 보스 본체 Animator 의 passTrigger ( DragonPass ) 재생 + 본체 이동, 끝나면 제자리로 복귀 후 페이드 인
 /// </summary>
 public class DragonPassPattern : BossPattern
 {
@@ -21,46 +21,45 @@ public class DragonPassPattern : BossPattern
     [SerializeField] private float blinkOffTime = 0.2f;
 
     [Header("공격")]
-    [SerializeField] private float passDuration = 1.2f;
+    [SerializeField, Tooltip("보스가 제자리에서 구역 아래 끝까지 지나가는 시간 - 지나가는 프레임도 이 시간에 맞게 늘어남")]
+    private float passDuration = 1.1f;
     [SerializeField] private float damage = 20f;
     [SerializeField] private float tickInterval = 0.5f;
 
-    [Header("연출")]
-    [SerializeField, Tooltip("용 연출 오브젝트 ( 선택 ) - 패턴 동안만 활성화")]
-    private Transform dragonVisual;
-    [SerializeField, Tooltip("PlayAtStart : 시작점 고정 + 애니메이션이 내리꽂음 ( 피벗 Top )\nMoveAlongPath : 오브젝트를 경로따라 이동 ( 피벗 = 머리 )")]
-    private PassVisualMode visualMode = PassVisualMode.PlayAtStart;
-    [SerializeField, Tooltip("비어 있으면 활성화 시 기본 State 처음부터 재생")]
-    private string visualAnimTrigger;
-    [SerializeField, Tooltip("true : 경고 점멸과 동시에 연출 시작 ( 준비 동작 겹침 )")]
-    private bool showVisualDuringWarning = true;
-    [SerializeField, Tooltip("연출 시작 ~ 내리꽂기 시작 시간 ( 준비 프레임 길이 )")]
-    private float windupDuration = 0.8f;
-    [SerializeField, Tooltip("내리꽂기 끝 ~ 연출 끄기 시간 ( 꼬리 / 잔상 프레임 길이 )")]
-    private float exitDuration = 0.4f;
-    [SerializeField, Tooltip("연출 동안 숨길 오브젝트 ( 대기 중인 보스 스프라이트 등 )")]
-    private List<GameObject> hideWhileVisual = new List<GameObject>();
-
-    [Header("연출 - 애니 동기화 ( MoveAlongPath )")]
-    [SerializeField, Tooltip("준비 동작 ( 위치 고정 프레임 ) 위치 - 지나가기는 여기서 Lane 아래 끝까지 이동. 비우면 Lane 윗변")]
-    private Transform windupPoint;
-    [SerializeField, FormerlySerializedAs("diveAnimLength"), Tooltip("지나가는 프레임 구간 길이 ( 초 ). 0 보다 크면 준비 동작은 원래 속도, 지나가기 동안 이 구간이 passDuration 에 맞게 늘어나도록 애니 속도 조절")]
-    private float passAnimLength;
-    [SerializeField, Tooltip("지나간 뒤 연출이 다시 나타날 위치 ( 보스 자리 ). 비우면 복귀 연출 없음")]
-    private Transform returnPoint;
-    [SerializeField, Range(0f, 1f), Tooltip("복귀 연출 시작 지점 ( 클립 정규화 시간, 0.5 = 클립 절반부터 )")]
-    private float returnNormalizedTime = 0.5f;
-    [SerializeField, Tooltip("복귀 연출 시간 - 끝나면 연출 끄고 숨긴 보스 다시 표시")]
-    private float returnDuration = 0.42f;
-    [SerializeField, Tooltip("숨겼던 보스가 다시 나타날 때 페이드 인 시간 ( 0 이면 바로 표시 )")]
+    [Header("연출 ( 보스 본체 )")]
+    [SerializeField, Tooltip("이동시킬 보스 스프라이트 ( Animator 포함 ). 비우면 보스 하위의 활성 Animator")]
+    private Transform bossVisual;
+    [SerializeField, Tooltip("보스 Animator 의 지나가용 트리거 ( Idle -> DragonPass )")]
+    private string passTrigger = "Pass";
+    [SerializeField, Tooltip("복귀 시 재생할 State 이름")]
+    private string idleStateName = "Idle";
+    [SerializeField, Tooltip("제자리 고정 프레임 구간 길이 ( 고정 프레임 수 / 샘플레이트 )")]
+    private float windupDuration = 0.4167f;
+    [SerializeField, FormerlySerializedAs("diveAnimLength"), Tooltip("지나가는 프레임 구간 길이 ( 클립 길이 - windupDuration ). 0 보다 크면 passDuration 에 맞게 애니 속도 조절")]
+    private float passAnimLength = 0.4167f;
+    [SerializeField, Tooltip("제자리 복귀 후 페이드 인 시간 ( 0 이면 바로 표시 )")]
     private float reappearFadeDuration = 0.4f;
 
-    private enum PassVisualMode { PlayAtStart, MoveAlongPath }
+    private Animator animator;
+    private SpriteRenderer[] renderers;
+    private float[] originAlphas;
+    private Vector3 homeLocalPos;
+    private bool moved;
 
-    private void Awake()
+    private void Start()
     {
-        // 씬에 켜진 채 저장돼 있어도 패턴 전에는 숨김
-        if (dragonVisual != null) dragonVisual.gameObject.SetActive(false);
+        if (bossVisual == null)
+        {
+            Animator found = Boss != null ? Boss.GetComponentInChildren<Animator>() : null;
+            if (found != null) bossVisual = found.transform;
+        }
+        if (bossVisual == null) return;
+
+        animator = bossVisual.GetComponent<Animator>();
+        renderers = bossVisual.GetComponentsInChildren<SpriteRenderer>(true);
+        originAlphas = new float[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++) originAlphas[i] = renderers[i].color.a;
+        homeLocalPos = bossVisual.localPosition;
     }
 
     protected override IEnumerator Execute()
@@ -68,41 +67,24 @@ public class DragonPassPattern : BossPattern
         if (lanes.Count == 0) yield break;
 
         ZoneShape lane = lanes[Random.Range(0, lanes.Count)].Snapshot();
-
-        // 위 -> 아래, 지나간 부분 ( top ~ head ) 만 피해
         Vector2 up = lane.Up;
         Vector2 top = lane.Center + up * lane.size.y * 0.5f;
         Vector2 bottom = lane.Center - up * lane.size.y * 0.5f;
 
-        Vector2 visualStart = windupPoint != null ? (Vector2)windupPoint.position : top;
-        float visualStartTime = float.NegativeInfinity;
-        if (showVisualDuringWarning)
-        {
-            ShowVisual(visualStart, lane.Angle);
-            visualStartTime = Time.time;
-        }
-
+        // 1. 경고
         BossTelegraph telegraph = CreateTelegraph(lane, telegraphStyle);
         yield return telegraph.Blink(blinkCount, blinkOnTime, blinkOffTime);
         telegraph.Release();
 
-        if (!showVisualDuringWarning)
-        {
-            ShowVisual(visualStart, lane.Angle);
-            visualStartTime = Time.time;
-        }
+        // 2. 제자리 준비 동작
+        if (animator != null && !string.IsNullOrEmpty(passTrigger)) animator.SetTrigger(passTrigger);
+        if (bossVisual != null && windupDuration > 0f) yield return new WaitForSeconds(windupDuration);
 
-        Animator visualAnimator = dragonVisual != null ? dragonVisual.GetComponentInChildren<Animator>() : null;
+        // 3. 지나가기 - 지나가는 프레임이 passDuration 동안 재생되도록
+        if (animator != null && passAnimLength > 0f && passDuration > 0f) animator.speed = passAnimLength / passDuration;
 
-        // 준비 동작이 남았으면 마저 대기
-        float remainWindup = visualStartTime + windupDuration - Time.time;
-        if (dragonVisual != null && remainWindup > 0f) yield return new WaitForSeconds(remainWindup);
-
-        // 지나가는 프레임 구간이 passDuration 동안 재생되도록
-        if (visualAnimator != null && passAnimLength > 0f && passDuration > 0f)
-        {
-            visualAnimator.speed = passAnimLength / passDuration;
-        }
+        Vector3 home = bossVisual != null ? bossVisual.position : (Vector3)top;
+        moved = bossVisual != null;
 
         float nextHitTime = 0f;
         float elapsed = 0f;
@@ -110,157 +92,74 @@ public class DragonPassPattern : BossPattern
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / passDuration);
+
+            if (bossVisual != null)
+            {
+                Vector3 pos = Vector2.Lerp(home, bottom, t);
+                pos.z = home.z;
+                bossVisual.position = pos;
+            }
+
+            // 위 -> 아래, 지나간 부분 ( top ~ head ) 만 피해
             Vector2 head = Vector2.Lerp(top, bottom, t);
-
-            if (dragonVisual != null && visualMode == PassVisualMode.MoveAlongPath) dragonVisual.position = Vector2.Lerp(visualStart, bottom, t);
-
-            float sweptLength = lane.size.y * t;
-            ZoneShape swept = ZoneShape.Fixed((top + head) * 0.5f, new Vector2(lane.size.x, sweptLength), lane.Angle);
+            ZoneShape swept = ZoneShape.Fixed((top + head) * 0.5f, new Vector2(lane.size.x, lane.size.y * t), lane.Angle);
             TryDamagePlayer(swept, damage, tickInterval, ref nextHitTime);
 
             yield return null;
         }
 
-        if (visualAnimator != null) visualAnimator.speed = 1f;
-        if (dragonVisual != null && exitDuration > 0f) yield return new WaitForSeconds(exitDuration);
-
-        // 보스 자리에서 다시 나타나는 연출 ( 클립 나머지 구간 )
-        if (dragonVisual != null && returnPoint != null && returnDuration > 0f)
+        // 4. 제자리 복귀 + 페이드 인
+        ReturnHome();
+        if (reappearFadeDuration > 0f)
         {
-            dragonVisual.SetPositionAndRotation(returnPoint.position, Quaternion.identity);
-            if (visualAnimator != null)
+            SetAlpha(0f);
+            float fade = 0f;
+            while (fade < reappearFadeDuration)
             {
-                visualAnimator.speed = 1f;
-                visualAnimator.Play(visualAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, returnNormalizedTime);
-            }
-            yield return new WaitForSeconds(returnDuration);
-        }
-
-        // 연출 끄고 숨긴 보스 페이드 인
-        if (dragonVisual != null && reappearFadeDuration > 0f)
-        {
-            HideVisual();
-            float elapsed2 = 0f;
-            while (elapsed2 < reappearFadeDuration)
-            {
-                elapsed2 += Time.deltaTime;
-                SetHiddenAlpha(Mathf.Clamp01(elapsed2 / reappearFadeDuration));
+                fade += Time.deltaTime;
+                SetAlpha(Mathf.Clamp01(fade / reappearFadeDuration));
                 yield return null;
             }
         }
+        SetAlpha(1f);
     }
 
-    private void HideVisual()
+    private void ReturnHome()
     {
-        if (dragonVisual == null) return;
-
-        Animator visualAnimator = dragonVisual.GetComponentInChildren<Animator>();
-        if (visualAnimator != null) visualAnimator.speed = 1f;
-        dragonVisual.gameObject.SetActive(false);
-
-        foreach (GameObject go in hideWhileVisual)
+        if (animator != null)
         {
-            if (go != null) go.SetActive(true);
-        }
-    }
-
-    /// <summary> 숨겼던 오브젝트 스프라이트 알파 ( 원래 알파 기준 비율 ) </summary>
-    private void SetHiddenAlpha(float ratio)
-    {
-        for (int i = 0; i < hiddenRenderers.Count; i++)
-        {
-            if (hiddenRenderers[i] == null) continue;
-            Color c = hiddenRenderers[i].color;
-            c.a = hiddenAlphas[i] * ratio;
-            hiddenRenderers[i].color = c;
-        }
-    }
-
-    private readonly List<SpriteRenderer> hiddenRenderers = new List<SpriteRenderer>();
-    private readonly List<float> hiddenAlphas = new List<float>();
-
-    private void ShowVisual(Vector2 top, float angle)
-    {
-        if (dragonVisual == null) return;
-
-        hiddenRenderers.Clear();
-        hiddenAlphas.Clear();
-        foreach (GameObject go in hideWhileVisual)
-        {
-            if (go == null) continue;
-            foreach (SpriteRenderer sr in go.GetComponentsInChildren<SpriteRenderer>(true))
+            animator.speed = 1f;
+            if (moved && !Boss.IsStunned && !Boss.IsDead && !string.IsNullOrEmpty(idleStateName))
             {
-                hiddenRenderers.Add(sr);
-                hiddenAlphas.Add(sr.color.a);
+                animator.ResetTrigger(passTrigger);
+                animator.Play(idleStateName, 0, 0f);
             }
-            go.SetActive(false);
-        }
-        SetHiddenAlpha(0f);
-
-        dragonVisual.SetPositionAndRotation(top, Quaternion.Euler(0f, 0f, angle));
-        dragonVisual.gameObject.SetActive(true);
-
-        // 이미 켜져 있었거나 상태가 남아 있어도 기본 State 처음부터
-        Animator visualAnimator = dragonVisual.GetComponentInChildren<Animator>();
-        if (visualAnimator != null)
-        {
-            visualAnimator.speed = 1f;
-            visualAnimator.Rebind();
-            visualAnimator.Update(0f);
         }
 
-        if (!string.IsNullOrEmpty(visualAnimTrigger))
-        {
-            Animator animator = dragonVisual.GetComponentInChildren<Animator>();
-            if (animator != null) animator.SetTrigger(visualAnimTrigger);
-        }
+        if (bossVisual != null) bossVisual.localPosition = homeLocalPos;
+        moved = false;
     }
 
-    #region [이전] 연출을 경로따라 이동만 하던 Execute
-    // protected override IEnumerator Execute()
-    // {
-    //     if (lanes.Count == 0) yield break;
-    //
-    //     ZoneShape lane = lanes[Random.Range(0, lanes.Count)].Snapshot();
-    //
-    //     BossTelegraph telegraph = CreateTelegraph(lane, telegraphStyle);
-    //     yield return telegraph.Blink(blinkCount, blinkOnTime, blinkOffTime);
-    //     telegraph.Release();
-    //
-    //     Vector2 up = lane.Up;
-    //     Vector2 top = lane.Center + up * lane.size.y * 0.5f;
-    //     Vector2 bottom = lane.Center - up * lane.size.y * 0.5f;
-    //
-    //     if (dragonVisual != null)
-    //     {
-    //         dragonVisual.position = top;
-    //         dragonVisual.gameObject.SetActive(true);
-    //     }
-    //
-    //     float nextHitTime = 0f;
-    //     float elapsed = 0f;
-    //     while (elapsed < passDuration)
-    //     {
-    //         elapsed += Time.deltaTime;
-    //         float t = Mathf.Clamp01(elapsed / passDuration);
-    //         Vector2 head = Vector2.Lerp(top, bottom, t);
-    //
-    //         if (dragonVisual != null) dragonVisual.position = head;
-    //
-    //         float sweptLength = lane.size.y * t;
-    //         ZoneShape swept = ZoneShape.Fixed((top + head) * 0.5f, new Vector2(lane.size.x, sweptLength), lane.Angle);
-    //         TryDamagePlayer(swept, damage, tickInterval, ref nextHitTime);
-    //
-    //         yield return null;
-    //     }
-    // }
-    #endregion
+    /// <param name="ratio">원래 알파 기준 비율</param>
+    private void SetAlpha(float ratio)
+    {
+        if (renderers == null) return;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            Color c = renderers[i].color;
+            c.a = originAlphas[i] * ratio;
+            renderers[i].color = c;
+        }
+    }
 
     public override void Cleanup()
     {
         base.Cleanup();
-        HideVisual();
-        SetHiddenAlpha(1f);
+        // 스턴 / 사망으로 중단돼도 본체는 제자리 + 원래 알파 ( 상태 애니는 Stun / Die 트리거가 처리 )
+        ReturnHome();
+        SetAlpha(1f);
     }
 
     private void OnDrawGizmosSelected()

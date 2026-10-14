@@ -42,7 +42,7 @@ public class TerritoryManager : MonoBehaviour
         }
     }
 
-    private ICurrencyProvider currencyProvider;
+    private PlayerWallet playerWallet;
 
     private Dictionary<int, TerritoryZone> territoryZonesDic = new Dictionary<int, TerritoryZone>();
 
@@ -77,7 +77,7 @@ public class TerritoryManager : MonoBehaviour
             territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
         }
 
-        currencyProvider = FindAnyObjectByType<CurrencyManager>();
+        playerWallet = FindAnyObjectByType<PlayerWallet>();
 
         territoryRunTimeData = new TerritoryRunTimeData();
 
@@ -437,7 +437,7 @@ public class TerritoryManager : MonoBehaviour
             return true;
         }
 
-        if (currencyProvider.TrySpend(territoryZone.TerritoryZoneData.RequireGold))
+        if (playerWallet.TrySpend(CurrencyType.Gold, (int)territoryZone.TerritoryZoneData.RequireGold))
         {
             territoryZone.UnLockZone();
             return true;

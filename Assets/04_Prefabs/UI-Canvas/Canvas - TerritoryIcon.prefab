@@ -1029,10 +1029,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TerritoryIcon
   icon: {fileID: 8620006538006397860}
   priceTMP: {fileID: 3787525260388069008}
+  insufficientGoldText: {fileID: 0}
   zoomInBtn: {fileID: 998911748862445087}
   buyBtn: {fileID: 3689463041473365064}
   focusingIcons: {fileID: 421666187808104155}
   focusingImages: {fileID: 3120238637473830792}
+  shakeDuration: 0.1
+  shakeStrength: {x: 0.5, y: 0, z: 0}
+  shakeVibrato: 2
+  shakeRandomness: 0.2
 --- !u!114 &1324790450111005394
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable, IPoolable
 {
     protected EnemyContext enemyContext;
     protected EnemyFSM enemyFSM;
+    protected EnemySFX enemySFX;
     protected EnemySkillManager skillManager;
 
     public static Action<float> OnEnemyDieExpEvent; 
@@ -40,6 +41,7 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable, IPoolable
     protected virtual void Awake()
     {
         enemyContext = CreateCTX();
+        enemySFX = GetComponentInChildren<EnemySFX>();
         enemyContext.Animator.Play(EnemyAnimHash.Spawn);
 
         skillManager = CreateSkillManager();
@@ -95,6 +97,7 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable, IPoolable
             return;
 
         enemyContext.Animator.Play(EnemyAnimHash.Hit, 0, 0f);
+        enemySFX?.PlayHit();
     }
 
     /// <summary>
@@ -109,6 +112,7 @@ public abstract class EnemyBase : MonoBehaviour, IEnemyDamageable, IPoolable
         ResetAnimParams();
 
         enemyContext.Animator.SetTrigger(EnemyAnimHash.DieTrigger);
+        enemySFX?.PlayDie();
 
         OnEnemyDieExpEvent?.Invoke(monsterData.EXP);
         OnEnemyDied?.Invoke(this);
