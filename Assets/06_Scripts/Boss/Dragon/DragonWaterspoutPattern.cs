@@ -29,6 +29,13 @@ public class DragonWaterspoutPattern : BossPattern
     [SerializeField] private float tickInterval = 0.5f;
     [SerializeField] private GameObject waterspoutVfx;
 
+    [Header("용오름 기본 연출 ( waterspoutVfx 없을 때 )")]
+    [SerializeField] private Color eruptFlashColor = new Color(0.85f, 0.95f, 1f, 0.9f);
+    [SerializeField] private Color eruptZoneColor = new Color(0.3f, 0.6f, 1f, 0.45f);
+    [SerializeField] private float eruptFlashTime = 0.2f;
+
+    private readonly List<GameObject> eruptVisuals = new List<GameObject>();
+
     protected override IEnumerator Execute()
     {
         if (rings.Count == 0) yield break;
@@ -55,6 +62,42 @@ public class DragonWaterspoutPattern : BossPattern
         telegraph.Release();
 
         SpawnDamageZone(ring, hole, damage, eruptDuration, tickInterval, waterspoutVfx);
+        if (waterspoutVfx == null) yield return EruptRoutine(ring.Snapshot(), hole?.Snapshot());
+    }
+
+    /// <summary> 번쩍임 -> 피해 유지 동안 채움 -> 사라짐 </summary>
+    private IEnumerator EruptRoutine(ZoneShape ring, ZoneShape hole)
+    {
+        BossZoneFill fill = BossZoneFill.Create(ring, hole, eruptFlashColor, telegraphStyle.sortingLayerName, telegraphStyle.sortingOrder - 1);
+        eruptVisuals.Add(fill.gameObject);
+
+        float elapsed = 0f;
+        while (elapsed < eruptDuration)
+        {
+            elapsed += Time.deltaTime;
+            Color color = elapsed < eruptFlashTime
+                ? Color.Lerp(eruptFlashColor, eruptZoneColor, elapsed / eruptFlashTime)
+                : eruptZoneColor;
+
+            float remain = eruptDuration - elapsed;
+            if (remain < 0.3f) color.a *= Mathf.Clamp01(remain / 0.3f);
+
+            fill.SetColor(color);
+            yield return null;
+        }
+
+        eruptVisuals.Remove(fill.gameObject);
+        Destroy(fill.gameObject);
+    }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+        foreach (GameObject go in eruptVisuals)
+        {
+            if (go != null) Destroy(go);
+        }
+        eruptVisuals.Clear();
     }
 
     private void OnDrawGizmosSelected()

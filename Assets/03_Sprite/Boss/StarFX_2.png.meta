@@ -1,14 +1,22 @@
 fileFormatVersion: 2
-guid: efa3d7e5ed7ac474187ad819a88af4bf
-AssetOrigin:
-  serializedVersion: 1
-  productId: 254596
-  packageName: Isometric PixelArt - Skeleton Common Soldier
-  packageVersion: 1.0
-  assetPath: Assets/PixelArtStudio/SkeletonsPack/CommonSoldier/Textures/GetHit/Left/GetHit.png
-  uploadId: 583562
+guid: 41ba8272d3c5a2c499e6dcd7fc4b16d9
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 8073630774636738921
+    second: StarFX_2_0
+  - first:
+      213: -7515581467291906721
+    second: StarFX_2_1
+  - first:
+      213: -8169573494088326780
+    second: StarFX_2_2
+  - first:
+      213: -5586359418965876745
+    second: StarFX_2_3
+  - first:
+      213: 5699073603422411434
+    second: StarFX_2_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +63,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -101,33 +109,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -144,7 +126,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -156,89 +138,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GetHit_1
+      name: StarFX_2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 52
-        height: 59
+        x: 251
+        y: 198
+        width: 174
+        height: 88
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 74f248790cb5f6c00800000000000000
-      internalID: 896035733603888967
+      spriteID: 96972e1e96c4b0070800000000000000
+      internalID: 8073630774636738921
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GetHit_2
+      name: StarFX_2_1
       rect:
         serializedVersion: 2
-        x: 52
-        y: 0
-        width: 42
-        height: 56
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bf38d951105685d30800000000000000
-      internalID: 4420394089596158971
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GetHit_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 59
-        width: 39
+        x: 912
+        y: 209
+        width: 167
         height: 55
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3ae519125a2f6c9e0800000000000000
-      internalID: -1601325826436931933
+      spriteID: f5d8e89897a43b790800000000000000
+      internalID: -7515581467291906721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GetHit_3
+      name: StarFX_2_2
       rect:
         serializedVersion: 2
-        x: 39
-        y: 59
-        width: 39
-        height: 55
+        x: 1568
+        y: 195
+        width: 180
+        height: 83
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 26f19475d5a908e90800000000000000
-      internalID: -7025445693010927774
+      spriteID: 4812b6ef038df9e80800000000000000
+      internalID: -8169573494088326780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarFX_2_3
+      rect:
+        serializedVersion: 2
+        x: 2232
+        y: 209
+        width: 167
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ff91ecc4b34972b0800000000000000
+      internalID: -5586359418965876745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarFX_2_4
+      rect:
+        serializedVersion: 2
+        x: 2891
+        y: 198
+        width: 174
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaa5cc05f3d271f40800000000000000
+      internalID: 5699073603422411434
       vertices: []
       indices: 
       edges: []
@@ -247,22 +251,21 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ca192efe94323b34f92c34ee80f6a86c
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: d6f2babc8af1d7b4b90cb8bdeae26215, type: 3}
-      name: _NormalMap
+    secondaryTextures: []
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GetHit_0: -1601325826436931933
-      GetHit_1: 896035733603888967
-      GetHit_2: 4420394089596158971
-      GetHit_3: -7025445693010927774
+      StarFX_2_0: 8073630774636738921
+      StarFX_2_1: -7515581467291906721
+      StarFX_2_2: -8169573494088326780
+      StarFX_2_3: -5586359418965876745
+      StarFX_2_4: 5699073603422411434
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

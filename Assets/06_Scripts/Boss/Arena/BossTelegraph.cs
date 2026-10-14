@@ -78,7 +78,7 @@ public class BossTelegraph : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private static Material GetDefaultMaterial()
+    public static Material GetDefaultMaterial()
     {
         if (defaultMaterial != null) return defaultMaterial;
 
