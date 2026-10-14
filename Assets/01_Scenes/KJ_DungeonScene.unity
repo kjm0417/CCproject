@@ -32782,6 +32782,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 783990707}
     m_Modifications:
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
+      propertyPath: bossVisual
+      value: 
+      objectReference: {fileID: 1095488323}
+    - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: visualMode
       value: 1
       objectReference: {fileID: 0}
@@ -32799,7 +32803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: passDuration
-      value: 0.6
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 62946144509799594, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: passAnimLength
@@ -32843,11 +32847,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2954306591377237761, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.81
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 2954306591377237761, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.9506
+      value: 13.67
       objectReference: {fileID: 0}
     - target: {fileID: 3739684082877356231, guid: 1a2533e0b91dfe74687142bf02c34874, type: 3}
       propertyPath: m_IsActive

@@ -39,7 +39,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
             IsZoomInClicked = true;
 
             TerritoryDirectionManager.Instance.ZoneIconClicked(this.GetComponentInParent<TerritoryZone>(),
-               () => buyBtn.gameObject.SetActive(true));
+               () => ShowBuyButton());
 
 
             buyBtn.onClick.AddListener(() =>
@@ -48,6 +48,24 @@ public class TerritoryZoneLockUI : MonoBehaviour
             });
 
         });
+    }
+
+    /// <summary>
+    /// 구매 버튼 표시 및 인터랙티블 상태 설정 (골드 부족 시 비활성화)
+    /// </summary>
+    private void ShowBuyButton()
+    {
+        buyBtn.gameObject.SetActive(true);
+
+        TerritoryZone zone = this.GetComponentInParent<TerritoryZone>();
+        PlayerWallet wallet = FindAnyObjectByType<PlayerWallet>();
+
+        if (zone != null && wallet != null)
+        {
+            int requiredGold = (int)zone.TerritoryZoneData.RequireGold;
+            int currentGold = wallet.GetBalance(CurrencyType.Gold);
+            buyBtn.interactable = currentGold >= requiredGold;
+        }
     }
     private void OnDisable()
     {
