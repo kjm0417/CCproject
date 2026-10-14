@@ -22,6 +22,9 @@ MonoBehaviour:
   - type: 4
     clip: {fileID: 8300000, guid: 7b5e1e267aaec4b41aef7cc654671729, type: 3}
     volume: 0.041
+  - type: 1
+    clip: {fileID: 8300000, guid: 693c80c419fd2984587acc46579d7764, type: 3}
+    volume: 0.375
   sfxList:
   - type: 1
     clip: {fileID: 8300000, guid: a05e2393c0667fc4b83c07ff0b585016, type: 3}
@@ -59,3 +62,5 @@ MonoBehaviour:
     bgm: 2
   - sceneName: KJ_DungeonScene
     bgm: 3
+  - sceneName: TitleScene
+    bgm: 1

@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// 영토확장시스템 - 해금 상태 표시 버튼 생성/해제 버튼 ( 잠금 )
@@ -12,6 +14,8 @@ public class TerritoryZoneLockUI : MonoBehaviour
     GameObject icon;
     [SerializeField]
     TextMeshProUGUI priceTMP;
+    [SerializeField]
+    TextMeshProUGUI insufficientGoldText; // 골드 부족 안내
 
     [SerializeField]
     private Button zoomInBtn;
@@ -24,6 +28,7 @@ public class TerritoryZoneLockUI : MonoBehaviour
     GameObject focusingImages;
 
     private bool IsZoomInClicked = false; // 줌인 버튼 클릭 여부
+    private Color originalPriceColor; // 가격 텍스트 원래 색상
 
     public void SetZoomInClicked(bool value)
     {
@@ -51,20 +56,22 @@ public class TerritoryZoneLockUI : MonoBehaviour
     }
 
     /// <summary>
-    /// 구매 버튼 표시 및 인터랙티블 상태 설정 (골드 부족 시 비활성화)
+    /// 구매 버튼 표시
     /// </summary>
     private void ShowBuyButton()
     {
         buyBtn.gameObject.SetActive(true);
 
-        TerritoryZone zone = this.GetComponentInParent<TerritoryZone>();
-        PlayerWallet wallet = FindAnyObjectByType<PlayerWallet>();
-
-        if (zone != null && wallet != null)
+        // 가격 텍스트 원래 색상 저장
+        if (priceTMP != null)
         {
-            int requiredGold = (int)zone.TerritoryZoneData.RequireGold;
-            int currentGold = wallet.GetBalance(CurrencyType.Gold);
-            buyBtn.interactable = currentGold >= requiredGold;
+            originalPriceColor = priceTMP.color;
+        }
+
+        // 부족 텍스트 초기화
+        if (insufficientGoldText != null)
+        {
+            insufficientGoldText.gameObject.SetActive(false);
         }
     }
     private void OnDisable()
@@ -75,7 +82,8 @@ public class TerritoryZoneLockUI : MonoBehaviour
 
     private void OnBuyBtnClicked()
     {
-        bool result = TerritoryManager.Instance.TryTerritoryUnlock(this.GetComponentInParent<TerritoryZone>());
+        TerritoryZone zone = this.GetComponentInParent<TerritoryZone>();
+        bool result = TerritoryManager.Instance.TryTerritoryUnlock(zone);
 
         if (result) // 해금 성공 시
         {
@@ -88,18 +96,91 @@ public class TerritoryZoneLockUI : MonoBehaviour
             var dic = TerritoryManager.Instance.GetAllAdjacentZones(PlayerZoneDetector.GetCurrentZone());
             foreach (var pair in dic)
             {
-                TerritoryZone zone = pair.Value;
+                TerritoryZone adjZone = pair.Value;
 
-                if (zone.IsLocked)
+                if (adjZone.IsLocked)
                 {
-                    zone.TerritoryZoneUIManager.ApplyLockedState();
-                    zone.UpdateAdjacentZoneLayer();
+                    adjZone.TerritoryZoneUIManager.ApplyLockedState();
+                    adjZone.UpdateAdjacentZoneLayer();
                 }
             }
+        }
+        else // 해금 실패 (골드 부족)
+        {
+            if (zone != null)
+            {
+                PlayerWallet wallet = FindAnyObjectByType<PlayerWallet>();
+                if (wallet != null)
+                {
+                    int required = (int)zone.TerritoryZoneData.RequireGold;
+                    int current = wallet.GetBalance(CurrencyType.Gold);
+                    int insufficient = required - current;
 
+                    StartCoroutine(ShowInsufficientGoldUI(insufficient));
+                }
+            }
         }
 
         IsZoomInClicked = false;
+    }
+
+    /// <summary>
+    /// 골드 부족 연출 (색상 변경, 부족액 표시, 흔들기, 자동 종료)
+    /// </summary>
+    private IEnumerator ShowInsufficientGoldUI(int insufficientAmount)
+    {
+        // 1. 가격 텍스트 빨간색으로
+        if (priceTMP != null)
+        {
+            priceTMP.color = Color.red;
+        }
+
+        // 2. 부족 텍스트 표시
+        if (insufficientGoldText != null)
+        {
+            insufficientGoldText.text = $"{insufficientAmount}골드가 부족합니다";
+            insufficientGoldText.gameObject.SetActive(true);
+        }
+
+        // 3. 버튼 흔들기 (DoTween)
+        if (buyBtn != null)
+        {
+            buyBtn.transform.DOShakePosition(0.5f, new Vector3(10f, 0, 0), 10, 90f);
+        }
+
+        // 4. 1초 대기
+        yield return new WaitForSeconds(1f);
+
+        // 5. UI 꺼기
+        if (insufficientGoldText != null)
+        {
+            insufficientGoldText.gameObject.SetActive(false);
+        }
+
+        // 6. 가격 텍스트 원래 색상으로
+        if (priceTMP != null)
+        {
+            priceTMP.color = originalPriceColor;
+        }
+
+        // 7. 상태 초기화 및 모든 UI 꺼기 (뒤로가기 버튼 않 누르면 자동 종료)
+        HideAllUI();
+    }
+
+    /// <summary>
+    /// 모든 UI 제거 및 카메라 원상태로
+    /// </summary>
+    private void HideAllUI()
+    {
+        FocusingIconUI(false);
+        FocusingImageUI(false);
+        buyBtn.gameObject.SetActive(false);
+        UnLockUI();
+        IsZoomInClicked = false;
+
+        // 카메라 및 줌 상태 초기화
+        TerritoryDirectionManager.Instance?.ResetBackClicked(
+            this.GetComponentInParent<TerritoryZone>(), false);
     }
 
     public void BuyBtnAcitve(bool value)
