@@ -152,10 +152,10 @@ public class TerritoryZoneLockUI : MonoBehaviour
             insufficientGoldText.gameObject.SetActive(true);
         }
 
-        // 3. 버튼 흔들기 (DoTween)
+        // 3. 버튼 흔들기 (DoTween) - 회전으로만 흔들기 (위치 고정)
         if (buyBtn != null)
         {
-            buyBtn.transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness);
+            buyBtn.transform.DOShakeRotation(shakeDuration, new Vector3(0, 0, shakeStrength.x * 5f), shakeVibrato, shakeRandomness);
         }
 
         // 4. 1초 대기

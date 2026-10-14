@@ -57,6 +57,26 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 8f3ec3ce7bd580249890b6ee498ee67f, type: 3}
     - {fileID: 8300000, guid: bac8cf8f40b0569448f17bd454328ae3, type: 3}
     pitchRandom: 0.1
+  - type: 6
+    clip: {fileID: 8300000, guid: 1f9116216c6673a4cbf442efe443e26a, type: 3}
+    volume: 1
+    randomClips: []
+    pitchRandom: 0.05
+  - type: 7
+    clip: {fileID: 8300000, guid: 215f438b5af97a847a64054f89ca70c4, type: 3}
+    volume: 1
+    randomClips: []
+    pitchRandom: 0.05
+  - type: 8
+    clip: {fileID: 8300000, guid: 8d87fc9488e73b1479f1f666dac4f950, type: 3}
+    volume: 1
+    randomClips: []
+    pitchRandom: 0.05
+  - type: 9
+    clip: {fileID: 8300000, guid: 7a7fd4db971debd4eb902896dfd6d665, type: 3}
+    volume: 1
+    randomClips: []
+    pitchRandom: 0.05
   sceneBGMList:
   - sceneName: KJ_Scene
     bgm: 2
