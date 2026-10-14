@@ -43,6 +43,29 @@ public class DungeonSpring : DungeonBase
 
     public DungeonSpring4FMap[] Maps4F => maps4F;
 
+    [Header("공통")]
+    [SerializeField, Tooltip("층 도착 후 적 출몰까지 대기 시간 ( 초 )")]
+    private float enemySpawnDelay = 1f;
+
+    /// <summary>
+    /// 층 도착 후 enemySpawnDelay 초 뒤 출몰 - 대기 중 다른 맵으로 이동하면 취소
+    /// </summary>
+    public void SpawnAfterDelay(DungeonMap map, Action spawn)
+    {
+        StartCoroutine(SpawnDelayRoutine(map, spawn));
+    }
+
+    private IEnumerator SpawnDelayRoutine(DungeonMap map, Action spawn)
+    {
+        if (enemySpawnDelay > 0f)
+        {
+            yield return new WaitForSeconds(enemySpawnDelay);
+        }
+
+        if (CurrentMap != map) yield break;
+        spawn?.Invoke();
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -93,7 +116,7 @@ public class DungeonSpring1F
 
         SetPortalsActive(false);
 
-        SpawnSlimes();
+        dungeonSpring.SpawnAfterDelay(dungeonSpring.CurrentMap, SpawnSlimes);
     }
 
     /// <summary>
@@ -351,7 +374,7 @@ public class DungeonSpring3F
         }
 
         InitSeedTiles();
-        SpawnEnemies();
+        dungeonSpring.SpawnAfterDelay(map, SpawnEnemies);
     }
 
     /// <summary>
@@ -530,7 +553,7 @@ public class DungeonSpring4F
         current.Fountain.OnPurified += OnPurified;
         current.Fountain.Begin();
 
-        SpawnInitialEnemies();
+        dungeonSpring.SpawnAfterDelay(map, SpawnInitialEnemies);
     }
 
     /// <summary>
@@ -559,6 +582,8 @@ public class DungeonSpring4F
             Debug.LogError($"[DungeonSpring4F] {current.Map.MapID} 적 프리팹 / 출몰 위치 설정 필요");
             return;
         }
+
+        if (current.Fountain.IsPurified) return; //출몰 대기 중 정화 완료
 
         isSpawning = true;
 

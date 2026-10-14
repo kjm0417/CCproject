@@ -3992,6 +3992,7 @@ GameObject:
   - component: {fileID: 549562188}
   - component: {fileID: 549562189}
   - component: {fileID: 549562190}
+  - component: {fileID: 549562191}
   m_Layer: 0
   m_Name: TerritoryManager
   m_TagString: Untagged
@@ -4065,6 +4066,22 @@ MonoBehaviour:
   - Seed: {fileID: 11400000, guid: b94e7bdc82527694593eaaad3f50c855, type: 2}
     CropPrefab: {fileID: 2798940810901604452, guid: 8ef1737cc210b624d900581eaad41ab8, type: 3}
   debugLog: 0
+--- !u!114 &549562191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549562186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afdeaacf563dbed4cb086114f2ef84fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundTilePreview
+  previewColor: {r: 1, g: 1, b: 1, a: 0.5}
+  pulseSpeed: 4
+  pulseAmount: 0.15
+  sortingOrderOffset: 1
 --- !u!1 &555069148 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5304877567646651685, guid: d7d9b69ea796b2b45929896586abd770, type: 3}
