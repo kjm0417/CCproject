@@ -348,11 +348,13 @@ MonoBehaviour:
   - {fileID: -886728743835265562, guid: 932fcadfcb71447448fecd0186bdc98c, type: 3}
   - {fileID: -886728743835265562, guid: 932fcadfcb71447448fecd0186bdc98c, type: 3}
   - {fileID: 2489966151012718206, guid: 509051e5e428856489f2e9120de2f57b, type: 3}
-  blossomStage: 4
-  blossomPrefab: {fileID: 4296189693744766715, guid: addb57dc3d572fd4b9baae3798489213, type: 3}
-  blossomPoints:
-  - {fileID: 7181607902969884286}
-  - {fileID: 9000135080830798550}
+  fruits:
+  - fruitName: "\uB9E4\uC2E4 \uC5F4\uB9E4"
+    stage: 4
+    prefab: {fileID: 4296189693744766715, guid: addb57dc3d572fd4b9baae3798489213, type: 3}
+    spawnPoints:
+    - {fileID: 7181607902969884286}
+    - {fileID: 9000135080830798550}
 --- !u!114 &-6701322306465851639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +373,9 @@ MonoBehaviour:
   jumpPower: 0.8
   jumpDuration: 0.5
   spinCount: 1
+  maxSplitCount: 5
+  splitSpacing: 0.2
+  splitRotationRange: 25
   dropMappings:
   - dropTable: {fileID: 11400000, guid: f9fa180fc64b02b449a7f5b11d7abc70, type: 2}
     prefab: {fileID: 7672621953354016798, guid: 581a10a44fe5153459c1af4a68caadc5, type: 3}

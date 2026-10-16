@@ -16,10 +16,12 @@ MonoBehaviour:
   RequireGold: 90
   IsSpecialZone: 0
   ResourceSpawnTable:
-  - ResourcePrefab: {fileID: 0}
-    SpawnLongTime: 0
-    MaxCount: 0
+  - ResourcePrefab: {fileID: 7417119400850013465, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+    MaxCount: 5
+    GridHeight: 1
+    GridWidth: 1
   NpcSlots: []
+  StructSlots: []
   AdjacentZoneId_Up: -1
   AdjacentZoneId_Down: 3
   AdjacentZoneId_Left: 8

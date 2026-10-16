@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// 2번 천둥번개
-/// 화면 어두워짐 + 랜덤 grid 빨간 테두리 점등
+/// 화면 어두워짐 + 랜덤 grid 묶음 ( strikeSize 칸 ) 빨간 테두리 점등
 /// -> 좌 / 우 한쪽부터 맑아지며 맑아진 칸부터 번개 ( 해당 칸 zoneDuration 동안 피해 )
 /// </summary>
 public class DragonThunderPattern : BossPattern
@@ -12,6 +12,8 @@ public class DragonThunderPattern : BossPattern
     [Header("대상")]
     [SerializeField] private BossArenaGrid grid;
     [SerializeField, Min(1)] private int strikeCount = 7;
+    [SerializeField, Tooltip("번개 1개가 덮는 칸 수 ( 2 x 2 = 4칸 )")]
+    private Vector2Int strikeSize = new Vector2Int(2, 2);
 
     [Header("어두워짐 연출 ( 선택 )")]
     [SerializeField, Tooltip("전장을 덮는 검은 스프라이트 - 맑아질 때 좌 / 우로 밀려남")]
@@ -26,6 +28,8 @@ public class DragonThunderPattern : BossPattern
     private Color bossDarkColor = new Color(0.2f, 0.2f, 0.28f, 1f);
 
     [Header("경고")]
+    [SerializeField, Tooltip("번개 지점 경고 박스 표시 ( 끄면 대기 시간만 유지 )")]
+    private bool showTelegraph;
     [SerializeField] private TelegraphStyle telegraphStyle = new TelegraphStyle();
     [SerializeField] private float warningDuration = 1.2f;
 
@@ -35,7 +39,43 @@ public class DragonThunderPattern : BossPattern
     [SerializeField] private float zoneDuration = 3f;
     [SerializeField] private float damage = 10f;
     [SerializeField] private float tickInterval = 1f;
-    [SerializeField] private GameObject lightningVfx;
+    [SerializeField, Tooltip("뇌격 지점에 생성할 이펙트 ( LightStrike_SFX )")]
+    private GameObject lightningVfx;
+    [SerializeField, Tooltip("이펙트 크기 배율")]
+    private float lightningVfxScale = 1f;
+    [SerializeField, Tooltip("영역 중심 기준 이펙트 위치 보정")]
+    private Vector2 lightningVfxOffset;
+
+    [Header("보스 입 기 모으기 ( 패턴 시작 )")]
+    [SerializeField, Tooltip("보스 입 위치")]
+    private Transform mouthPoint;
+    [SerializeField, Tooltip("패턴 시작하자마자 입에서 나오는 이펙트 ( LightStrike_SFX_4 ) - 중심이 입 번개 시작점")]
+    private GameObject chargeVfx;
+    [SerializeField, Tooltip("chargeVfx 스프라이트 안 구슬 중심 ( 프리팹 로컬 좌표 )")]
+    private Vector2 chargeVfxCenter = new Vector2(0f, 1.12f);
+    [SerializeField] private float chargeVfxScale = 1f;
+    [SerializeField, Tooltip("chargeVfx 이후 나오는 이펙트 ( LightStrike_SFX_3 )")]
+    private GameObject chargeBurstVfx;
+    [SerializeField, Tooltip("chargeVfx 시작 후 chargeBurstVfx 까지 대기")]
+    private float chargeBurstDelay = 0.5f;
+    [SerializeField, Tooltip("chargeBurstVfx 스프라이트 안 중심 ( 프리팹 로컬 좌표 )")]
+    private Vector2 chargeBurstVfxCenter = new Vector2(0.03f, 0.18f);
+    [SerializeField, Tooltip("chargeVfx 보다 조금 크게")]
+    private float chargeBurstVfxScale = 1.2f;
+
+    [Header("보스 입 번개 ( 기 모은 지점 -> 뇌격 지점 )")]
+    [SerializeField, Tooltip("입에서 뇌격 지점까지 뻗는 이펙트 ( LightStrike_SFX_2 )")]
+    private GameObject mouthBoltVfx;
+    [SerializeField, Tooltip("이펙트 스프라이트 안 번개 윗끝 ( 프리팹 로컬 좌표 )")]
+    private Vector2 mouthBoltTop = new Vector2(-2.82f, 5.27f);
+    [SerializeField, Tooltip("이펙트 스프라이트 안 번개 아래 끝 ( 프리팹 로컬 좌표 )")]
+    private Vector2 mouthBoltBottom = new Vector2(0.48f, -5.43f);
+    [SerializeField, Tooltip("번개 굵기 배율 ( 1 = 원본 굵기, 길이는 거리에 맞게 자동 )")]
+    private float mouthBoltWidth = 1f;
+
+    [Header("이펙트 종료")]
+    [SerializeField, Tooltip("이펙트 애니 마지막 프레임 재생 후 사라지기까지 ( 0 = 바로 )")]
+    private float vfxHideDelay;
 
     [Header("번개 기본 연출 ( lightningVfx 없을 때 )")]
     [SerializeField, Tooltip("번개 순간 번쩍임 색")]
@@ -62,19 +102,33 @@ public class DragonThunderPattern : BossPattern
     {
         if (grid == null) yield break;
 
+        // 0. 입에서 기 모으기 ( 어두워짐과 동시 진행 )
+        chargeDone = false;
+        if (mouthPoint != null) StartSubRoutine(ChargeRoutine());
+        else chargeDone = true;
+
         // 1. 어두워짐 + 경고
         yield return Darken();
 
-        List<Vector2Int> cells = grid.GetRandomCells(strikeCount);
+        List<Vector2Int> cells = grid.GetRandomBlocks(strikeCount, strikeSize);
         List<BossTelegraph> telegraphs = new List<BossTelegraph>();
         foreach (Vector2Int cell in cells)
         {
-            BossTelegraph telegraph = CreateTelegraph(grid.GetCellShape(cell), telegraphStyle);
+            if (!showTelegraph)
+            {
+                telegraphs.Add(null);
+                continue;
+            }
+
+            BossTelegraph telegraph = CreateTelegraph(grid.GetBlockShape(cell, strikeSize), telegraphStyle);
             telegraph.SetVisible(true);
             telegraphs.Add(telegraph);
         }
 
         yield return new WaitForSeconds(warningDuration);
+
+        // 기 모으기 이펙트가 다 끝난 뒤 번개 시작
+        while (!chargeDone) yield return null;
 
         // 2. 한쪽부터 맑아지며 지나간 칸에 번개
         bool fromLeft = Random.value < 0.5f;
@@ -108,15 +162,24 @@ public class DragonThunderPattern : BossPattern
             {
                 if (struck[i]) continue;
 
-                float cellX = grid.CellToWorld(cells[i]).x;
+                ZoneShape shape = grid.GetBlockShape(cells[i], strikeSize);
+                float cellX = shape.Center.x;
                 bool passed = fromLeft ? cellX <= edgeX : cellX >= edgeX;
                 if (!passed) continue;
 
                 struck[i] = true;
                 remain--;
-                telegraphs[i].Release();
-                SpawnDamageZone(grid.GetCellShape(cells[i]), null, damage, zoneDuration, tickInterval, lightningVfx);
-                if (lightningVfx == null) StartSubRoutine(StrikeRoutine(grid.GetCellShape(cells[i])));
+                if (telegraphs[i] != null) telegraphs[i].Release();
+                BossDamageZone zone = SpawnDamageZone(shape, null, damage, zoneDuration, tickInterval, lightningVfx);
+                if (zone.Vfx != null)
+                {
+                    zone.Vfx.transform.position = shape.Center + lightningVfxOffset;
+                    zone.Vfx.transform.localScale = Vector3.one * lightningVfxScale;
+                    float length = GetClipLength(zone.Vfx);
+                    if (length > 0f) zone.HideVfxAfter(length + vfxHideDelay);
+                }
+                if (lightningVfx == null) StartSubRoutine(StrikeRoutine(shape));
+                if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
             }
 
             yield return null;
@@ -152,6 +215,147 @@ public class DragonThunderPattern : BossPattern
         if (darkOverlay != null) SetOverlayAlpha(darkAlpha);
         SetBossDarkness(1f);
     }
+
+    #region 보스 입 기 모으기
+
+    private readonly List<GameObject> chargeVisuals = new List<GameObject>();
+    private bool chargeDone;
+
+    /// <summary> 입 번개 시작점 = 기 모으기 구슬 중심 </summary>
+    private Vector2 ChargePoint => mouthPoint.position;
+
+    /// <summary> chargeVfx -> chargeBurstDelay 후 chargeBurstVfx, 둘 다 클립 1회 재생 후 반납 </summary>
+    private IEnumerator ChargeRoutine()
+    {
+        float chargeLength = 0f;
+        float burstLength = 0f;
+
+        GameObject charge = SpawnChargeVisual(chargeVfx, chargeVfxCenter, chargeVfxScale, out chargeLength);
+        float elapsed = 0f;
+        while (elapsed < chargeBurstDelay)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        GameObject burst = SpawnChargeVisual(chargeBurstVfx, chargeBurstVfxCenter, chargeBurstVfxScale, out burstLength);
+        float end = Mathf.Max(chargeLength, chargeBurstDelay + burstLength);
+        while (elapsed < end)
+        {
+            elapsed += Time.deltaTime;
+            if (charge != null && elapsed >= chargeLength) ReleaseChargeVisual(ref charge);
+            yield return null;
+        }
+
+        ReleaseChargeVisual(ref charge);
+        ReleaseChargeVisual(ref burst);
+        chargeDone = true;
+    }
+
+    /// <param name="center">스프라이트 안 이펙트 중심 - 이 점이 ChargePoint 에 오도록 배치</param>
+    /// <param name="length">클립 1회 재생 시간</param>
+    private GameObject SpawnChargeVisual(GameObject prefab, Vector2 center, float scale, out float length)
+    {
+        length = 0f;
+        if (prefab == null) return null;
+
+        Vector3 pos = ChargePoint - center * scale;
+        GameObject go = ObjectPoolManager.Spawn(prefab, pos, Quaternion.identity);
+        go.transform.localScale = Vector3.one * scale;
+        chargeVisuals.Add(go);
+
+        length = GetClipLength(go) + vfxHideDelay;
+        return go;
+    }
+
+    /// <summary> 이펙트 애니 1회 재생 시간 ( 풀 재활성화 시 Animator 는 처음부터 재생 ) </summary>
+    private static float GetClipLength(GameObject go)
+    {
+        Animator animator = go != null ? go.GetComponent<Animator>() : null;
+        if (animator == null || animator.runtimeAnimatorController == null) return 0f;
+
+        float length = 0f;
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        {
+            length = Mathf.Max(length, clip.length);
+        }
+        return length;
+    }
+
+    private void ReleaseChargeVisual(ref GameObject go)
+    {
+        if (go == null) return;
+        chargeVisuals.Remove(go);
+        ObjectPoolManager.Despawn(go);
+        go = null;
+    }
+
+    private void ClearChargeVisuals()
+    {
+        foreach (GameObject go in chargeVisuals)
+        {
+            if (go != null) ObjectPoolManager.Despawn(go);
+        }
+        chargeVisuals.Clear();
+        chargeDone = true;
+    }
+
+    #endregion
+
+    #region 보스 입 번개
+
+    private readonly List<GameObject> mouthBolts = new List<GameObject>();
+
+    /// <summary>
+    /// 이펙트의 윗끝 -> 아래 끝 ( mouthBoltTop -> mouthBoltBottom ) 을 입 -> target 에 맞춤
+    /// 부모 : 입 위치, -Y 가 target 방향, Y 스케일 = 거리 / 자식 : 윗끝 -> 아래 끝을 부모 (0,0) -> (0,-1) 로 정규화
+    /// </summary>
+    private IEnumerator MouthBoltRoutine(Vector2 target)
+    {
+        Vector2 mouth = ChargePoint;
+        Vector2 dir = target - mouth;
+        Vector2 local = mouthBoltBottom - mouthBoltTop;
+        if (dir.sqrMagnitude < 0.0001f || local.sqrMagnitude < 0.0001f) yield break;
+
+        GameObject pivot = new GameObject("MouthBolt");
+        pivot.transform.SetPositionAndRotation(mouth, Quaternion.Euler(0f, 0f, Vector2.SignedAngle(Vector2.down, dir)));
+        pivot.transform.localScale = new Vector3(local.magnitude * mouthBoltWidth, dir.magnitude, 1f);
+        mouthBolts.Add(pivot);
+
+        float k = 1f / local.magnitude;
+        Quaternion childRot = Quaternion.Euler(0f, 0f, Vector2.SignedAngle(local, Vector2.down));
+        GameObject bolt = ObjectPoolManager.Spawn(mouthBoltVfx, pivot.transform.position, pivot.transform.rotation, pivot.transform);
+        bolt.transform.localRotation = childRot;
+        bolt.transform.localScale = Vector3.one * k;
+        bolt.transform.localPosition = childRot * (-(Vector3)mouthBoltTop * k);
+
+        yield return new WaitForSeconds(GetClipLength(bolt) + vfxHideDelay);
+        ReleaseMouthBolt(pivot);
+    }
+
+    private void ReleaseMouthBolt(GameObject pivot)
+    {
+        if (pivot == null) return;
+        mouthBolts.Remove(pivot);
+
+        // 이펙트는 풀 반납 후 부모 제거
+        for (int i = pivot.transform.childCount - 1; i >= 0; i--)
+        {
+            ObjectPoolManager.Despawn(pivot.transform.GetChild(i).gameObject);
+        }
+        Destroy(pivot);
+    }
+
+    private void ClearMouthBolts()
+    {
+        for (int i = mouthBolts.Count - 1; i >= 0; i--)
+        {
+            ReleaseMouthBolt(mouthBolts[i]);
+        }
+        mouthBolts.Clear();
+    }
+
+    #endregion
 
     #region 번개 기본 연출
 
@@ -321,5 +525,7 @@ public class DragonThunderPattern : BossPattern
         HideOverlay();
         RestoreBoss();
         ClearStrikeVisuals();
+        ClearMouthBolts();
+        ClearChargeVisuals();
     }
 }

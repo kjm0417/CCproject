@@ -14,6 +14,7 @@ public class BossDamageZone : MonoBehaviour
     private float endTime;
     private float nextHitTime;
     private GameObject vfx;
+    private float vfxEndTime = float.MaxValue;
 
     public static BossDamageZone Spawn(BossBase owner, ZoneShape shape, ZoneShape hole, float damage, float duration, float tickInterval, GameObject vfxPrefab)
     {
@@ -38,6 +39,13 @@ public class BossDamageZone : MonoBehaviour
     }
 
     public bool IsAlive => this != null && Time.time < endTime;
+    public GameObject Vfx => vfx;
+
+    /// <summary> 피해 영역은 유지한 채 이펙트만 delay 후 먼저 반납 </summary>
+    public void HideVfxAfter(float delay)
+    {
+        vfxEndTime = Time.time + delay;
+    }
 
     private void Update()
     {
@@ -45,6 +53,12 @@ public class BossDamageZone : MonoBehaviour
         {
             Release();
             return;
+        }
+
+        if (vfx != null && Time.time >= vfxEndTime)
+        {
+            ObjectPoolManager.Despawn(vfx);
+            vfx = null;
         }
 
         if (Time.time < nextHitTime || !owner.HasPlayer) return;
