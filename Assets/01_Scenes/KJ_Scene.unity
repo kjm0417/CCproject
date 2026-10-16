@@ -13907,6 +13907,71 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &1654361379
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 638876437869165681, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 638876437869165681, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2589099141673096503, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417119400850013465, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
+      propertyPath: m_Name
+      value: TestMuilberry_Stage5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8518b4104fa78e44cb01480e7baef0db, type: 3}
 --- !u!1 &1658445735
 GameObject:
   m_ObjectHideFlags: 0
@@ -19212,3 +19277,4 @@ SceneRoots:
   - {fileID: 9152335226908333729}
   - {fileID: 4196704532365007719}
   - {fileID: 367487589}
+  - {fileID: 1654361379}

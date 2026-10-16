@@ -5,8 +5,8 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 자연 생성물 - 복합 자원 오브젝트 ( 성장 단계가 존재 함)
-/// 성장 자체는 GrowthController가 담당, 여기서는 단계마다 드랍 / 피격 시 단계 리셋만 처리
+/// 복잡한 필드 오브젝트 - 단계 별 모습, 열매 성장 + 기능
+/// 성장 로직은 GrowthController에서 담당, 여기서는 단계별 모습 / 드랍 / 열매 표시를 처리
 /// </summary>
 public class NaturalComplexObject : DamageableFieldObject, IGrowable
 {
@@ -17,13 +17,13 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         {
             growth.CurrentStage = value;
             ApplyStageSprite(value);
-            RefreshBlossoms(value);
+            RefreshFruits(value);
         }
     }
     public virtual bool IsHarvestable => false;
 
     /// <summary>
-    /// 최대 단계 드랍까지 끝났는지 여부 - 저장/로드 시 최대 단계 중복 드랍 방지
+    /// 최대 단계에서 수확 후 돌아갈 단계 - 저장/로드 시 최대 단계 반복 방지
     /// </summary>
     public bool IsGrowthComplete
     {
@@ -39,11 +39,11 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     [SerializeField]
     List<FarmObjData> farmObjDatas = new();
 
-    [SerializeField] 
+    [SerializeField]
     private int maxGrowthStage = 5;    //마지막 단계
-   
-    [Tooltip("최대 단계 열매 수확 후 돌아갈 단계")]
-    [SerializeField] 
+
+    [Tooltip("최대 단계 수확 후 돌아갈 단계")]
+    [SerializeField]
     private int resetStage = 3;        //리셋할 단계
 
     [Header("단계별 모습")]
@@ -53,20 +53,37 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
     private SpriteRenderer spriteRenderer;
 
-    [Header("매화")]
-    [Tooltip("매화가 피는 단계")]
-    [SerializeField]
-    private int blossomStage = 4;
+    [System.Serializable]
+    private class FruitData
+    {
+        [Tooltip("열매 이름 (매화, 오디 등)")]
+        public string fruitName;
 
-    [Tooltip("포인트마다 생성할 매화 prefab")]
-    [SerializeField]
-    private GameObject blossomPrefab;
+        [Tooltip("열매가 생성될 단계")]
+        public int stage;
 
-    [Tooltip("매화 생성 위치 (나무 자식으로 빈 오브젝트 배치)")]
-    [SerializeField]
-    private List<Transform> blossomPoints = new();
+        [Tooltip("생성할 열매 프리팹")]
+        public GameObject prefab;
 
-    private readonly List<GameObject> spawnedBlossoms = new();
+        [Tooltip("열매 생성 위치 (나무 자식으로 빈 오브젝트 배치)")]
+        public List<Transform> spawnPoints = new();
+
+        [System.NonSerialized]
+        public List<GameObject> spawnedObjects = new();
+
+        public void Clear()
+        {
+            foreach (GameObject obj in spawnedObjects)
+            {
+                if (obj != null) ObjectPoolManager.Despawn(obj);
+            }
+            spawnedObjects.Clear();
+        }
+    }
+
+    [Header("열매")]
+    [SerializeField]
+    private List<FruitData> fruits = new();
 
     private GrowthController growth;
     private bool hasStarted; //Start 실행 여부 ( 풀 재사용 판정 )
@@ -82,7 +99,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         // growth.OnStageCompleted += HandleStageCompleted;
         #endregion
         growth.OnStageChanged += ApplyStageSprite;
-        growth.OnStageChanged += RefreshBlossoms;
+        growth.OnStageChanged += RefreshFruits;
 
         // 스프라이트는 자식(Sprite_Ani)에 있음
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -94,7 +111,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
         // 로드 시 GrowthStage/IsGrowthComplete가 Start 전에 채워지므로 그 단계부터 이어서 성장
         ApplyStageSprite(growth.CurrentStage);
-        RefreshBlossoms(growth.CurrentStage);
+        RefreshFruits(growth.CurrentStage);
         growth.StartGrowth();
         hasStarted = true;
     }
@@ -119,7 +136,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         base.OnDespawned();
 
         growth.Stop();
-        ClearBlossoms();
+        ClearFruits();
     }
 
     private IEnumerator BeginGrowthNextFrame()
@@ -127,7 +144,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         yield return null;
 
         ApplyStageSprite(growth.CurrentStage);
-        RefreshBlossoms(growth.CurrentStage);
+        RefreshFruits(growth.CurrentStage);
         growth.StartGrowth();
     }
 
@@ -138,6 +155,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     // private void HandleStageCompleted(FarmObjData farmObj)
     // {
     //     // 최대 단계(열매)는 자동 드랍하지 않고 상호작용 시 드랍
+    //
     //     if (growth.IsMaxStage) return;
     //
     //     if (dropper != null)
@@ -148,7 +166,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     #endregion
 
     /// <summary>
-    /// 최대 단계(열매) 수확 - HP 감소 없이 열매 드랍 후 resetStage로 되돌려 재성장
+    /// 최대 단계(열매) 수확 - HP 공격 후 수확 기능 + resetStage로 시간 초기화
     /// </summary>
     private void HarvestFruit()
     {
@@ -161,7 +179,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
         growth.ResetTo(resetStage);
     }
 
-    #region [이전] 피격마다 현재 단계 드랍 (최대 단계면 리셋)
+    #region [이전] 피격마다 현재 단계 드랍 (최대 단계 제외)
     // private void DropOnHit()
     // {
     //     FarmObjData stageData = growth.GetStageData(growth.CurrentStage);
@@ -178,11 +196,11 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     #endregion
 
     /// <summary>
-    /// HP 0(파괴) 시 현재 단계 드랍 (리셋 없음)
+    /// HP 0(파괴) 시 현재 단계 드랍 (파괴 드랍)
     /// </summary>
     private void DropOnDepleted()
     {
-        // dropMappings에 단계 그룹이 다 있고 pickOne 설정도 쓰기 위해 DropFinal 대신 DropOnHit 사용
+        // dropMappings의 단계 그룹을 보고 pickOne 규칙으로 랜덤 드랍 또는 DropFinal 또는 DropOnHit 처리
         FarmObjData stageData = growth.GetStageData(growth.CurrentStage);
         if (dropper != null && stageData != null)
         {
@@ -192,7 +210,7 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
 
     public override void TakeDamage(InteractionContext context)
     {
-        // 최대 단계: HP 공격 대신 열매 수확 + resetStage로 전환
+        // 최대 단계: HP 공격 후 수확 + resetStage로 돌아옴
         if (growth.IsMaxStage)
         {
             HarvestFruit();
@@ -243,48 +261,34 @@ public class NaturalComplexObject : DamageableFieldObject, IGrowable
     }
 
     /// <summary>
-    /// blossomStage일 때만 포인트마다 매화 생성, 다른 단계면 제거
+    /// 각 열매별로 stage일 때만 생성, 아니면 제거
     /// </summary>
-    private void RefreshBlossoms(int stage)
+    private void RefreshFruits(int stage)
     {
-        bool shouldBloom = stage == blossomStage && blossomPrefab != null;
-
-        if (!shouldBloom)
+        foreach (FruitData fruit in fruits)
         {
-            ClearBlossoms();
-            return;
-        }
-        #region [이전] Destroy
-        // if (!shouldBloom)
-        // {
-        //     foreach (GameObject blossom in spawnedBlossoms)
-        //     {
-        //         if (blossom != null) Destroy(blossom);
-        //     }
-        //     spawnedBlossoms.Clear();
-        //     return;
-        // }
-        #endregion
+            bool shouldSpawn = stage == fruit.stage && fruit.prefab != null;
 
-        if (spawnedBlossoms.Count > 0) return; // 이미 생성됨
+            if (!shouldSpawn || fruit.spawnedObjects.Count > 0)
+            {
+                fruit.Clear();
+                continue;
+            }
 
-        foreach (Transform point in blossomPoints)
-        {
-            if (point == null) continue;
-            spawnedBlossoms.Add(ObjectPoolManager.Spawn(blossomPrefab, point.position, Quaternion.identity, point));
-            #region [이전] Instantiate / Destroy
-            // spawnedBlossoms.Add(Instantiate(blossomPrefab, point.position, Quaternion.identity, point));
-            #endregion
+            foreach (Transform point in fruit.spawnPoints)
+            {
+                if (point == null) continue;
+                fruit.spawnedObjects.Add(ObjectPoolManager.Spawn(fruit.prefab, point.position, Quaternion.identity, point));
+            }
         }
     }
 
-    private void ClearBlossoms()
+    private void ClearFruits()
     {
-        foreach (GameObject blossom in spawnedBlossoms)
+        foreach (FruitData fruit in fruits)
         {
-            if (blossom != null) ObjectPoolManager.Despawn(blossom);
+            fruit.Clear();
         }
-        spawnedBlossoms.Clear();
     }
 
     protected override void OnDepleted()

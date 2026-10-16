@@ -1,0 +1,363 @@
+fileFormatVersion: 2
+guid: 696bf86d8a72d1642a28c3ccf0b28555
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3348783452980636060
+    second: LightStrike_Boss_0
+  - first:
+      213: -6794722060971143983
+    second: LightStrike_Boss_1
+  - first:
+      213: 1151076889310816442
+    second: LightStrike_Boss_2
+  - first:
+      213: -1566660133649221883
+    second: LightStrike_Boss_3
+  - first:
+      213: -501490549732305173
+    second: LightStrike_Boss_4
+  - first:
+      213: 8937186137578811235
+    second: LightStrike_Boss_5
+  - first:
+      213: 8929747216549491231
+    second: LightStrike_Boss_6
+  - first:
+      213: -7434518097182777670
+    second: LightStrike_Boss_7
+  - first:
+      213: -7110356555493292748
+    second: LightStrike_Boss_8
+  - first:
+      213: 5662328761629574804
+    second: LightStrike_Boss_9
+  - first:
+      213: -5761728063617528613
+    second: LightStrike_Boss_10
+  - first:
+      213: 4715400763557476224
+    second: LightStrike_Boss_11
+  - first:
+      213: 6776457727539572066
+    second: LightStrike_Boss_12
+  - first:
+      213: 7622846336553192190
+    second: LightStrike_Boss_13
+  - first:
+      213: 4110140266215291932
+    second: LightStrike_Boss_14
+  - first:
+      213: 2115811417362766516
+    second: LightStrike_Boss_15
+  - first:
+      213: -8655150006845268650
+    second: LightStrike_Boss_16
+  - first:
+      213: 3756933740423128191
+    second: LightStrike_Boss_17
+  - first:
+      213: 1529723127870557301
+    second: LightStrike_Boss_18
+  - first:
+      213: -6276983766424727985
+    second: LightStrike_Boss_19
+  - first:
+      213: 166732902973964386
+    second: LightStrike_Boss_20
+  - first:
+      213: -899783188553299074
+    second: LightStrike_Boss_21
+  - first:
+      213: 3511952147323774632
+    second: LightStrike_Boss_22
+  - first:
+      213: -3877040314757317276
+    second: LightStrike_Boss_23
+  - first:
+      213: 6856535468764550789
+    second: LightStrike_Boss_24
+  - first:
+      213: 7980567666996903709
+    second: LightStrike_Boss_25
+  - first:
+      213: 843316731666712085
+    second: LightStrike_Boss_26
+  - first:
+      213: 534459672662394248
+    second: LightStrike_Boss_27
+  - first:
+      213: -7603016291437590021
+    second: LightStrike_Boss_28
+  - first:
+      213: 3710175971007313305
+    second: LightStrike_Boss_29
+  - first:
+      213: -7031311524698714426
+    second: LightStrike_Boss_30
+  - first:
+      213: 6965227802644478197
+    second: LightStrike_Boss_31
+  - first:
+      213: 7964509258729828902
+    second: LightStrike_Boss_32
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LightStrike_Boss_0
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 0
+        width: 924
+        height: 1193
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 466126f213bb681d0800000000000000
+      internalID: -3348783452980636060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LightStrike_Boss_1
+      rect:
+        serializedVersion: 2
+        x: 1516
+        y: 0
+        width: 924
+        height: 1193
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dc0e48194c44b1a0800000000000000
+      internalID: -6794722060971143983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LightStrike_Boss_2
+      rect:
+        serializedVersion: 2
+        x: 2780
+        y: 0
+        width: 924
+        height: 566
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab86888055279ff00800000000000000
+      internalID: 1151076889310816442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LightStrike_Boss_3
+      rect:
+        serializedVersion: 2
+        x: 4092
+        y: 0
+        width: 924
+        height: 566
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5077212b8ea124ae0800000000000000
+      internalID: -1566660133649221883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: cc0d59625c5fdfe44a10151e7d3f2a51
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      LightStrike_Boss_0: -3348783452980636060
+      LightStrike_Boss_1: -6794722060971143983
+      LightStrike_Boss_10: -5761728063617528613
+      LightStrike_Boss_11: 4715400763557476224
+      LightStrike_Boss_12: 6776457727539572066
+      LightStrike_Boss_13: 7622846336553192190
+      LightStrike_Boss_14: 4110140266215291932
+      LightStrike_Boss_15: 2115811417362766516
+      LightStrike_Boss_16: -8655150006845268650
+      LightStrike_Boss_17: 3756933740423128191
+      LightStrike_Boss_18: 1529723127870557301
+      LightStrike_Boss_19: -6276983766424727985
+      LightStrike_Boss_2: 1151076889310816442
+      LightStrike_Boss_20: 166732902973964386
+      LightStrike_Boss_21: -899783188553299074
+      LightStrike_Boss_22: 3511952147323774632
+      LightStrike_Boss_23: -3877040314757317276
+      LightStrike_Boss_24: 6856535468764550789
+      LightStrike_Boss_25: 7980567666996903709
+      LightStrike_Boss_26: 843316731666712085
+      LightStrike_Boss_27: 534459672662394248
+      LightStrike_Boss_28: -7603016291437590021
+      LightStrike_Boss_29: 3710175971007313305
+      LightStrike_Boss_3: -1566660133649221883
+      LightStrike_Boss_30: -7031311524698714426
+      LightStrike_Boss_31: 6965227802644478197
+      LightStrike_Boss_32: 7964509258729828902
+      LightStrike_Boss_4: -501490549732305173
+      LightStrike_Boss_5: 8937186137578811235
+      LightStrike_Boss_6: 8929747216549491231
+      LightStrike_Boss_7: -7434518097182777670
+      LightStrike_Boss_8: -7110356555493292748
+      LightStrike_Boss_9: 5662328761629574804
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

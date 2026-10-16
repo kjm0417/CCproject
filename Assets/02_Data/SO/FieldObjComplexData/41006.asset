@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdc5a1caf7398e64d98ea53771a18fb0, type: 3}
+  m_Name: 41006
+  m_EditorClassIdentifier: Assembly-CSharp::FieldComplexObjData
+  HP: 5
+  ExpReward: 10
+  RespawnTimeMin: 45
+  RespawnTimeMax: 60
+  ObjectID: 41005
+  ObjectName: "\uC624\uB514 \uB098\uBB34"
+  ObjectType: Tree
+  Description: 
+  InteractionRange: 1 * 2
+  CropID: 511005

@@ -346,6 +346,7 @@ public class DungeonSpring3F
 
     private DungeonSpring3FMap current; //현재 진행 중인 3층 맵
     private int plantedCount; //심은 타일 수
+    private readonly List<DungeonSeedTile> seedTiles = new List<DungeonSeedTile>(); //실제 사용 타일 ( 빈 칸 제외 / 미등록 시 맵 자식 자동 수집 )
 
     public DungeonSpring3F(DungeonSpring dungeonSpring)
     {
@@ -382,33 +383,41 @@ public class DungeonSpring3F
     /// </summary>
     private void Exit()
     {
-        if (current != null && current.SeedTiles != null)
+        foreach (DungeonSeedTile tile in seedTiles)
         {
-            foreach (DungeonSeedTile tile in current.SeedTiles)
-            {
-                if (tile != null)
-                {
-                    tile.OnPlanted -= OnTilePlanted;
-                }
-            }
+            tile.OnPlanted -= OnTilePlanted;
         }
 
+        seedTiles.Clear();
         current = null;
         plantedCount = 0;
     }
 
     private void InitSeedTiles()
     {
-        if (current.SeedTiles == null || current.SeedTiles.Length == 0)
+        if (current.SeedTiles != null)
+        {
+            foreach (DungeonSeedTile tile in current.SeedTiles)
+            {
+                if (tile != null) seedTiles.Add(tile);
+            }
+        }
+
+        //인스펙터 미등록 ( 빈 칸 ) - 맵 자식 타일 자동 수집
+        if (seedTiles.Count == 0 && current.Map != null)
+        {
+            seedTiles.AddRange(current.Map.GetComponentsInChildren<DungeonSeedTile>(true));
+            Debug.LogWarning($"[DungeonSpring3F] {current.Map.MapID} SeedTiles 미등록 - 맵 자식 타일 {seedTiles.Count}개 자동 사용");
+        }
+
+        if (seedTiles.Count == 0)
         {
             Debug.LogError($"[DungeonSpring3F] {current.Map.MapID} 씨앗 타일 설정 필요");
             return;
         }
 
-        foreach (DungeonSeedTile tile in current.SeedTiles)
+        foreach (DungeonSeedTile tile in seedTiles)
         {
-            if (tile == null) continue;
-
             tile.ResetState();
             tile.OnPlanted += OnTilePlanted;
         }
@@ -449,9 +458,9 @@ public class DungeonSpring3F
         tile.OnPlanted -= OnTilePlanted;
 
         plantedCount++;
-        Debug.Log($"[DungeonSpring3F] 씨앗 심기 {plantedCount}/{current.SeedTiles.Length}");
+        Debug.Log($"[DungeonSpring3F] 씨앗 심기 {plantedCount}/{seedTiles.Count}");
 
-        if (plantedCount >= current.SeedTiles.Length)
+        if (plantedCount >= seedTiles.Count)
         {
             OpenPortal();
         }

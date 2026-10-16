@@ -1,25 +1,19 @@
 fileFormatVersion: 2
-guid: 60db14a0310a39341878d8d347e538cc
+guid: 1868559577709eb478b8b7dce41f8135
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2455296736213878891
-    second: Move2_0
+      213: -5615301740586721416
+    second: Seed_Three-removebg-preview_0
   - first:
-      213: 5295367560769658385
-    second: Move2_1
+      213: 1298226711053400874
+    second: Seed_Three-removebg-preview_1
   - first:
-      213: -646517056497191475
-    second: Move2_2
+      213: 8023180237678489780
+    second: Seed_Three-removebg-preview_2
   - first:
-      213: -5569351817671470470
-    second: Move2_3
-  - first:
-      213: -2478356052322966577
-    second: Move2_4
-  - first:
-      213: 5323084035643961720
-    second: Move2_5
+      213: -2860855075553226979
+    second: Seed_Three-removebg-preview_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -141,13 +135,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Move2_0
+      name: Seed_Three-removebg-preview_0
       rect:
         serializedVersion: 2
-        x: 89
-        y: 248
-        width: 562
-        height: 312
+        x: 57
+        y: 695
+        width: 127
+        height: 261
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 597bbcb80a80dedd0800000000000000
-      internalID: -2455296736213878891
+      spriteID: 87f12bd61d07212b0800000000000000
+      internalID: -5615301740586721416
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Move2_1
+      name: Seed_Three-removebg-preview_2
       rect:
         serializedVersion: 2
-        x: 749
-        y: 84
-        width: 562
-        height: 476
+        x: 47
+        y: 357
+        width: 151
+        height: 273
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,20 +172,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 11e5dce8dbcec7940800000000000000
-      internalID: 5295367560769658385
+      spriteID: 4b0b2c3eaef085f60800000000000000
+      internalID: 8023180237678489780
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Move2_2
+      name: Seed_Three-removebg-preview_3
       rect:
         serializedVersion: 2
-        x: 1409
-        y: 0
-        width: 489
-        height: 560
+        x: 41
+        y: 53
+        width: 155
+        height: 228
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,52 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dc5f04a992c1707f0800000000000000
-      internalID: -646517056497191475
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Move2_3
-      rect:
-        serializedVersion: 2
-        x: 2295
-        y: 0
-        width: 104
-        height: 453
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a72148e8700b5b2b0800000000000000
-      internalID: -5569351817671470470
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Move2_5
-      rect:
-        serializedVersion: 2
-        x: 2973
-        y: 0
-        width: 64
-        height: 160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8717c1e3ab46fd940800000000000000
-      internalID: 5323084035643961720
+      spriteID: d1fc6cb57733c48d0800000000000000
+      internalID: -2860855075553226979
       vertices: []
       indices: 
       edges: []
@@ -254,7 +204,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c9b2fc345a834f04d8f5fc7099b724c2
+    spriteID: 23c4f705c70cc5647b478d6220770748
     internalID: 0
     vertices: []
     indices: 
@@ -264,12 +214,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Move2_0: -2455296736213878891
-      Move2_1: 5295367560769658385
-      Move2_2: -646517056497191475
-      Move2_3: -5569351817671470470
-      Move2_4: -2478356052322966577
-      Move2_5: 5323084035643961720
+      Seed_Three-removebg-preview_0: -5615301740586721416
+      Seed_Three-removebg-preview_1: 1298226711053400874
+      Seed_Three-removebg-preview_2: 8023180237678489780
+      Seed_Three-removebg-preview_3: -2860855075553226979
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
