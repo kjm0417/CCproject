@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uC0BD"
   ToolType: Shovel
   ToolGrade: common
-  Description: 
+  Description: "\uD759\uC744 \uD30C\uB294 \uAE30\uBCF8 \uC0BD"
   Power: 1.5
   CraftRecipeID: 61004
   Icon: {fileID: 57591053551863209, guid: 3d77d1c7fe894e648ac2bc7d8648a9a4, type: 3}

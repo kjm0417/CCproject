@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uACE1\uAD2D\uC774"
   ToolType: Pickaxe
   ToolGrade: common
-  Description: 
+  Description: "\uB2E8\uB2E8\uD55C \uBC14\uC704\uB97C \uCE90\uB294 \uAE30\uBCF8 \uACE1\uAD2D\uC774"
   Power: 1.5
   CraftRecipeID: 61001
   Icon: {fileID: -3577915740046469863, guid: d52368e18f3c7784f96472abf69d0102, type: 3}

@@ -31,3 +31,9 @@ MonoBehaviour:
     DropRate: 100
     MinCount: 2
     MaxCount: 2
+  - DropGroupID: 71003
+    ItemID: 11004
+    Item: {fileID: 0}
+    DropRate: 100
+    MinCount: 1
+    MaxCount: 2

@@ -269,5 +269,89 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":""
+  },
+  {
+    "ItemID":11004,
+    "ItemName":"철",
+    "ItemType":"재료 아이템",
+    "SubType":"",
+    "Description":"석탄 바위에서 가끔 나오는 철 덩어리. 도구 강화에 쓴다",
+    "MaxStack":99,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":21201,
+    "ItemName":"강화 곡괭이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철 날을 덧댄 곡괭이",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":22201,
+    "ItemName":"강화 도끼",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철 날로 벼린 도끼",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":25201,
+    "ItemName":"강화 칼",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철로 다시 벼린 칼",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":23201,
+    "ItemName":"강화 삽",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철판을 덧댄 삽",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":23202,
+    "ItemName":"강화 괭이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철 날 괭이",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":25202,
+    "ItemName":"강화 마법 지팡이",
+    "ItemType":"도구 아이템",
+    "SubType":"",
+    "Description":"철 고리로 마력을 붙잡아 둔 지팡이",
+    "MaxStack":1,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
   }
 ]

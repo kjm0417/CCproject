@@ -46,6 +46,13 @@ public class RecipeData : ScriptableObject
     public CraftLifeType LifeType;
     [Tooltip("Spring / Summer / Autumn / Winter / All")]
     public string Season;
+    [Tooltip("강화 레시피: 보유해야 하는 기존 도구 ID. 제작 완료 시 이 도구가 결과물로 교체된다")]
+    public string RequiredToolID;
+
+    /// <summary>
+    /// 강화 레시피인지 (기존 도구 보유 필요 + 완료 시 교체)
+    /// </summary>
+    public bool IsUpgrade => !string.IsNullOrEmpty(RequiredToolID);
 
     /// <summary>
     /// 결과물이 도구인지 (ID 체계: 첫째 자리 2 = 도구)

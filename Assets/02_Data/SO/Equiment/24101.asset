@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uB09A\uC2EF\uB300"
   ToolType: FishingRod
   ToolGrade: common
-  Description: 
+  Description: "\uBB3C\uAC00\uC5D0\uC11C \uC4F0\uB294 \uB09A\uC2EF\uB300"
   Power: 1
-  CraftRecipeID: 61006
+  CraftRecipeID: 
   Icon: {fileID: 0}

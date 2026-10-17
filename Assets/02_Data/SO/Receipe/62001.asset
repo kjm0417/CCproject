@@ -22,3 +22,4 @@ MonoBehaviour:
     Count: 1
   LifeType: 0
   Season: All
+  RequiredToolID: 

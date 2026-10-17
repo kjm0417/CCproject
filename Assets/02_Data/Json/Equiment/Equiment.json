@@ -4,7 +4,7 @@
     "ToolName":"곡괭이",
     "ToolType":"Pickaxe",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"단단한 바위를 캐는 기본 곡괭이",
     "Power":1.5,
     "CraftRecipeID":61001
   },
@@ -13,7 +13,7 @@
     "ToolName":"도끼",
     "ToolType":"Axe",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"나무를 베는 기본 도끼",
     "Power":1.5,
     "CraftRecipeID":61002
   },
@@ -22,7 +22,7 @@
     "ToolName":"삽",
     "ToolType":"Shovel",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"흙을 파는 기본 삽",
     "Power":1.5,
     "CraftRecipeID":61004
   },
@@ -31,7 +31,7 @@
     "ToolName":"칼",
     "ToolType":"Sword",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"몬스터를 상대하는 기본 칼",
     "Power":2,
     "CraftRecipeID":61003
   },
@@ -40,7 +40,7 @@
     "ToolName":"괭이",
     "ToolType":"Hoe",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"밭을 가는 기본 괭이",
     "Power":1.5,
     "CraftRecipeID":61005
   },
@@ -49,17 +49,71 @@
     "ToolName":"낚싯대",
     "ToolType":"FishingRod",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"물가에서 쓰는 낚싯대",
     "Power":1,
-    "CraftRecipeID":61006
+    "CraftRecipeID":0
   },
   {
     "ToolID":25102,
     "ToolName":"마법 지팡이",
     "ToolType":"Staff",
     "ToolGrade":"common",
-    "Description":"",
+    "Description":"매실 기운이 깃든 나무 지팡이",
     "Power":2,
     "CraftRecipeID":61007
+  },
+  {
+    "ToolID":21201,
+    "ToolName":"강화 곡괭이",
+    "ToolType":"Pickaxe",
+    "ToolGrade":"uncommon",
+    "Description":"철 날을 덧댄 곡괭이. 바위가 더 잘 깨진다",
+    "Power":3,
+    "CraftRecipeID":61101
+  },
+  {
+    "ToolID":22201,
+    "ToolName":"강화 도끼",
+    "ToolType":"Axe",
+    "ToolGrade":"uncommon",
+    "Description":"철 날로 벼린 도끼. 나무를 더 빨리 벤다",
+    "Power":3,
+    "CraftRecipeID":61102
+  },
+  {
+    "ToolID":25201,
+    "ToolName":"강화 칼",
+    "ToolType":"Sword",
+    "ToolGrade":"uncommon",
+    "Description":"철로 다시 벼린 칼. 더 깊이 벤다",
+    "Power":4,
+    "CraftRecipeID":61103
+  },
+  {
+    "ToolID":23201,
+    "ToolName":"강화 삽",
+    "ToolType":"Shovel",
+    "ToolGrade":"uncommon",
+    "Description":"철판을 덧댄 삽. 단단한 흙도 잘 판다",
+    "Power":3,
+    "CraftRecipeID":61104
+  },
+  {
+    "ToolID":23202,
+    "ToolName":"강화 괭이",
+    "ToolType":"Hoe",
+    "ToolGrade":"uncommon",
+    "Description":"철 날 괭이. 밭을 더 넓고 고르게 간다",
+    "Power":3,
+    "CraftRecipeID":61105
+  },
+  {
+    "ToolID":25202,
+    "ToolName":"강화 마법 지팡이",
+    "ToolType":"Staff",
+    "ToolGrade":"uncommon",
+    "Description":"철 고리로 마력을 붙잡아 둔 지팡이",
+    "Power":4,
+    "CraftRecipeID":61106
   }
 ]

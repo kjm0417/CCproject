@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c572c4a219e0bd4e8b63d6227b81d14, type: 3}
+  m_Name: 11004
+  m_EditorClassIdentifier: Assembly-CSharp::InvenItemData
+  ItemID: 11004
+  ItemName: "\uCCA0"
+  Icon: {fileID: 0}
+  ItemType: "\uC7AC\uB8CC \uC544\uC774\uD15C"
+  SubType: 
+  Description: "\uC11D\uD0C4 \uBC14\uC704\uC5D0\uC11C \uAC00\uB054 \uB098\uC624\uB294
+    \uCCA0 \uB369\uC5B4\uB9AC. \uB3C4\uAD6C \uAC15\uD654\uC5D0 \uC4F4\uB2E4"
+  MaxStack: 99
+  SellPrice: 0
+  MinBuyGold: 0
+  MaxBuyGold: 0
+  BuyDiamond: 0
+  HungerRecovery: 0

@@ -10,17 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 742956056c5ac994ca6b466617bf20b9, type: 3}
-  m_Name: 61006
+  m_Name: 61101
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
-  CraftRecipeID: 61006
-  ResultItemID: 24101
+  CraftRecipeID: 61101
+  ResultItemID: 21201
   ResultCount: 1
   CraftFacilityID: 42003
-  CraftTimeSec: 12
+  CraftTimeSec: 30
   Materials:
   - ItemID: 11001
-    Count: 3
-  - ItemID: 11002
-    Count: 1
-  LifeType: 3
+    Count: 5
+  - ItemID: 11004
+    Count: 4
+  - ItemID: 11003
+    Count: 2
+  LifeType: 1
   Season: Spring
+  RequiredToolID: 21101

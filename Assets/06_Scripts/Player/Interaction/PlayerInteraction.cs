@@ -416,7 +416,8 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
             InvenItemData item = inventory.Slots[i].Item;
             if (item == null) continue;
 
-            if (!string.IsNullOrEmpty(itemId) && item.ItemID == itemId) return true;
+            // 강화 도구도 같은 종류로 인정 (21201 -> 21101)
+            if (!string.IsNullOrEmpty(itemId) && ToolItemIds.IsSameTool(item.ItemID, itemId)) return true;
             if (!string.IsNullOrEmpty(itemName) && item.ItemName == itemName) return true;
         }
 

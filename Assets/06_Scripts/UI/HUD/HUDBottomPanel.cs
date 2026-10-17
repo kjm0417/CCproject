@@ -582,10 +582,12 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private ToolType ResolveToolType(InvenItemData item)
     {
         if (item == null) return ToolType.None;
-        if (item.ItemID == swordItemId || item.ItemName == "칼") return ToolType.Sword;
-        if (item.ItemID == axeItemId || item.ItemName == "도끼") return ToolType.Axe;
-        if (item.ItemID == pickaxeItemId || item.ItemName == "곡괭이") return ToolType.Pickaxe;
-        if (item.ItemID == shovelItemId || item.ItemName == "삽") return ToolType.Shovel;
+        // 강화 도구도 같은 종류로 판정 (21201 -> 21101)
+        string baseId = ToolItemIds.ToBaseId(item.ItemID);
+        if (baseId == swordItemId || item.ItemName == "칼") return ToolType.Sword;
+        if (baseId == axeItemId || item.ItemName == "도끼") return ToolType.Axe;
+        if (baseId == pickaxeItemId || item.ItemName == "곡괭이") return ToolType.Pickaxe;
+        if (baseId == shovelItemId || item.ItemName == "삽") return ToolType.Shovel;
         return ToolType.None;
     }
 
@@ -718,22 +720,28 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     {
         if (item == null) return null;
 
-        if (item.ItemID == swordItemId || item.ItemName == "칼")
+        // 아이템 ID별 전용 아이콘 (Resources/ItemIcons/{ItemID}) 우선
+        Sprite idIcon = Resources.Load<Sprite>(ToolItemIds.IconPath(item.ItemID));
+        if (idIcon != null) return idIcon;
+
+        // 전용 아이콘 없는 강화 도구는 기본 도구 아이콘 사용
+        string baseId = ToolItemIds.ToBaseId(item.ItemID);
+        if (baseId == swordItemId || item.ItemName == "칼")
         {
             return GetIcon(swordIcon, "Equipment/Sword");
         }
 
-        if (item.ItemID == axeItemId || item.ItemName == "도끼")
+        if (baseId == axeItemId || item.ItemName == "도끼")
         {
             return GetIcon(axeIcon, "Equipment/Axe");
         }
 
-        if (item.ItemID == pickaxeItemId || item.ItemName == "곡괭이")
+        if (baseId == pickaxeItemId || item.ItemName == "곡괭이")
         {
             return GetIcon(pickaxeIcon, "Equipment/Pick");
         }
 
-        if (item.ItemID == shovelItemId || item.ItemName == "삽")
+        if (baseId == shovelItemId || item.ItemName == "삽")
         {
             return GetIcon(shovelIcon, "Equipment/Shovel");
         }
