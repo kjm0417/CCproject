@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 
 [Serializable]
-public class RecipeDTO
+public class CookingRecipeDTO
 {
     public int CraftRecipeID;
     public int ResultItemID;
@@ -21,7 +21,7 @@ public class RecipeDTO
     public int Material3Count;
 }
 
-public static class RecipeDataImporter
+public static class CookingRecipeDataImporter
 {
     public const string JsonPath = "Assets/02_Data/Json/Receipe/Receipe.json";
     public const string RecipeFolder = "Assets/02_Data/SO/Recipes";
@@ -31,12 +31,12 @@ public static class RecipeDataImporter
     [Serializable]
     private class RecipeRows
     {
-        public List<RecipeDTO> items;
+        public List<CookingRecipeDTO> items;
     }
 
     private class ImportEntry
     {
-        public RecipeDTO Row;
+        public CookingRecipeDTO Row;
         public InvenItemData Result;
         public List<RecipeIngredient> Ingredients;
     }
@@ -50,7 +50,7 @@ public static class RecipeDataImporter
         }
         catch (Exception exception)
         {
-            Debug.LogError($"[RecipeDataImporter] 가져오기 실패: {exception.Message}");
+            Debug.LogError($"[CookingRecipeDataImporter] 가져오기 실패: {exception.Message}");
         }
     }
 
@@ -66,7 +66,7 @@ public static class RecipeDataImporter
         var entries = new List<ImportEntry>();
 
         // 모든 행을 먼저 검증한다. 잘못된 재료를 조용히 빼서 더 싼 레시피를 만들지 않는다.
-        foreach (RecipeDTO row in data.items)
+        foreach (CookingRecipeDTO row in data.items)
         {
             if (row == null || row.CraftRecipeID <= 0)
                 throw new InvalidDataException("CraftRecipeID는 양수여야 합니다.");
@@ -89,20 +89,20 @@ public static class RecipeDataImporter
                 Result = FindItem(items, row.ResultItemID, row.CraftRecipeID),
                 Ingredients = ingredients
             });
-            ValidateAssetPath<RecipeData>(RecipePath(row.CraftRecipeID));
+            ValidateAssetPath<CookingRecipeData>(RecipePath(row.CraftRecipeID));
         }
         ValidateAssetPath<CookingData>(CookingAssetPath);
 
         EnsureFolder(RecipeFolder);
         EnsureFolder("Assets/02_Data/SO/Cooking");
-        var imported = new List<RecipeData>();
+        var imported = new List<CookingRecipeData>();
         foreach (ImportEntry entry in entries)
         {
             string path = RecipePath(entry.Row.CraftRecipeID);
-            RecipeData recipe = AssetDatabase.LoadAssetAtPath<RecipeData>(path);
+            CookingRecipeData recipe = AssetDatabase.LoadAssetAtPath<CookingRecipeData>(path);
             if (recipe == null)
             {
-                recipe = ScriptableObject.CreateInstance<RecipeData>();
+                recipe = ScriptableObject.CreateInstance<CookingRecipeData>();
                 AssetDatabase.CreateAsset(recipe, path);
             }
 
@@ -131,7 +131,7 @@ public static class RecipeDataImporter
         serialized.ApplyModifiedPropertiesWithoutUndo();
         EditorUtility.SetDirty(cooking);
         AssetDatabase.SaveAssets();
-        Debug.Log($"[RecipeDataImporter] 레시피 {imported.Count}개 갱신 완료 (전체 해금)");
+        Debug.Log($"[CookingRecipeDataImporter] 레시피 {imported.Count}개 갱신 완료 (전체 해금)");
         return cooking;
     }
 

@@ -24,7 +24,7 @@ public class CookingPanelUI : MonoBehaviour
     private PlayerCooking cooking;
     private bool initialized;
     private bool ownsSession;
-    public RecipeData SelectedRecipe { get; private set; }
+    public CookingRecipeData SelectedRecipe { get; private set; }
 
     private void Awake()
     {
@@ -96,7 +96,7 @@ public class CookingPanelUI : MonoBehaviour
         recipeSlots.Clear();
         SelectedRecipe = null;
         if (cookingData != null)
-            foreach (RecipeData recipe in cookingData.GetUnlockedRecipes(craftFacilityID))
+            foreach (CookingRecipeData recipe in cookingData.GetUnlockedRecipes(craftFacilityID))
             {
                 if (recipe.ResultItem == null) continue;
                 FoodSlotUI slot = Instantiate(recipeSlotPrefab, recipeContent);
@@ -107,7 +107,7 @@ public class CookingPanelUI : MonoBehaviour
         ResizeContent(recipeContent, recipeSlots.Count, false);
     }
 
-    public void SelectRecipe(RecipeData recipe)
+    public void SelectRecipe(CookingRecipeData recipe)
     {
         if (cooking != null && cooking.IsBusy) return;
         SelectedRecipe = recipe;

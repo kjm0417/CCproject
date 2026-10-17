@@ -18,7 +18,7 @@ public class CookingTimingMinigame : CookingMinigame
     private float position;
     private float targetStart;
 
-    public override void Begin(RecipeData recipe, Action<bool> onCompleted)
+    public override void Begin(CookingRecipeData recipe, Action<bool> onCompleted)
     {
         Cancel();
         if (overlay == null) CreateOverlay();
