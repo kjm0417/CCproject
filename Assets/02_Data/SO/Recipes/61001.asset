@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15a5cb8ed4d8d2d9724c9d179f29a47d, type: 3}
+  m_Name: 61001
+  m_EditorClassIdentifier: Assembly-CSharp::CookingRecipeData
+  CraftRecipeID: 61001
+  ResultItem: {fileID: 11400000, guid: 3cebf7874d09d804ea3ef295b9fd9124, type: 2}
+  ResultCount: 1
+  CraftFacilityID: 42003
+  CraftTimeSec: 10
+  Ingredients:
+  - Item: {fileID: 11400000, guid: 47aa57cc8972cf8489ebca0636c6869c, type: 2}
+    Count: 2
+  - Item: {fileID: 11400000, guid: 60d1cacc84328f049be9966b6a5e72bb, type: 2}
+    Count: 3

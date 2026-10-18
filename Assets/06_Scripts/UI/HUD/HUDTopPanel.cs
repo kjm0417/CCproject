@@ -19,6 +19,9 @@ public class HUDTopPanel : PlayerHUDPanelBase
     [SerializeField] private TMP_Text txtHealth;
     [SerializeField] private TMP_Text txtHunger;
 
+    [Header("Currency")]
+    [SerializeField] private TMP_Text txtGold;
+
     [Header("Skill Window")]
     [SerializeField] private GameObject skillTreeCanvasPrefab;
 
@@ -74,6 +77,11 @@ public class HUDTopPanel : PlayerHUDPanelBase
             Context.Vitals.OnHungerChanged += RefreshVitals;
             Context.Vitals.OnHungerTierChanged += HandleHungerTierChanged;
         }
+
+        if (Context.Wallet != null)
+        {
+            Context.Wallet.OnChanged += HandleCurrencyChanged;
+        }
     }
 
     protected override void UnsubscribeEvents()
@@ -93,12 +101,18 @@ public class HUDTopPanel : PlayerHUDPanelBase
             Context.Vitals.OnHungerChanged -= RefreshVitals;
             Context.Vitals.OnHungerTierChanged -= HandleHungerTierChanged;
         }
+
+        if (Context.Wallet != null)
+        {
+            Context.Wallet.OnChanged -= HandleCurrencyChanged;
+        }
     }
 
     protected override void Refresh()
     {
         RefreshProgression();
         RefreshVitals();
+        RefreshGold();
     }
 
     private void HandleLevelUp(int level)
@@ -109,6 +123,25 @@ public class HUDTopPanel : PlayerHUDPanelBase
     private void HandleHungerTierChanged(HungerTier tier)
     {
         RefreshVitals();
+    }
+
+    private void HandleCurrencyChanged(CurrencyType type)
+    {
+        if (type == CurrencyType.Gold)
+            RefreshGold();
+    }
+
+    private void RefreshGold()
+    {
+        PlayerWallet wallet = Context != null ? Context.Wallet : null;
+        if (wallet == null)
+        {
+            SetText(txtGold, "0");
+            return;
+        }
+
+        int gold = wallet.GetBalance(CurrencyType.Gold);
+        SetText(txtGold, gold.ToString("N0"));
     }
 
     private void RefreshProgression()

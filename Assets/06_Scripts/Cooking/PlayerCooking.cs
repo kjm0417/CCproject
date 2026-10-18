@@ -24,7 +24,9 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
     private bool isCompleting;
 
     public event Action OnCookingChanged;
+    public event Action<CookingRecipeData> OnCookSuccess;
     public bool IsBusy => pendingRecipe != null;
+    public bool IsAutomatic => isAutomatic && IsBusy;
     public string LastMessage { get; private set; } = string.Empty;
     public CookingData Data => cookingData;
 
@@ -98,6 +100,7 @@ public class PlayerCooking : MonoBehaviour, IPlayerComponent
                 int count = GetSuccessCount(recipe);
                 successes[recipe.CraftRecipeID] = count == int.MaxValue ? count : count + 1;
                 LastMessage = $"{recipe.ResultItem.ItemName} {recipe.ResultCount}개 완성!";
+                OnCookSuccess?.Invoke(recipe);
             }
         }
         finally

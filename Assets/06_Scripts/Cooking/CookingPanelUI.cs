@@ -24,6 +24,7 @@ public class CookingPanelUI : MonoBehaviour
     private PlayerCooking cooking;
     private bool initialized;
     private bool ownsSession;
+    public event System.Action OnPanelClosed;
     public CookingRecipeData SelectedRecipe { get; private set; }
 
     private void Awake()
@@ -57,13 +58,17 @@ public class CookingPanelUI : MonoBehaviour
     public void Open(PlayerContext player, int facilityID = 0)
     {
         craftFacilityID = facilityID;
-        Initialize(player);
-        gameObject.SetActive(true);
+        gameObject.SetActive(true);   // Awake가 먼저 실행되어 미리보기 자식을 숨긴다.
+        Initialize(player);           // 그 뒤에 BuildRecipes로 실제 슬롯을 생성한다.
     }
 
     public void Close() => gameObject.SetActive(false);
+
+    // 외부 스테이션이 세션을 이어받을 때 호출. UI가 닫혀도 요리를 취소하지 않는다.
+    public void DetachSession() => ownsSession = false;
+
     private void OnEnable() { if (initialized) { Subscribe(); Refresh(); } }
-    private void OnDisable() { Unsubscribe(); CancelSession(); }
+    private void OnDisable() { Unsubscribe(); CancelSession(); OnPanelClosed?.Invoke(); }
 
     private void Subscribe()
     {
