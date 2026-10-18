@@ -16,6 +16,15 @@ public class ShopObject : MonoBehaviour, IInteractable
     private ShopPanelUI shopUI;
     private bool waitingForShopkeeper;
 
+    /// <summary>
+    /// 청설모 / 상점 감지 영역 연결 (상점 섬 해금으로 청설모가 생성될 때 호출)
+    /// </summary>
+    public void Connect(ShopkeeperAI keeper, ShopArea area)
+    {
+        shopkeeper = keeper;
+        shopArea = area;
+    }
+
     // ── IInteractable ──
 
     public bool CanInteract(InteractionContext context)

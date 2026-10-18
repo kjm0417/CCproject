@@ -40,6 +40,8 @@ MonoBehaviour:
     KillGold: 5
   NpcSlots: []
   StructSlots:
+  - StructPrefab: {fileID: 3252388564846957997, guid: 1cf705cb83df3c8499731970cd8f38df, type: 3}
+    StructSpawnPos: {x: 2.35, y: 2.82}
   - StructPrefab: {fileID: 2548245190477398378, guid: 187a3926f509c0f4a9416dc7df9cd592, type: 3}
     StructSpawnPos: {x: 0, y: 1}
   AdjacentZoneId_Up: 9

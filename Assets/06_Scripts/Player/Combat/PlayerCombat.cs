@@ -55,6 +55,12 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
 
         nextAttackTime = Time.time + context.BaseData.AttackCooldown;
 
+        // 적중 여부와 상관없이 휘두르는 소리
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFXType.SwordSwing);
+        }
+
         Vector2 origin = attackOrigin.position;
         Vector2 facing = GetAttackFacingDirection();
         float range = context.Stats.AttackRange;

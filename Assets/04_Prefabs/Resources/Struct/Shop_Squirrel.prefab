@@ -71,6 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5637823229555236066}
+  - component: {fileID: 5277351298073977960}
   m_Layer: 0
   m_Name: Shop_Squirrel
   m_TagString: Untagged
@@ -97,6 +98,23 @@ Transform:
   - {fileID: 4360177421323571297}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5277351298073977960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548245190477398378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626c68cee25f8554598acb5552b5b8d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopkeeperLinker
+  shopkeeper: {fileID: 3013664596741839745}
+  shopArea: {fileID: 6570428398422409125}
+  shopStandPoint: {fileID: 7475973569007869293}
+  areaPadding: 1
+  standSampleDistance: 2
 --- !u!1 &3614786617381374897
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,6 +459,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8516cc737bde7be41b41e35d67c6dae8, type: 3}
+--- !u!114 &3013664596741839745 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1144955645867290321, guid: 8516cc737bde7be41b41e35d67c6dae8, type: 3}
+  m_PrefabInstance: {fileID: 2752012647968322896}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50a971869f5448faa5fd04600a9f5d5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5384012416272280385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7820155680118742545, guid: 8516cc737bde7be41b41e35d67c6dae8, type: 3}
