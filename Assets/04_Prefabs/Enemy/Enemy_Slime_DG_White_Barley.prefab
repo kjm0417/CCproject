@@ -116,9 +116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7314eb48e71b97146aac921263ba2d55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySlime
-  monsterData: {fileID: 11400000, guid: ba7b32e9b6112454f87068095e16e976, type: 2}
+  monsterData: {fileID: 11400000, guid: 28386e540b984fcdb5cadb96a31f960c, type: 2}
   despawnDelay: 1.5
-  monsterSlimeData: {fileID: 11400000, guid: 56d879f4de7d7f247baaa0d8fe5c8c0e, type: 2}
+  monsterSlimeData: {fileID: 11400000, guid: 7c6d7dd9db154272a013b5bbaa8b8737, type: 2}
 --- !u!114 &1039629948303043840
 MonoBehaviour:
   m_ObjectHideFlags: 0

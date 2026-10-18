@@ -2,20 +2,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 던전 2층 나무 뿌리 - 곡괭이로 requiredHits 횟수만큼 상호작용 시 비활성
+/// 던전 2층 나무 뿌리 - 도끼로 requiredHits 횟수만큼 상호작용 시 비활성
 /// 겹쳐진 뿌리는 가장 위에 그려진 뿌리부터 제거 가능 ( 아래 깔린 뿌리는 콜라이더 OFF -> 감지 X )
-/// 곡괭이 자동 변경은 PreferredToolType ( IToolInteractionTarget ) 으로 기존 PlayerInteraction 에서 처리
+/// 도끼 자동 변경은 PreferredToolType ( IToolInteractionTarget ) 으로 기존 PlayerInteraction 에서 처리
 /// </summary>
 public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget, IPoolable
 {
-    [SerializeField, Tooltip("곡괭이 상호작용 필요 횟수")]
+    [SerializeField, Tooltip("도끼 상호작용 필요 횟수")]
     private int requiredHits = 3;
     [SerializeField, Tooltip("true : 다른 뿌리에 덮여도 콜라이더 항상 ON ( 보스 자연의 부름 뿌리 등 )")]
     private bool keepColliderEnabled;
 
     private int hitCount;
 
-    public ToolType PreferredToolType => ToolType.Pickaxe; //감지 시 곡괭이 자동 변경
+    public ToolType PreferredToolType => ToolType.Axe; //감지 시 도끼 자동 변경
 
     private static readonly List<DungeonTreeRoot> activeRoots = new List<DungeonTreeRoot>(); //현재 활성화된 뿌리
 
@@ -54,11 +54,11 @@ public class DungeonTreeRoot : DungeonGimmickObject, IToolInteractionTarget, IPo
     }
 
     /// <summary>
-    /// 곡괭이일 때만 1회 카운트 - 필요 횟수 도달 시 비활성
+    /// 도끼일 때만 1회 카운트 - 필요 횟수 도달 시 비활성
     /// </summary>
     public override void Interact(InteractionContext context)
     {
-        if (!CanInteract(context) || context.ToolType != ToolType.Pickaxe) return;
+        if (!CanInteract(context) || context.ToolType != ToolType.Axe) return;
 
         hitCount++;
         if (hitCount >= requiredHits)
