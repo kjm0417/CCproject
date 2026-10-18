@@ -136,6 +136,26 @@ public abstract class BossBase : MonoBehaviour, IEnemyDamageable
 
     #endregion
 
+    #region 등장 연출
+
+    /// <summary> 등장 연출 중 - AI ( 패턴 ) 정지, 체력 UI 대기 </summary>
+    public bool IsIntroPlaying { get; private set; }
+
+    public void BeginIntro()
+    {
+        IsIntroPlaying = true;
+        CancelPattern();
+        if (aiAgent != null) aiAgent.enabled = false;
+    }
+
+    public void EndIntro()
+    {
+        IsIntroPlaying = false;
+        if (aiAgent != null && !isDead) aiAgent.enabled = true;
+    }
+
+    #endregion
+
     #region 스턴
 
     public void ApplyStun(float duration)

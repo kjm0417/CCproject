@@ -41,6 +41,19 @@ public class BossStunGimmick : MonoBehaviour
         if (boss != null) boss.OnStunEndedEvent -= ResetAll;
     }
 
+    /// <summary> 기믹 시도 중 - 플레이어가 구역 안에 있거나 진행도가 남아 있음 ( 스턴 종료 시 리셋 ) </summary>
+    public bool IsAttempting
+    {
+        get
+        {
+            foreach (BossActivationZone zone in zones)
+            {
+                if (zone != null && (zone.IsPlayerInside || zone.Progress > 0f)) return true;
+            }
+            return false;
+        }
+    }
+
     /// <summary> 구역 진행 추가 조건 - 기본은 항상 허용 </summary>
     protected virtual bool CanZoneProgress(BossActivationZone zone)
     {

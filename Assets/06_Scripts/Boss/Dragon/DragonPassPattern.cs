@@ -67,20 +67,43 @@ public class DragonPassPattern : BossPattern
         if (lanes.Count == 0) yield break;
 
         ZoneShape lane = lanes[Random.Range(0, lanes.Count)].Snapshot();
-        Vector2 up = lane.Up;
-        Vector2 top = lane.Center + up * lane.size.y * 0.5f;
-        Vector2 bottom = lane.Center - up * lane.size.y * 0.5f;
 
         // 1. 경고
         BossTelegraph telegraph = CreateTelegraph(lane, telegraphStyle);
         yield return telegraph.Blink(blinkCount, blinkOnTime, blinkOffTime);
         telegraph.Release();
 
-        // 2. 제자리 준비 동작
+        // 2. 제자리 준비 동작 + 3. 지나가기
+        yield return PassMotion(lane, true);
+
+        // 4. 제자리 복귀 + 페이드 인
+        ReturnHome();
+        if (reappearFadeDuration > 0f)
+        {
+            SetAlpha(0f);
+            float fade = 0f;
+            while (fade < reappearFadeDuration)
+            {
+                fade += Time.deltaTime;
+                SetAlpha(Mathf.Clamp01(fade / reappearFadeDuration));
+                yield return null;
+            }
+        }
+        SetAlpha(1f);
+    }
+
+    /// <summary> 제자리 준비 동작 후 구역 위 -> 아래로 이동 ( dealDamage : 지나간 부분 피해 ) </summary>
+    private IEnumerator PassMotion(ZoneShape lane, bool dealDamage)
+    {
+        Vector2 up = lane.Up;
+        Vector2 top = lane.Center + up * lane.size.y * 0.5f;
+        Vector2 bottom = lane.Center - up * lane.size.y * 0.5f;
+
+        // 제자리 준비 동작
         if (animator != null && !string.IsNullOrEmpty(passTrigger)) animator.SetTrigger(passTrigger);
         if (bossVisual != null && windupDuration > 0f) yield return new WaitForSeconds(windupDuration);
 
-        // 3. 지나가기 - 지나가는 프레임이 passDuration 동안 재생되도록
+        // 지나가기 - 지나가는 프레임이 passDuration 동안 재생되도록
         if (animator != null && passAnimLength > 0f && passDuration > 0f) animator.speed = passAnimLength / passDuration;
 
         Vector3 home = bossVisual != null ? bossVisual.position : (Vector3)top;
@@ -101,27 +124,36 @@ public class DragonPassPattern : BossPattern
             }
 
             // 위 -> 아래, 지나간 부분 ( top ~ head ) 만 피해
-            Vector2 head = Vector2.Lerp(top, bottom, t);
-            ZoneShape swept = ZoneShape.Fixed((top + head) * 0.5f, new Vector2(lane.size.x, lane.size.y * t), lane.Angle);
-            TryDamagePlayer(swept, damage, tickInterval, ref nextHitTime);
+            if (dealDamage)
+            {
+                Vector2 head = Vector2.Lerp(top, bottom, t);
+                ZoneShape swept = ZoneShape.Fixed((top + head) * 0.5f, new Vector2(lane.size.x, lane.size.y * t), lane.Angle);
+                TryDamagePlayer(swept, damage, tickInterval, ref nextHitTime);
+            }
 
             yield return null;
         }
+    }
 
-        // 4. 제자리 복귀 + 페이드 인
-        ReturnHome();
-        if (reappearFadeDuration > 0f)
+    /// <summary> 등장 연출용 - 첫 번째 구역으로 지나가기만 ( 경고 / 피해 / 복귀 X, 본체는 구역 아래 끝에 남음 ) </summary>
+    public IEnumerator PlayIntroPass()
+    {
+        if (lanes.Count == 0 || bossVisual == null) yield break;
+
+        yield return PassMotion(lanes[0].Snapshot(), false);
+        if (animator != null) animator.speed = 1f;
+    }
+
+    /// <summary> 등장 연출 종료 - Idle 로 전환 ( 위치는 연출에서 처리 ) </summary>
+    public void EndIntroPass()
+    {
+        if (animator != null)
         {
-            SetAlpha(0f);
-            float fade = 0f;
-            while (fade < reappearFadeDuration)
-            {
-                fade += Time.deltaTime;
-                SetAlpha(Mathf.Clamp01(fade / reappearFadeDuration));
-                yield return null;
-            }
+            animator.speed = 1f;
+            animator.ResetTrigger(passTrigger);
+            if (!string.IsNullOrEmpty(idleStateName)) animator.Play(idleStateName, 0, 0f);
         }
-        SetAlpha(1f);
+        moved = false;
     }
 
     private void ReturnHome()

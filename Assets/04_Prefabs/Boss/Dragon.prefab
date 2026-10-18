@@ -136,6 +136,7 @@ MonoBehaviour:
   darkenDuration: 0.5
   bossRenderers: []
   bossDarkColor: {r: 0.2, g: 0.2, b: 0.28, a: 1}
+  showTelegraph: 0
   telegraphStyle:
     color: {r: 1, g: 0, b: 0, a: 1}
     width: 0.08
@@ -149,6 +150,8 @@ MonoBehaviour:
   tickInterval: 1
   lightningVfx: {fileID: 0}
   lightningVfxScale: 1
+  lightningWarnScale: 2
+  lightningWarnFrames: 6
   lightningVfxOffset: {x: 0, y: 0}
   mouthPoint: {fileID: 7720729824230760871}
   chargeVfx: {fileID: 6937842667137355095, guid: 58d43d4b01ef0034193d79ab80ac5055, type: 3}
@@ -259,6 +262,7 @@ GameObject:
   - component: {fileID: 3893533336670354340}
   - component: {fileID: 6684281638386794939}
   - component: {fileID: 234679188280435083}
+  - component: {fileID: 3773206582018458029}
   m_Layer: 11
   m_Name: Dragon
   m_TagString: Untagged
@@ -410,6 +414,37 @@ MonoBehaviour:
   boss: {fileID: 0}
   buttonSize: {x: 140, y: 50}
   margin: 10
+--- !u!114 &3773206582018458029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4714908585790209494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8658dd24f2eeba4498c081f37e6a38b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragonIntro
+  boss: {fileID: 0}
+  passPattern: {fileID: 0}
+  bossVisual: {fileID: 0}
+  playOnce: 1
+  coverArea: {fileID: 0}
+  coverColor: {r: 0, g: 0, b: 0, a: 1}
+  coverMargin: 3
+  coverSortingLayer: UI
+  coverSortingOrder: 1000
+  shakeDelay: 0.3
+  shakeCount: 2
+  shakeDuration: 0.3
+  shakeInterval: 0.2
+  shakeStrength: 0.5
+  fadeDelay: 0.3
+  fadeDuration: 1
+  descendStartY: 45.9
+  descendEndY: 41
+  descendDuration: 2
 --- !u!1 &6093420384509034824
 GameObject:
   m_ObjectHideFlags: 0
