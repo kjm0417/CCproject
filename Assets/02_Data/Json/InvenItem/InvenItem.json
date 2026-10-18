@@ -235,18 +235,6 @@
     "BuyDiamond":""
   },
   {
-    "ItemID":24101,
-    "ItemName":"낚싯대",
-    "ItemType":"도구 아이템",
-    "SubType":"",
-    "Description":"",
-    "MaxStack":1,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
-  },
-  {
     "ItemID":25101,
     "ItemName":"칼",
     "ItemType":"도구 아이템",
@@ -275,7 +263,7 @@
     "ItemName":"철",
     "ItemType":"재료 아이템",
     "SubType":"",
-    "Description":"석탄 바위에서 가끔 나오는 철 덩어리. 도구 강화에 쓴다",
+    "Description":"철 바위를 캐면 나오는 철 덩어리. 도구 강화에 쓴다",
     "MaxStack":99,
     "SellPrice":"",
     "MinBuyGold":"",

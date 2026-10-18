@@ -13,18 +13,34 @@ MonoBehaviour:
   m_Name: TerritoryZoneData_Zone03
   m_EditorClassIdentifier: Assembly-CSharp::TerritoryZoneData
   ZoneId: 3
-  RequireGold: 30
+  RequireGold: 100
   IsSpecialZone: 0
   ResourceSpawnTable:
-  - ResourcePrefab: {fileID: 4801886088550710931, guid: 7452d390e8442384f8e0f20eb71c39d9, type: 3}
-    MaxCount: 15
-    GridHeight: 1
-    GridWidth: 1
   - ResourcePrefab: {fileID: 7417119400850013465, guid: 3f64cdc146e56fc41a0c0f0170033180, type: 3}
-    MaxCount: 5
+    MaxCount: 1
     GridHeight: 2
     GridWidth: 1
+  - ResourcePrefab: {fileID: 7417119400850013465, guid: b31f3f25511878244a5c05f0fce164e7, type: 3}
+    MaxCount: 1
+    GridHeight: 1
+    GridWidth: 1
+  - ResourcePrefab: {fileID: 4801886088550710931, guid: 7452d390e8442384f8e0f20eb71c39d9, type: 3}
+    MaxCount: 1
+    GridHeight: 1
+    GridWidth: 1
+  CropSpawnTable:
+  - Seed: {fileID: 11400000, guid: 95bd3dad17da8d4438cf7bab79d01f3a, type: 2}
+    MaxCount: 1
+  - Seed: {fileID: 11400000, guid: aec9e734e6748a64db74b3e286411a0b, type: 2}
+    MaxCount: 1
+  MonsterSpawnTable:
+  - EnemyPrefab: {fileID: 3947759421036759213, guid: c4ebcefa3f37a4c4caff7a6280857a22, type: 3}
+    MaxCount: 1
+    RespawnDelay: 30
   NpcSlots: []
+  StructSlots:
+  - StructPrefab: {fileID: 2548245190477398378, guid: 187a3926f509c0f4a9416dc7df9cd592, type: 3}
+    StructSpawnPos: {x: 0, y: 1}
   AdjacentZoneId_Up: 9
   AdjacentZoneId_Down: 4
   AdjacentZoneId_Left: 1

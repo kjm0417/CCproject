@@ -45,15 +45,6 @@
     "CraftRecipeID":61005
   },
   {
-    "ToolID":24101,
-    "ToolName":"낚싯대",
-    "ToolType":"FishingRod",
-    "ToolGrade":"common",
-    "Description":"물가에서 쓰는 낚싯대",
-    "Power":1,
-    "CraftRecipeID":0
-  },
-  {
     "ToolID":25102,
     "ToolName":"마법 지팡이",
     "ToolType":"Staff",

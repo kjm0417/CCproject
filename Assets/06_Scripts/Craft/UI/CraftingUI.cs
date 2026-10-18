@@ -53,6 +53,11 @@ public class CraftingUI : MonoBehaviour
     [Tooltip("재료 충족도 (0~1)")]
     [SerializeField]
     private Slider materialFillSlider;
+    [Tooltip("강화 레시피일 때만 켜지는 필요 도구 영역 (슬롯 + 화살표)")]
+    [SerializeField]
+    private GameObject requiredToolRoot;
+    [SerializeField]
+    private CraftMaterialSlotView requiredToolSlot;
 
     [Header("개수 / 시간 / 제작")]
     [SerializeField]
@@ -309,6 +314,13 @@ public class CraftingUI : MonoBehaviour
             resultIcon.enabled = icon != null;
         }
         if (resultNameText != null) resultNameText.text = GetResultName(recipe);
+
+        // 강화 레시피: 필요 도구 아이콘 + 보유 여부(0/1, 1/1)
+        if (requiredToolRoot != null) requiredToolRoot.SetActive(recipe.IsUpgrade);
+        if (recipe.IsUpgrade && requiredToolSlot != null && !IsCrafting)
+        {
+            requiredToolSlot.Set(GetItemIcon(recipe.RequiredToolID), Mathf.Min(1, GetItemCount(recipe.RequiredToolID)), 1);
+        }
 
         // 재료: 제작 개수만큼 곱한 필요량 기준 (제작 중이면 이미 소모했으므로 갱신하지 않는다)
         if (!IsCrafting)

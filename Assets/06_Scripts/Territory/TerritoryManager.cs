@@ -223,6 +223,20 @@ public class TerritoryManager : MonoBehaviour
         return territorySaveData;
     }
 
+    /// <summary>
+    /// 세이브가 없을 때(새 게임) 처음부터 열려 있는 구역의 자원/작물/구조물 생성
+    /// </summary>
+    public void SpawnStartZones()
+    {
+        foreach (var zone in territoryZonesDic.Values)
+        {
+            if (zone.IsLocked) continue;
+
+            ResourceSpawner spawner = zone.GetComponent<ResourceSpawner>();
+            if (spawner != null) spawner.SpawnInitial();
+        }
+    }
+
     public void Load(TerritorySaveData data)
     {
         if (data == null) return;
@@ -249,9 +263,12 @@ public class TerritoryManager : MonoBehaviour
             }
         }
 
-        // 구조물 생성
+        // 구조물 생성 (해금된 구역만)
         foreach (var zone in territoryZonesDic.Values)
         {
+            bool isUnlocked = zone.TerritoryZoneData.ZoneId == 1 || data.UnlockedZoneIds.Contains(zone.TerritoryZoneData.ZoneId);
+            if (!isUnlocked) continue;
+
             if (zone.TerritoryZoneData.StructSlots.Count > 0)
             {
                 foreach (var structSlot in zone.TerritoryZoneData.StructSlots)

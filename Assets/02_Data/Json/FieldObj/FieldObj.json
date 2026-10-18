@@ -36,6 +36,18 @@
     "DropGroupID":71003
   },
   {
+    "ObjectID":41005,
+    "ObjectName":"철 바위",
+    "ObjectType":"Rock",
+    "HP":7,
+    "ExpReward":15,
+    "Description":"",
+    "RespawnTimeMin":60,
+    "RespawnTimeMax":70,
+    "InteractionRange":"1 * 1",
+    "DropGroupID":71006
+  },
+  {
     "ObjectID":41004,
     "ObjectName":"수풀",
     "ObjectType":"Bush",

@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6650396616142888429}
-  - component: {fileID: 7479160892733193517}
-  - component: {fileID: 4554164625061945806}
-  - component: {fileID: 4921561854523853734}
+  - component: {fileID: 3947759421036759213}
+  - component: {fileID: 2057400892937894430}
+  - component: {fileID: 4912981816734331751}
   m_Layer: 11
-  m_Name: Enemy_Skeleton
+  m_Name: Enemy_Slime_DG_Basic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +35,7 @@ Transform:
   - {fileID: 7386932050837543087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7479160892733193517
+--- !u!114 &3947759421036759213
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,13 +44,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4582181796093165541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dc483be1fed093478e9b9bc581725f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 7314eb48e71b97146aac921263ba2d55, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySkeleton
-  monsterData: {fileID: 11400000, guid: 2be264fd37fa1644cada9d19e0375bf9, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySlime
+  monsterData: {fileID: 11400000, guid: ba7b32e9b6112454f87068095e16e976, type: 2}
   despawnDelay: 1.5
-  monsterSkeletonData: {fileID: 11400000, guid: bc934364b89ac3a4aab8f1fe23b08815, type: 2}
---- !u!114 &4554164625061945806
+  monsterSlimeData: {fileID: 11400000, guid: 56d879f4de7d7f247baaa0d8fe5c8c0e, type: 2}
+--- !u!114 &2057400892937894430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,7 +78,7 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &4921561854523853734
+--- !u!114 &4912981816734331751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,6 +92,74 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPathfinder
   repathInterval: 0.3
   nextWaypointDistance: 0.3
+--- !u!1 &5784196932952718058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6648021615502260363}
+  - component: {fileID: 4565469909886973978}
+  m_Layer: 13
+  m_Name: WallBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6648021615502260363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5784196932952718058}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7386932050837543087}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &4565469909886973978
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5784196932952718058}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &8821267218433236044
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,9 +173,10 @@ GameObject:
   - component: {fileID: 421031383285036602}
   - component: {fileID: 4505502565647948232}
   - component: {fileID: 8763966595547520707}
-  - component: {fileID: 1945792960394560132}
+  - component: {fileID: 5288446143993876612}
+  - component: {fileID: 3443314735250606806}
   m_Layer: 11
-  m_Name: Skeleton
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,10 +192,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1610594711218970317}
+  - {fileID: 6648021615502260363}
   m_Father: {fileID: 6650396616142888429}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2822211806747122362
@@ -178,7 +247,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 789176449968563626, guid: 3566062b323da52478be420562893d8f, type: 3}
+  m_Sprite: {fileID: 5606235672744479607, guid: 4494cd58ec45ec84c971cbfebfd1035f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -199,7 +268,7 @@ Animator:
   m_GameObject: {fileID: 8821267218433236044}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0202f514b8467d2439969b7dc7b70cf1, type: 2}
+  m_Controller: {fileID: 9100000, guid: 278b968c9bd6c9446b3c0fc7bd322536, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -234,7 +303,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -273,9 +342,9 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.3, y: 0.0001}
+  m_Size: {x: 1.22, y: 1}
   m_Direction: 0
---- !u!114 &1945792960394560132
+--- !u!114 &5288446143993876612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,79 +353,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 8821267218433236044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a43a79574127f546b6b6735d55c8485, type: 3}
+  m_Script: {fileID: 11500000, guid: 887cb03b91c03704ea33a44e30b067de, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySkeletonDetector
-  chargeRadius: 4.21
-  attackRadius: 0.76
-  splashRadius: 0.9
-  splashAngle: 94
-  baseAttackRadius: 0.72
---- !u!1 &9022033565864760323
-GameObject:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySlimeDetector
+  chargeRadius: 5.21
+  attackRadius: 0.46
+  splashRadius: 0.78
+  baseAttackRadius: 0.63
+--- !u!114 &3443314735250606806
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1610594711218970317}
-  - component: {fileID: 2244372606241023509}
-  m_Layer: 13
-  m_Name: WallBody
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1610594711218970317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9022033565864760323}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7386932050837543087}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &2244372606241023509
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9022033565864760323}
+  m_GameObject: {fileID: 8821267218433236044}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.25
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da17247811fcb4409fe16f191867f15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySFX
+  attackSFX: 6
+  skillSFX: 7
+  hitSFX: 8
+  dieSFX: 9

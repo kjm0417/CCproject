@@ -210,6 +210,9 @@ MonoBehaviour:
   jumpPower: 0.8
   jumpDuration: 0.5
   spinCount: 1
+  maxSplitCount: 5
+  splitSpacing: 0.2
+  splitRotationRange: 25
 --- !u!114 &7007042218327987479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7034037888209383690, guid: 107dd3475acca0d42b6231573f463c41, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.23
+      value: 0.669
       objectReference: {fileID: 0}
     - target: {fileID: 7034037888209383690, guid: 107dd3475acca0d42b6231573f463c41, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

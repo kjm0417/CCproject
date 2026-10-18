@@ -109,6 +109,38 @@ public class CropPlanter : MonoBehaviour
     }
 
     /// <summary>
+    /// 해당 칸을 파낸 흙으로 바꾸고 씨앗 소모 없이 다 자란 작물을 심는다 (구역 해금 시 배치)
+    /// </summary>
+    public bool TryPlantGrown(TerritoryZone zone, Vector3Int cell, InvenItemData seed)
+    {
+        PlantedCropObject cropPrefab = FindCropPrefab(seed);
+        if (cropPrefab == null)
+        {
+            Log($"{(seed != null ? seed.ItemID : "null")} 매핑된 작물 없음");
+            return false;
+        }
+
+        if (plantedCells.ContainsKey((zone.TerritoryZoneData.ZoneId, cell)))
+        {
+            Log($"{zone.name} {cell} 이미 작물이 심겨 있음");
+            return false;
+        }
+
+        if (!TileModifier.IsModified(zone, cell) && !TileModifier.TryForceConvertTile(zone, cell, ToolType.Shovel))
+        {
+            Log($"{zone.name} {cell} 흙으로 변환 불가");
+            return false;
+        }
+
+        PlantedCropObject crop = SpawnCrop(cropPrefab, zone, cell, seed.ItemID);
+
+        // Start 전에 채워두면 성장 없이 바로 수확 가능
+        crop.GrowthStage = crop.MaxGrowthStage;
+        crop.IsGrowthComplete = true;
+        return true;
+    }
+
+    /// <summary>
     /// 칸 중앙에 작물 생성 및 칸 점유 등록
     /// </summary>
     private PlantedCropObject SpawnCrop(PlantedCropObject cropPrefab, TerritoryZone zone, Vector3Int cell, string seedItemId)

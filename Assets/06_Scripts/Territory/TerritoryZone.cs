@@ -199,6 +199,10 @@ public class TerritoryZone : MonoBehaviour
             GetComponent<ResourceSpawner>().SpawnInitial();
         }
 
+        // 몬스터는 저장하지 않으므로 로드로 열릴 때도 생성
+        MonsterSpawner monsterSpawner = GetComponent<MonsterSpawner>();
+        if (monsterSpawner != null) monsterSpawner.SpawnAll();
+
         OnTerritoryUnlocked?.Invoke(false);
 
         yield return new WaitForSeconds(1.5f);

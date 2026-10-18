@@ -67,6 +67,14 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// 자원 / 작물 / 구조물 주변이 아닌 빈 칸인지 (몬스터 생성 위치 판정용)
+    /// </summary>
+    public bool IsSpawnableCell(Vector3Int cell)
+    {
+        return CanSpawnAt(cell, 1, 1);
+    }
+
+    /// <summary>
     /// 현재 스폰된 모든 오브젝트 반환 (여러 칸 차지하는 자원도 1번만)
     /// </summary>
     public List<GameObject> GetSpawnedObjects()
@@ -170,17 +178,20 @@ public class ResourceSpawner : MonoBehaviour
         {
             Debug.Log($"Spawning {entry.ResourcePrefab.name}, GridWidth: {entry.GridWidth}, GridHeight: {entry.GridHeight}, MaxCount: {entry.MaxCount}");
 
+            // 이 자원 크기로 못 쓰는 칸은 이 자원 후보에서만 제외 (작은 자원은 다시 쓸 수 있게)
+            List<Vector3Int> candidateCells = new List<Vector3Int>(availableCells);
+
             for (int i = 0; i < entry.MaxCount; i++)
             {
-                if (availableCells.Count == 0) break; // 저번에 얘기한 안전장치
+                if (candidateCells.Count == 0) break; // 저번에 얘기한 안전장치
 
-                int index =  Random.Range(0, availableCells.Count);
+                int index =  Random.Range(0, candidateCells.Count);
 
-                Vector3Int pickedCell = availableCells[index]; //리스트에서 index 번째 자리에 있는 좌표값 = 우리가 사용할 자원의 스폰 위치
+                Vector3Int pickedCell = candidateCells[index]; //리스트에서 index 번째 자리에 있는 좌표값 = 우리가 사용할 자원의 스폰 위치
+                candidateCells.RemoveAt(index);
 
                 if (!CanSpawnAt(pickedCell, entry.GridWidth, entry.GridHeight))
                 {
-                    availableCells.RemoveAt(index);
                     i--; // 이 반복 다시 시도
                     continue;
                 }
@@ -199,6 +210,36 @@ public class ResourceSpawner : MonoBehaviour
                         availableCells.Remove(adjacentCell);
                     }
                 }
+            }
+        }
+
+        SpawnInitialCrops(availableCells);
+    }
+
+    /// <summary>
+    /// 작물 스폰 테이블대로 남은 빈 칸에 다 자란 작물 심기 (파낸 흙 1칸 + 작물 1포기)
+    /// </summary>
+    private void SpawnInitialCrops(List<Vector3Int> availableCells)
+    {
+        List<CropSpawnEntry> table = territoryZone.TerritoryZoneData.CropSpawnTable;
+        CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
+        if (table == null || cropPlanter == null) return;
+
+        foreach (CropSpawnEntry entry in table)
+        {
+            if (entry.Seed == null) continue;
+
+            int planted = 0;
+            while (planted < entry.MaxCount && availableCells.Count > 0)
+            {
+                int index = Random.Range(0, availableCells.Count);
+                Vector3Int pickedCell = availableCells[index];
+                availableCells.RemoveAt(index);
+
+                if (!CanSpawnAt(pickedCell, 1, 1)) continue;
+
+                if (cropPlanter.TryPlantGrown(territoryZone, pickedCell, entry.Seed))
+                    planted++;
             }
         }
     }
