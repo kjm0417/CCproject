@@ -206,7 +206,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument:
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1352302298444680126
@@ -1840,7 +1840,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6268099773950116186}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1875,7 +1875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f30cc83d4c5064eade63ae057c864b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDTopPanel
-  skillTreeCanvasPrefab: {fileID: 1000, guid: 053b60bc1107450d9ee5230f0a2e3e00, type: 3}
   imgExpFill: {fileID: 3076426993899318323}
   imgHealthFill: {fileID: 7927758229747824061}
   imgHungerFill: {fileID: 3517914745511318420}
@@ -1885,6 +1884,7 @@ MonoBehaviour:
   txtExp: {fileID: 0}
   txtHealth: {fileID: 0}
   txtHunger: {fileID: 0}
+  skillTreeCanvasPrefab: {fileID: 1000, guid: 053b60bc1107450d9ee5230f0a2e3e00, type: 3}
 --- !u!1 &6284511654801244771
 GameObject:
   m_ObjectHideFlags: 0
@@ -2770,16 +2770,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
     - target: {fileID: 1089647004292860603, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -2908379429125303752, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
+    - target: {fileID: 1089647004292860603, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4560888902755751246, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
     - target: {fileID: 4560888902755751246, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -2908379429125303752, guid: 0042f01e8a4e1964ba105ec6f990dcb1, type: 2}
+    - target: {fileID: 4560888902755751246, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7094645278267449219, guid: 522ebe010c4c566468612f6c8fdfa7c0, type: 3}
       propertyPath: m_Pivot.x
