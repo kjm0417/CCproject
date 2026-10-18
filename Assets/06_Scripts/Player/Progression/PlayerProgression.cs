@@ -18,6 +18,7 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
     private int skillPointsPerLevel = 1;
 
     public event Action OnExpChanged;
+    public event Action<int> OnExpGained; // 획득량 (획득 텍스트 연출용)
     public event Action<int> OnLevelUp;
     public event Action OnSkillPointsChanged;
 
@@ -67,6 +68,7 @@ public class PlayerProgression : MonoBehaviour, IPlayerComponent
         if (amount <= 0) return;
 
         expInLevel += (int)amount;
+        OnExpGained?.Invoke((int)amount);
 
         int need = RequiredExp(level);
         while (need > 0 && expInLevel >= need)

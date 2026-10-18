@@ -243,6 +243,14 @@ public class GroundTileModifier : MonoBehaviour
             return false;
         }
 
+        // 설치물이 놓인 칸은 변환 불가
+        StructurePlacer placer = Manager.StructurePlacer;
+        if (placer != null && placer.IsPlaced(zone, cell))
+        {
+            if (logFailure) Log($"{zone.name} {cell} 설치물이 있어 변환 불가");
+            return false;
+        }
+
         return true;
     }
 
@@ -261,6 +269,14 @@ public class GroundTileModifier : MonoBehaviour
     public bool IsModified(TerritoryZone zone, Vector3Int cell)
     {
         return modifiedCells.TryGetValue(zone.TerritoryZoneData.ZoneId, out var cells) && cells.ContainsKey(cell);
+    }
+
+    /// <summary>
+    /// 해금된 구역 중 해당 위치에 Ground 타일이 있는 구역과 칸 (설치물 배치 등 외부용)
+    /// </summary>
+    public TerritoryZone FindZoneAt(Vector3 worldPosition, out Vector3Int cell)
+    {
+        return FindUnlockedZoneAt(worldPosition, out cell);
     }
 
     /// <summary>

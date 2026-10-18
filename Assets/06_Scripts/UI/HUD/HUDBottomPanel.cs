@@ -643,6 +643,14 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return;
         }
 
+        // 설치 아이템(상자 / 작업대 / 모닥불): 발밑 칸에 배치. 배치 가능 여부는 누를 때 판정
+        StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+        if (placer != null && placer.IsPlaceable(item))
+        {
+            attackButton.SetQuickSlotOverride(icon, () => interaction.TryPlaceStructure(item), interaction != null);
+            return;
+        }
+
         ToolType toolType = ResolveToolType(item);
         if (toolType == ToolType.None || interaction == null)
         {

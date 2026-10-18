@@ -27,6 +27,11 @@ public class ResourceSpawner : MonoBehaviour
     private Dictionary<Vector3Int, GameObject> occupiedCells = new Dictionary<Vector3Int, GameObject>();
     private Dictionary<GameObject, List<Vector3Int>> occupiedCellsByObject = new Dictionary<GameObject, List<Vector3Int>>();
 
+    /// <summary>
+    /// 영지 자원이 채집(파괴)될 때 (자원 prefab) - 퀘스트 진행용
+    /// </summary>
+    public static event System.Action<GameObject> OnAnyResourceDepleted;
+
     // 재생성 예정 자원: (entry, 시작시간, 대기시간)
     private List<(ResourceSpawnEntry entry, float startTime, float delay)> respawningResources = new List<(ResourceSpawnEntry, float, float)>();
 
@@ -319,6 +324,11 @@ public class ResourceSpawner : MonoBehaviour
                 if (cropPlanter != null && cropPlanter.IsPlanted(territoryZone, checkCell))
                     return false;
 
+                // 플레이어가 배치한 설치물 칸이면 불가
+                StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+                if (placer != null && placer.IsPlaced(territoryZone, checkCell))
+                    return false;
+
                 // 구조물 셀 주변 structBlockRadius칸 안이면 불가
                 foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
                 {
@@ -349,6 +359,8 @@ public class ResourceSpawner : MonoBehaviour
         {
             damageable.OnDestroyed -= OnResourceDestroyed;
         }
+
+        OnAnyResourceDepleted?.Invoke(entry.ResourcePrefab);
 
         // 재생성 예정 자원 기록
         respawningResources.Add((entry, Time.time, respawnTime));

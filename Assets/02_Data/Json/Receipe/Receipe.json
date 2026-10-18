@@ -206,5 +206,53 @@
     "LifeType":"Magic",
     "Season":"Spring",
     "RequiredToolID":25102
+  },
+  {
+    "CraftRecipeID":61201,
+    "ResultItemID":42001,
+    "ResultCount":1,
+    "CraftFacilityID":42003,
+    "CraftTimeSec":10,
+    "Material1ID":11001,
+    "Material1Count":4,
+    "Material2ID":11002,
+    "Material2Count":2,
+    "Material3ID":0,
+    "Material3Count":0,
+    "LifeType":"Economy",
+    "Season":"Spring",
+    "RequiredToolID":0
+  },
+  {
+    "CraftRecipeID":61202,
+    "ResultItemID":42003,
+    "ResultCount":1,
+    "CraftFacilityID":42003,
+    "CraftTimeSec":15,
+    "Material1ID":11001,
+    "Material1Count":3,
+    "Material2ID":0,
+    "Material2Count":0,
+    "Material3ID":0,
+    "Material3Count":0,
+    "LifeType":"Industry",
+    "Season":"Spring",
+    "RequiredToolID":0
+  },
+  {
+    "CraftRecipeID":61203,
+    "ResultItemID":42002,
+    "ResultCount":1,
+    "CraftFacilityID":42003,
+    "CraftTimeSec":8,
+    "Material1ID":11001,
+    "Material1Count":2,
+    "Material2ID":11003,
+    "Material2Count":2,
+    "Material3ID":0,
+    "Material3Count":0,
+    "LifeType":"Agriculture",
+    "Season":"Spring",
+    "RequiredToolID":0
   }
 ]

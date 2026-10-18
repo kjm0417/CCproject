@@ -98,6 +98,14 @@ public class CropPlanter : MonoBehaviour
             return false;
         }
 
+        // 설치물이 놓인 칸이면 심기 불가
+        StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+        if (placer != null && placer.IsPlaced(zone, cell))
+        {
+            Log($"{zone.name} {cell} 설치물이 있어 심기 불가");
+            return false;
+        }
+
         if (inventory.Remove(seed, 1) <= 0)
         {
             Log($"{seed.ItemName} 소모 실패");

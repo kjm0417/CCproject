@@ -8,6 +8,8 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
 {
     // 잔액 변동 시 방송 (인자: 바뀐 재화 종류). 골드 UI 등이 구독.
     public event Action<CurrencyType> OnChanged;
+    // 획득 시 방송 (인자: 재화 종류, 획득량). 획득 텍스트 연출 등이 구독.
+    public event Action<CurrencyType, int> OnGained;
 
     private readonly Dictionary<CurrencyType, int> balances = new Dictionary<CurrencyType, int>();
     public Dictionary<CurrencyType, int> Balances => balances;
@@ -45,6 +47,7 @@ public class PlayerWallet : MonoBehaviour, IPlayerComponent
         if (amount <= 0) return;
         balances[type] = GetBalance(type) + amount;
         OnChanged?.Invoke(type);
+        OnGained?.Invoke(type, amount);
     }
 
     // 소비 시도. 부족하면 false 반환(구매 취소).

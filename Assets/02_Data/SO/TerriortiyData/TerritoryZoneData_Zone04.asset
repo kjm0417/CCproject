@@ -41,9 +41,11 @@ MonoBehaviour:
   - EnemyPrefab: {fileID: 3947759421036759213, guid: c4ebcefa3f37a4c4caff7a6280857a22, type: 3}
     MaxCount: 2
     RespawnDelay: 30
+    KillGold: 5
   - EnemyPrefab: {fileID: 7479160892733193517, guid: 5ca2a693909941d4c90a85faaf57bfc9, type: 3}
     MaxCount: 1
     RespawnDelay: 30
+    KillGold: 0
   NpcSlots: []
   StructSlots: []
   AdjacentZoneId_Up: 3

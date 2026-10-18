@@ -341,5 +341,41 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":""
+  },
+  {
+    "ItemID":42001,
+    "ItemName":"나무 상자",
+    "ItemType":"배치 아이템",
+    "SubType":"설치 아이템",
+    "Description":"물건을 보관하는 나무 상자",
+    "MaxStack":99,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":42002,
+    "ItemName":"모닥불",
+    "ItemType":"배치 아이템",
+    "SubType":"설치 아이템",
+    "Description":"음식을 굽는 모닥불",
+    "MaxStack":99,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
+  },
+  {
+    "ItemID":42003,
+    "ItemName":"작업대",
+    "ItemType":"배치 아이템",
+    "SubType":"설치 아이템",
+    "Description":"도구를 만드는 작업대",
+    "MaxStack":99,
+    "SellPrice":"",
+    "MinBuyGold":"",
+    "MaxBuyGold":"",
+    "BuyDiamond":""
   }
 ]

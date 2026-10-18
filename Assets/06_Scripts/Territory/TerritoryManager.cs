@@ -57,6 +57,9 @@ public class TerritoryManager : MonoBehaviour
     // 파낸 흙에 씨앗 심기 (같은 오브젝트에 붙어 있을 때만)
     public CropPlanter CropPlanter { get; private set; }
 
+    // 설치 아이템 배치 (같은 오브젝트에 붙어 있을 때만)
+    public StructurePlacer StructurePlacer { get; private set; }
+
     private Dictionary<int, Dictionary<ResourceSpawnEntry, float>> savedRespawningResources = new Dictionary<int, Dictionary<ResourceSpawnEntry, float>>();
 
     private void Awake()
@@ -83,6 +86,7 @@ public class TerritoryManager : MonoBehaviour
 
         TileModifier = GetComponent<GroundTileModifier>();
         CropPlanter = GetComponent<CropPlanter>();
+        StructurePlacer = GetComponent<StructurePlacer>();
     }
 
     #region 영토 저장 및 불러오기
@@ -195,6 +199,18 @@ public class TerritoryManager : MonoBehaviour
         if (CropPlanter != null)
         {
             territorySaveData.plantedCrops = CropPlanter.Save();
+        }
+
+        // 배치한 설치물 저장
+        if (StructurePlacer != null)
+        {
+            territorySaveData.placedStructures = StructurePlacer.Save();
+        }
+
+        // 퀘스트 진행 저장
+        if (QuestManager.Instance != null)
+        {
+            territorySaveData.quests = QuestManager.Instance.Save();
         }
 
         // 상자 보관 아이템 저장
@@ -320,6 +336,18 @@ public class TerritoryManager : MonoBehaviour
         if (CropPlanter != null)
         {
             CropPlanter.Load(data.plantedCrops);
+        }
+
+        // 배치한 설치물 복원 (상자 보관 아이템 복원보다 먼저)
+        if (StructurePlacer != null)
+        {
+            StructurePlacer.Load(data.placedStructures);
+        }
+
+        // 퀘스트 진행 복원
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.Load(data.quests);
         }
 
         foreach(var objState in data.fieldObjects)

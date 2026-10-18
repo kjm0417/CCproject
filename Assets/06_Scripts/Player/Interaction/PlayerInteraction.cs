@@ -302,6 +302,17 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     }
 
     /// <summary>
+    /// 발밑 칸에 설치 아이템(상자 / 작업대 / 모닥불) 배치
+    /// </summary>
+    public bool TryPlaceStructure(InvenItemData item)
+    {
+        StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+        if (placer == null || context == null) return false;
+
+        return placer.TryPlace(tileCheckOrigin.position, item, context.Inventory);
+    }
+
+    /// <summary>
     /// 씨앗을 든 상태: 앞에 다 자란 작물이 있으면 수확, 없으면 발밑에 심기
     /// (씨앗 선택 시 도구가 None으로 잠겨 TryInteract로는 수확이 막히므로 별도 처리)
     /// </summary>
