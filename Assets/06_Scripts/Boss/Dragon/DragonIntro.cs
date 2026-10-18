@@ -19,6 +19,8 @@ public class DragonIntro : MonoBehaviour
     private Transform bossVisual;
     [SerializeField, Tooltip("한 번만 재생 ( 맵 재진입 시 생략 )")]
     private bool playOnce = true;
+    [SerializeField, Tooltip("연출 동안 숨길 UI ( HUD Bottom 패널 등 ) - 연출 끝나면 다시 표시")]
+    private GameObject[] hideDuringIntro;
 
     [Header("1. 검은 화면")]
     [SerializeField, Tooltip("가릴 영역 ( 비우면 부모 DungeonMap 의 CamBound )")]
@@ -77,6 +79,7 @@ public class DragonIntro : MonoBehaviour
 
         // 맵 활성화 프레임에 바로 가림 + AI 정지 ( 첫 프레임부터 패턴 / 맵 노출 X )
         boss.BeginIntro();
+        SetHiddenUI(false);
         ShowCover(1f);
         introRoutine = StartCoroutine(IntroRoutine());
     }
@@ -89,6 +92,7 @@ public class DragonIntro : MonoBehaviour
         StopCoroutine(introRoutine);
         introRoutine = null;
         HideCover();
+        SetHiddenUI(true);
         if (cameraOffset != null) cameraOffset.Offset = Vector3.zero;
         SetVisualY(descendEndY);
         if (passPattern != null) passPattern.EndIntroPass();
@@ -139,8 +143,37 @@ public class DragonIntro : MonoBehaviour
         // 5. 연출 끝 -> 패턴 시작
         played = true;
         introRoutine = null;
+        SetHiddenUI(true);
         boss.EndIntro();
     }
+
+    /// <summary> CanvasGroup 으로 숨김 ( SetActive 는 UIHUD.Show 등이 다시 켜버림 ) </summary>
+    private void SetHiddenUI(bool visible)
+    {
+        if (hideDuringIntro == null) return;
+
+        foreach (GameObject go in hideDuringIntro)
+        {
+            if (go == null) continue;
+
+            if (!go.TryGetComponent(out CanvasGroup group)) group = go.AddComponent<CanvasGroup>();
+            group.alpha = visible ? 1f : 0f;
+            group.interactable = visible;
+            group.blocksRaycasts = visible;
+        }
+    }
+
+    #region [이전] SetActive 로 숨김 - 씬 시작 시 UIHUD.Start 의 Show 가 다시 켜서 안 꺼짐
+    // private void SetHiddenUI(bool active)
+    // {
+    //     if (hideDuringIntro == null) return;
+    //
+    //     foreach (GameObject go in hideDuringIntro)
+    //     {
+    //         if (go != null) go.SetActive(active);
+    //     }
+    // }
+    #endregion
 
     /// <summary> CinemachineCameraOffset 로 흔들림 ( 카메라 위치를 직접 옮기면 Cinemachine / Confiner 가 덮어씀 ) </summary>
     private IEnumerator Shake()

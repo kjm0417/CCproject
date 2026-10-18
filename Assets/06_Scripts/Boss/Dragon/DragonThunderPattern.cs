@@ -47,6 +47,12 @@ public class DragonThunderPattern : BossPattern
     private float lightningWarnScale = 2f;
     [SerializeField, Tooltip("앞에서부터 전조 프레임 수 ( 이후 프레임은 lightningVfxScale )")]
     private int lightningWarnFrames = 6;
+    [SerializeField, Tooltip("전조 프레임 유지 시간 ( 전조 프레임만 이 시간에 맞춰 재생, 이후 프레임은 원래 속도 )")]
+    private float lightningWarnDuration = 1f;
+    [SerializeField, Tooltip("이펙트 Animator 상태 이름")]
+    private string lightningVfxState = "Charge";
+    [SerializeField, Range(0f, 1f), Tooltip("어둠이 칸을 얼마나 지나가면 번개인지 ( 0 : 칸 앞쪽 끝 / 0.5 : 중심 / 1 : 칸을 완전히 지나감 )")]
+    private float revealPassRatio = 1f;
     [SerializeField, Tooltip("영역 중심 기준 이펙트 위치 보정")]
     private Vector2 lightningVfxOffset;
 
@@ -76,6 +82,13 @@ public class DragonThunderPattern : BossPattern
     private Vector2 mouthBoltBottom = new Vector2(0.48f, -5.43f);
     [SerializeField, Tooltip("번개 굵기 배율 ( 1 = 원본 굵기, 길이는 거리에 맞게 자동 )")]
     private float mouthBoltWidth = 1f;
+
+    [Header("번개 착탄 ( 입 번개 끝난 뒤 )")]
+    [SerializeField, Tooltip("입 번개 ( SFX_2 ) 재생 끝나고 뇌격 지점에 재생 ( LightStrike_SFX_5 )")]
+    private GameObject impactVfx;
+    [SerializeField] private float impactVfxScale = 1f;
+    [SerializeField, Tooltip("영역 중심 기준 위치 보정")]
+    private Vector2 impactVfxOffset;
 
     [Header("이펙트 종료")]
     [SerializeField, Tooltip("이펙트 애니 마지막 프레임 재생 후 사라지기까지 ( 0 = 바로 )")]
@@ -167,23 +180,23 @@ public class DragonThunderPattern : BossPattern
                 if (struck[i]) continue;
 
                 ZoneShape shape = grid.GetBlockShape(cells[i], strikeSize);
-                float cellX = shape.Center.x;
-                bool passed = fromLeft ? cellX <= edgeX : cellX >= edgeX;
-                if (!passed) continue;
+                if (t < 1f && !IsRevealed(shape, revealX, fromLeft)) continue; //다 걷히면 남은 칸 전부
 
                 struck[i] = true;
                 remain--;
                 if (telegraphs[i] != null) telegraphs[i].Release();
-                BossDamageZone zone = SpawnDamageZone(shape, null, damage, zoneDuration, tickInterval, lightningVfx);
-                if (zone.Vfx != null)
+
+                // 어둠이 지나간 지점에 바로 번개 이펙트 ( 전조 -> 번개 )
+                if (lightningVfx != null)
                 {
-                    zone.Vfx.transform.position = shape.Center + lightningVfxOffset;
-                    float length = GetClipLength(zone.Vfx);
-                    if (length > 0f) zone.HideVfxAfter(length + vfxHideDelay);
-                    StartSubRoutine(LightningVfxRoutine(zone.Vfx, shape.Center));
+                    StartSubRoutine(LightningCellRoutine(shape));
                 }
-                else if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
-                if (lightningVfx == null) StartSubRoutine(StrikeRoutine(shape));
+                else
+                {
+                    SpawnDamageZone(shape, null, damage, zoneDuration, tickInterval);
+                    if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
+                    StartSubRoutine(StrikeRoutine(shape));
+                }
             }
 
             yield return null;
@@ -192,8 +205,10 @@ public class DragonThunderPattern : BossPattern
         HideOverlay();
         RestoreBoss();
 
-        // 3. 마지막 번개 지속 시간 대기
-        yield return new WaitForSeconds(zoneDuration);
+        // 3. 마지막 번개 이펙트 ( 전조 포함 ) + 지속 시간 대기
+        while (activeCells > 0) yield return null;
+        float waitEnd = Time.time + zoneDuration;
+        while (Time.time < waitEnd || mouthBolts.Count > 0 || impactVisuals.Count > 0) yield return null;
     }
 
     private IEnumerator Darken()
@@ -272,7 +287,112 @@ public class DragonThunderPattern : BossPattern
         return go;
     }
 
-    /// <summary> 전조 프레임은 크게 -> 이후 원래 크기, 마지막 프레임 시작 시 입 번개 </summary>
+    /// <summary> 어둠 경계 ( revealX ) 가 칸을 revealPassRatio 만큼 지나갔는지 </summary>
+    private bool IsRevealed(ZoneShape shape, float revealX, bool fromLeft)
+    {
+        float halfWidth = shape.size.x * 0.5f;
+        float passX = fromLeft
+            ? Mathf.Lerp(shape.Center.x - halfWidth, shape.Center.x + halfWidth, revealPassRatio)
+            : Mathf.Lerp(shape.Center.x + halfWidth, shape.Center.x - halfWidth, revealPassRatio);
+        return fromLeft ? revealX >= passX : revealX <= passX;
+    }
+
+    private readonly List<GameObject> lightningVisuals = new List<GameObject>();
+    private int activeCells;
+
+    /// <summary>
+    /// 어둠이 지나간 지점의 번개 이펙트
+    /// 전조 프레임을 lightningWarnDuration 동안 크게 재생 -> 번개 프레임 원래 크기 / 속도 ( 피해 시작 )
+    /// -> 마지막 프레임에 입 번개 ( SFX_2 ) -> 반납
+    /// </summary>
+    private IEnumerator LightningCellRoutine(ZoneShape shape)
+    {
+        activeCells++;
+        GameObject vfx = ObjectPoolManager.Spawn(lightningVfx, shape.Center + lightningVfxOffset, Quaternion.identity);
+        lightningVisuals.Add(vfx);
+        vfx.transform.localScale = Vector3.one * lightningWarnScale;
+
+        Animator animator = vfx.GetComponent<Animator>();
+        float clipLength = GetClipLength(vfx);
+        float frameTime = 1f / GetClipFrameRate(vfx);
+        float warnEnd = Mathf.Min(lightningWarnFrames * frameTime, clipLength);
+        float boltTime = Mathf.Max(warnEnd, clipLength - frameTime); //마지막 프레임 시작
+        int stateHash = Animator.StringToHash(lightningVfxState);
+
+        // 1. 전조 ( 애니 시간을 직접 지정 - 속도 0 )
+        if (animator != null) animator.speed = 0f;
+        float elapsed = 0f;
+        while (elapsed < lightningWarnDuration)
+        {
+            float warnT = Mathf.Clamp01((elapsed + Time.deltaTime) / lightningWarnDuration);
+            SetAnimTime(animator, stateHash, Mathf.Min(warnT * warnEnd, warnEnd - frameTime * 0.5f), clipLength);
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        // 2. 번개 프레임 ( 원래 크기 / 속도 ) + 피해
+        vfx.transform.localScale = Vector3.one * lightningVfxScale;
+        if (animator != null)
+        {
+            animator.speed = 1f;
+            SetAnimTime(animator, stateHash, warnEnd, clipLength);
+        }
+        SpawnDamageZone(shape, null, damage, zoneDuration, tickInterval);
+
+        // 3. 마지막 프레임에 입 번개
+        yield return new WaitForSeconds(boltTime - warnEnd);
+        if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
+
+        yield return new WaitForSeconds(clipLength - boltTime + vfxHideDelay);
+        ReleaseLightningVisual(vfx);
+        activeCells--;
+    }
+
+    private static void SetAnimTime(Animator animator, int stateHash, float time, float clipLength)
+    {
+        if (animator == null || clipLength <= 0f) return;
+        animator.Play(stateHash, 0, time / clipLength);
+    }
+
+    private void ReleaseLightningVisual(GameObject vfx)
+    {
+        if (vfx == null) return;
+        lightningVisuals.Remove(vfx);
+
+        Animator animator = vfx.GetComponent<Animator>();
+        if (animator != null) animator.speed = 1f; //풀 재사용 대비
+        ObjectPoolManager.Despawn(vfx);
+    }
+
+    private void ClearLightningVisuals()
+    {
+        for (int i = lightningVisuals.Count - 1; i >= 0; i--)
+        {
+            ReleaseLightningVisual(lightningVisuals[i]);
+        }
+        lightningVisuals.Clear();
+        activeCells = 0;
+    }
+
+    #region [이전] 칸 중심이 grid 기준 경계를 지나면 번개 / 이펙트 마지막 프레임에 입 번개
+    // ZoneShape shape = grid.GetBlockShape(cells[i], strikeSize);
+    // float cellX = shape.Center.x;
+    // bool passed = fromLeft ? cellX <= edgeX : cellX >= edgeX;
+    // if (!passed) continue;
+    // ...
+    // BossDamageZone zone = SpawnDamageZone(shape, null, damage, zoneDuration, tickInterval, lightningVfx);
+    // if (zone.Vfx != null)
+    // {
+    //     zone.Vfx.transform.position = shape.Center + lightningVfxOffset;
+    //     float length = GetClipLength(zone.Vfx);
+    //     if (length > 0f) zone.HideVfxAfter(length + vfxHideDelay);
+    //     StartSubRoutine(LightningVfxRoutine(zone.Vfx, shape.Center));
+    // }
+    // else if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
+    // if (lightningVfx == null) StartSubRoutine(StrikeRoutine(shape));
+    #endregion
+
+    /// <summary> [미사용] 전조 프레임은 크게 -> 이후 원래 크기, 마지막 프레임 시작 시 입 번개 </summary>
     private IEnumerator LightningVfxRoutine(GameObject vfx, Vector2 target)
     {
         float frameTime = 1f / GetClipFrameRate(vfx);
@@ -374,6 +494,28 @@ public class DragonThunderPattern : BossPattern
 
         yield return new WaitForSeconds(GetClipLength(bolt) + vfxHideDelay);
         ReleaseMouthBolt(pivot);
+
+        // 입 번개 끝 -> 착탄 이펙트 1회
+        if (impactVfx == null) yield break;
+
+        GameObject impact = ObjectPoolManager.Spawn(impactVfx, target + impactVfxOffset, Quaternion.identity);
+        impact.transform.localScale = Vector3.one * impactVfxScale;
+        impactVisuals.Add(impact);
+
+        yield return new WaitForSeconds(GetClipLength(impact) + vfxHideDelay);
+        impactVisuals.Remove(impact);
+        ObjectPoolManager.Despawn(impact);
+    }
+
+    private readonly List<GameObject> impactVisuals = new List<GameObject>();
+
+    private void ClearImpactVisuals()
+    {
+        foreach (GameObject go in impactVisuals)
+        {
+            if (go != null) ObjectPoolManager.Despawn(go);
+        }
+        impactVisuals.Clear();
     }
 
     private void ReleaseMouthBolt(GameObject pivot)
@@ -568,7 +710,9 @@ public class DragonThunderPattern : BossPattern
         HideOverlay();
         RestoreBoss();
         ClearStrikeVisuals();
+        ClearLightningVisuals();
         ClearMouthBolts();
+        ClearImpactVisuals();
         ClearChargeVisuals();
     }
 }

@@ -1,0 +1,646 @@
+fileFormatVersion: 2
+guid: 6d9271750bbe12840907990a7d6315d2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3705586476969650459
+    second: WaterspoutSFX_0
+  - first:
+      213: 8210670833309549619
+    second: WaterspoutSFX_1
+  - first:
+      213: 6516358725719131460
+    second: WaterspoutSFX_2
+  - first:
+      213: -2041112774290102235
+    second: WaterspoutSFX_3
+  - first:
+      213: 6439561864466369467
+    second: WaterspoutSFX_4
+  - first:
+      213: -6387085620667124760
+    second: WaterspoutSFX_5
+  - first:
+      213: 1517213968489858511
+    second: WaterspoutSFX_6
+  - first:
+      213: 4658184522001985643
+    second: WaterspoutSFX_7
+  - first:
+      213: -9103386997528134540
+    second: WaterspoutSFX_8
+  - first:
+      213: -3033536209953469025
+    second: WaterspoutSFX_9
+  - first:
+      213: -8128098307282381177
+    second: WaterspoutSFX_10
+  - first:
+      213: -6031389098670941890
+    second: WaterspoutSFX_11
+  - first:
+      213: -4310330315861742270
+    second: WaterspoutSFX_12
+  - first:
+      213: 1881277264324609114
+    second: WaterspoutSFX_13
+  - first:
+      213: 6160019174842864235
+    second: WaterspoutSFX_14
+  - first:
+      213: -489444831602879087
+    second: WaterspoutSFX_15
+  - first:
+      213: 844839414786901340
+    second: WaterspoutSFX_16
+  - first:
+      213: 4395620094893982139
+    second: WaterspoutSFX_17
+  - first:
+      213: 248724279372856461
+    second: WaterspoutSFX_18
+  - first:
+      213: 4777094871548989232
+    second: WaterspoutSFX_19
+  - first:
+      213: -4370057970800837702
+    second: WaterspoutSFX_20
+  - first:
+      213: -6384053982154352613
+    second: WaterspoutSFX_21
+  - first:
+      213: -368447343777226356
+    second: WaterspoutSFX_22
+  - first:
+      213: 4001279196789249983
+    second: WaterspoutSFX_23
+  - first:
+      213: -6849910474062841047
+    second: WaterspoutSFX_24
+  - first:
+      213: 8026578159098126294
+    second: WaterspoutSFX_25
+  - first:
+      213: -2549530497875106451
+    second: WaterspoutSFX_26
+  - first:
+      213: -6540231657031176365
+    second: WaterspoutSFX_27
+  - first:
+      213: -8784708584442887161
+    second: WaterspoutSFX_28
+  - first:
+      213: -4615309663040043882
+    second: WaterspoutSFX_29
+  - first:
+      213: 7121445586091753889
+    second: WaterspoutSFX_30
+  - first:
+      213: -2957479789063562941
+    second: WaterspoutSFX_31
+  - first:
+      213: 6045670384817641672
+    second: WaterspoutSFX_32
+  - first:
+      213: -2619899702701192405
+    second: WaterspoutSFX_33
+  - first:
+      213: -5919814463450959243
+    second: WaterspoutSFX_34
+  - first:
+      213: -785038964782494791
+    second: WaterspoutSFX_35
+  - first:
+      213: -1119941261114904091
+    second: WaterspoutSFX_36
+  - first:
+      213: 7284685155967073275
+    second: WaterspoutSFX_37
+  - first:
+      213: -6395202657902335934
+    second: WaterspoutSFX_38
+  - first:
+      213: 2785008708365273393
+    second: WaterspoutSFX_39
+  - first:
+      213: 1223529372157733297
+    second: WaterspoutSFX_40
+  - first:
+      213: 3629594341136878437
+    second: WaterspoutSFX_41
+  - first:
+      213: -7835771163117765483
+    second: WaterspoutSFX_42
+  - first:
+      213: 6160652996708363283
+    second: WaterspoutSFX_43
+  - first:
+      213: -7495451168642729810
+    second: WaterspoutSFX_44
+  - first:
+      213: 4714767831854262411
+    second: WaterspoutSFX_45
+  - first:
+      213: -9027391041502350879
+    second: WaterspoutSFX_46
+  - first:
+      213: 1611218560859528506
+    second: WaterspoutSFX_47
+  - first:
+      213: 7790769768611493988
+    second: WaterspoutSFX_48
+  - first:
+      213: 7628417444285843741
+    second: WaterspoutSFX_49
+  - first:
+      213: 457433176313733684
+    second: WaterspoutSFX_50
+  - first:
+      213: -7584616980919542461
+    second: WaterspoutSFX_51
+  - first:
+      213: -5387778882103349301
+    second: WaterspoutSFX_52
+  - first:
+      213: 7286655057855543845
+    second: WaterspoutSFX_53
+  - first:
+      213: -5117103180918386493
+    second: WaterspoutSFX_54
+  - first:
+      213: -8040171509415370184
+    second: WaterspoutSFX_55
+  - first:
+      213: -5120464796714592636
+    second: WaterspoutSFX_56
+  - first:
+      213: 4161588785816073618
+    second: WaterspoutSFX_57
+  - first:
+      213: 7971004685001415314
+    second: WaterspoutSFX_58
+  - first:
+      213: -9018227612751410980
+    second: WaterspoutSFX_59
+  - first:
+      213: 3048635250230955478
+    second: WaterspoutSFX_60
+  - first:
+      213: -2214487259514471511
+    second: WaterspoutSFX_61
+  - first:
+      213: 1425316389180631201
+    second: WaterspoutSFX_62
+  - first:
+      213: -7394421158741830661
+    second: WaterspoutSFX_63
+  - first:
+      213: 3113172947299743619
+    second: WaterspoutSFX_64
+  - first:
+      213: -4228695089198538010
+    second: WaterspoutSFX_65
+  - first:
+      213: -720847260583249271
+    second: WaterspoutSFX_66
+  - first:
+      213: -7736318813440199232
+    second: WaterspoutSFX_67
+  - first:
+      213: 3316874385122100942
+    second: WaterspoutSFX_68
+  - first:
+      213: 3714294280096794281
+    second: WaterspoutSFX_69
+  - first:
+      213: -3690011229311390868
+    second: WaterspoutSFX_70
+  - first:
+      213: -1557843291630065429
+    second: WaterspoutSFX_71
+  - first:
+      213: 2967061685323635561
+    second: WaterspoutSFX_72
+  - first:
+      213: 7375672291647987894
+    second: WaterspoutSFX_73
+  - first:
+      213: 929978415698805897
+    second: WaterspoutSFX_74
+  - first:
+      213: 2527911592766208666
+    second: WaterspoutSFX_75
+  - first:
+      213: 5549482254078017485
+    second: WaterspoutSFX_76
+  - first:
+      213: 4260290870795982805
+    second: WaterspoutSFX_77
+  - first:
+      213: -6633229550979065424
+    second: WaterspoutSFX_78
+  - first:
+      213: 1787518558285848054
+    second: WaterspoutSFX_79
+  - first:
+      213: 7252857725447998401
+    second: WaterspoutSFX_80
+  - first:
+      213: -7105059118602381862
+    second: WaterspoutSFX_81
+  - first:
+      213: -2271615728742761624
+    second: WaterspoutSFX_82
+  - first:
+      213: -2220270548012905600
+    second: WaterspoutSFX_83
+  - first:
+      213: -7427883474691282440
+    second: WaterspoutSFX_84
+  - first:
+      213: 7521594161539430867
+    second: WaterspoutSFX_85
+  - first:
+      213: 1473875632754238352
+    second: WaterspoutSFX_86
+  - first:
+      213: -8329703197311473886
+    second: WaterspoutSFX_87
+  - first:
+      213: -9210729637968121248
+    second: WaterspoutSFX_88
+  - first:
+      213: 5799634610348277271
+    second: WaterspoutSFX_89
+  - first:
+      213: 4964535541703119843
+    second: WaterspoutSFX_90
+  - first:
+      213: -8964641105985832589
+    second: WaterspoutSFX_91
+  - first:
+      213: 8117521319305244947
+    second: WaterspoutSFX_92
+  - first:
+      213: 3593208611016997208
+    second: WaterspoutSFX_93
+  - first:
+      213: 5902150633564689449
+    second: WaterspoutSFX_94
+  - first:
+      213: -3077178646882796358
+    second: WaterspoutSFX_95
+  - first:
+      213: -7727890199990768867
+    second: WaterspoutSFX_96
+  - first:
+      213: -2565459761868131650
+    second: WaterspoutSFX_97
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WaterspoutSFX_0
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 0
+        width: 1484
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b19644c8443ec6330800000000000000
+      internalID: 3705586476969650459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_1
+      rect:
+        serializedVersion: 2
+        x: 2036
+        y: 0
+        width: 1484
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3348313fe9922f170800000000000000
+      internalID: 8210670833309549619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_2
+      rect:
+        serializedVersion: 2
+        x: 3636
+        y: 0
+        width: 1484
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44581836cb1ce6a50800000000000000
+      internalID: 6516358725719131460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_3
+      rect:
+        serializedVersion: 2
+        x: 5456
+        y: 0
+        width: 1484
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5282dedfeb28ca3e0800000000000000
+      internalID: -2041112774290102235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_4
+      rect:
+        serializedVersion: 2
+        x: 7369
+        y: 0
+        width: 1563
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbb8ba0c56bed5950800000000000000
+      internalID: 6439561864466369467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_5
+      rect:
+        serializedVersion: 2
+        x: 9362
+        y: 0
+        width: 1563
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e3712ed7738c57a0800000000000000
+      internalID: -6387085620667124760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_6
+      rect:
+        serializedVersion: 2
+        x: 11248
+        y: 0
+        width: 1563
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc54918d01a3e0510800000000000000
+      internalID: 1517213968489858511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_7
+      rect:
+        serializedVersion: 2
+        x: 13238
+        y: 0
+        width: 1366
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b60b624842235a040800000000000000
+      internalID: 4658184522001985643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterspoutSFX_8
+      rect:
+        serializedVersion: 2
+        x: 14844
+        y: 0
+        width: 1273
+        height: 1355
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47cfc6fe1c54aa180800000000000000
+      internalID: -9103386997528134540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 82b9e97a47db8a4488b66d81e54da436
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":9.0,"y":1.0},"gridSpriteSize":{"x":1807.0,"y":1355.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      WaterspoutSFX_0: 3705586476969650459
+      WaterspoutSFX_1: 8210670833309549619
+      WaterspoutSFX_2: 6516358725719131460
+      WaterspoutSFX_3: -2041112774290102235
+      WaterspoutSFX_4: 6439561864466369467
+      WaterspoutSFX_5: -6387085620667124760
+      WaterspoutSFX_6: 1517213968489858511
+      WaterspoutSFX_7: 4658184522001985643
+      WaterspoutSFX_8: -9103386997528134540
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
