@@ -25,3 +25,6 @@ MonoBehaviour:
   MaxBuyGold: 0
   BuyDiamond: 0
   HungerRecovery: 0
+  BaseBuyGold: 0
+  ShopListed: 0
+  SellSeason: 

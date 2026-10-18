@@ -20,8 +20,11 @@ MonoBehaviour:
   Description: "\uCCA0 \uBC14\uC704\uB97C \uCE90\uBA74 \uB098\uC624\uB294 \uCCA0
     \uB369\uC5B4\uB9AC. \uB3C4\uAD6C \uAC15\uD654\uC5D0 \uC4F4\uB2E4"
   MaxStack: 99
-  SellPrice: 0
-  MinBuyGold: 0
-  MaxBuyGold: 0
-  BuyDiamond: 0
+  SellPrice: 5
+  MinBuyGold: 10
+  MaxBuyGold: 14
+  BuyDiamond: 1
   HungerRecovery: 0
+  BaseBuyGold: 12
+  ShopListed: 1
+  SellSeason: Spring

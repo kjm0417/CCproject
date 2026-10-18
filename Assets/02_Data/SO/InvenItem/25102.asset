@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InvenItemData
   ItemID: 25102
   ItemName: "\uB9C8\uBC95 \uC9C0\uD321\uC774"
+  Icon: {fileID: 0}
   ItemType: "\uB3C4\uAD6C \uC544\uC774\uD15C"
   SubType: 
   Description: 
@@ -23,3 +24,6 @@ MonoBehaviour:
   MaxBuyGold: 0
   BuyDiamond: 0
   HungerRecovery: 0
+  BaseBuyGold: 0
+  ShopListed: 0
+  SellSeason: 

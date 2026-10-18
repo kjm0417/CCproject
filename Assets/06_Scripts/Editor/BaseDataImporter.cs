@@ -14,8 +14,8 @@ public abstract class BaseDataImporter<TDTO,TSO> where TSO : ScriptableObject
     protected abstract string JsonFilePath { get;}
     public abstract string SOFolderPath { get; }
 
-    protected abstract void MapDTOToSO(TDTO dto, TSO so); //ÇÊµå ¸ÅÇÎ
-    protected abstract string GetDTOID(TDTO dto); //SOÀÇ ID¸¦ °¡Á®¿À´Â ¸Ş¼­µå
+    protected abstract void MapDTOToSO(TDTO dto, TSO so); //ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½
+    protected abstract string GetDTOID(TDTO dto); //SOï¿½ï¿½ IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
 
     public DTOList<TDTO> GetDTOList()
     {
@@ -40,15 +40,22 @@ public abstract class BaseDataImporter<TDTO,TSO> where TSO : ScriptableObject
 
         foreach (TDTO dto in data.items)
         {
-            TSO so = ScriptableObject.CreateInstance<TSO>();
-            Debug.Log($"DTO: {dto != null}");
-            MapDTOToSO(dto, so);
-
             string dtoID = GetDTOID(dto);
-
             string assetPath = SOFolderPath + dtoID + ".asset";
 
-            AssetDatabase.CreateAsset(so, assetPath);
+            // ê¸°ì¡´ ì—ì…‹ì´ ìˆìœ¼ë©´ ì—…ë°ì´íŠ¸, ì—†ìœ¼ë©´ ìƒˆë¡œ ìƒì„± (GUID ìœ ì§€)
+            TSO so = AssetDatabase.LoadAssetAtPath<TSO>(assetPath);
+            if (so == null)
+            {
+                so = ScriptableObject.CreateInstance<TSO>();
+                MapDTOToSO(dto, so);
+                AssetDatabase.CreateAsset(so, assetPath);
+            }
+            else
+            {
+                MapDTOToSO(dto, so);
+                EditorUtility.SetDirty(so);
+            }
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

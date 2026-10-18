@@ -15,5 +15,8 @@ public class InvenItemData : ScriptableObject
     public int MaxBuyGold;
     public int BuyDiamond;
     [Min(0f)] public float HungerRecovery;
+    public int BaseBuyGold;
+    public bool ShopListed;
+    public string SellSeason; // ex) "Spring;Summer"
 }
 

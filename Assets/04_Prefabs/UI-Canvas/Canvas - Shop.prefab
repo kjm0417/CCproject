@@ -2059,6 +2059,7 @@ GameObject:
   - component: {fileID: 8705587658677776991}
   - component: {fileID: 3455639130099355903}
   - component: {fileID: 2199673253511317294}
+  - component: {fileID: 846019174925561756}
   m_Layer: 5
   m_Name: Canvas - Shop
   m_TagString: Untagged
@@ -2150,6 +2151,41 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &846019174925561756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2617221270531579867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8177552862cca2b4cb8ab75ec0d692fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopPanelUI
+  grpShopMain: {fileID: 8487736430676636834}
+  grpShopChange: {fileID: 4167396094036770985}
+  itemGridContainer: {fileID: 2910692675571839053}
+  shopSlotPrefab: {fileID: 7700631992252895900, guid: bbb2983d55e81f841b9a96f10067f2a0, type: 3}
+  btnGoldShop: {fileID: 2432881276229208771}
+  btnDiamondShop: {fileID: 1777814959138351552}
+  btnSale: {fileID: 1807069121414305202}
+  btnBackMain: {fileID: 3156794746326421989}
+  detailIcon: {fileID: 9214006105314849104}
+  detailName: {fileID: 1584936665066646857}
+  detailPrice: {fileID: 3281718641462283665}
+  detailCount: {fileID: 5920209512849585835}
+  detailShopCount: {fileID: 6831114687141450892}
+  detailDescription: {fileID: 6722529977666800846}
+  quantitySlider: {fileID: 233365148644659254}
+  btnUp: {fileID: 3692675269882240848}
+  btnDown: {fileID: 5520419431811645345}
+  btnUps: {fileID: 7718857743749184370}
+  btnDowns: {fileID: 7082860520511114182}
+  btnOK: {fileID: 5326569208355202605}
+  btnClose: {fileID: 1033518769848777634}
+  btnBackChange: {fileID: 5618292036221136263}
+  itemDatabase: {fileID: 11400000, guid: d488846811487e146948b2fa64b842a7, type: 2}
 --- !u!1 &2659529105771161314
 GameObject:
   m_ObjectHideFlags: 0

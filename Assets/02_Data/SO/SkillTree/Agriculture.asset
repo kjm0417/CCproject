@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87222d535c46d954d82d95c4c7b36245, type: 3}
+  m_Name: Agriculture
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  displayName: "\uCC44\uC9D1"
+  nodes:
+  - skill: {fileID: 11400000, guid: 656a18470960b0b489f966b16018ed49, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: 7cf5d02b7d5517e40a5879a38326821c, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: 48468a7dfe4016143be5b8663c3473a6, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: 07eba61bc1547234795b4318dd9eee54, type: 2}
+    parent: {fileID: 0}
+  - skill: {fileID: 11400000, guid: 9a04b89d709ee244f8a495ced4151a3d, type: 2}
+    parent: {fileID: 11400000, guid: 656a18470960b0b489f966b16018ed49, type: 2}
+  - skill: {fileID: 11400000, guid: 06a4aa8497e389347a0221d9e8709ea0, type: 2}
+    parent: {fileID: 11400000, guid: 7cf5d02b7d5517e40a5879a38326821c, type: 2}
+  - skill: {fileID: 11400000, guid: 239fbef8762bd594a807b789e06730c5, type: 2}
+    parent: {fileID: 11400000, guid: 48468a7dfe4016143be5b8663c3473a6, type: 2}
+  - skill: {fileID: 11400000, guid: d36bc2a663e4d344fadc54c2d63ee578, type: 2}
+    parent: {fileID: 11400000, guid: 07eba61bc1547234795b4318dd9eee54, type: 2}
+  - skill: {fileID: 11400000, guid: 07347254a0003864d85790bc7e76e769, type: 2}
+    parent: {fileID: 11400000, guid: 9a04b89d709ee244f8a495ced4151a3d, type: 2}
+  - skill: {fileID: 11400000, guid: 9901193e4c2a8fe4badaf221b3bf5a9d, type: 2}
+    parent: {fileID: 11400000, guid: 06a4aa8497e389347a0221d9e8709ea0, type: 2}
+  - skill: {fileID: 11400000, guid: e0ffb32ed9b733c4d8f6ac0e93409602, type: 2}
+    parent: {fileID: 11400000, guid: 239fbef8762bd594a807b789e06730c5, type: 2}
+  - skill: {fileID: 11400000, guid: 6b7e7d04abcedc04397566653d3beb39, type: 2}
+    parent: {fileID: 11400000, guid: d36bc2a663e4d344fadc54c2d63ee578, type: 2}
+  - skill: {fileID: 11400000, guid: fb3e6135d1af99c49a07a1fab03dc3e9, type: 2}
+    parent: {fileID: 11400000, guid: 07347254a0003864d85790bc7e76e769, type: 2}
+  - skill: {fileID: 11400000, guid: 43b2d779e46b83b4891c490a105d3341, type: 2}
+    parent: {fileID: 11400000, guid: 9901193e4c2a8fe4badaf221b3bf5a9d, type: 2}
+  - skill: {fileID: 11400000, guid: 2ec0c9c779e399644affdb49783bbcfe, type: 2}
+    parent: {fileID: 11400000, guid: e0ffb32ed9b733c4d8f6ac0e93409602, type: 2}
+  - skill: {fileID: 11400000, guid: e17b21ff5b8ffb946b319678b9a3b5f3, type: 2}
+    parent: {fileID: 11400000, guid: 6b7e7d04abcedc04397566653d3beb39, type: 2}

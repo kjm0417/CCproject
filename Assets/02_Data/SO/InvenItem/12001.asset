@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c572c4a219e0bd4e8b63d6227b81d14, type: 3}
+  m_Name: 12001
+  m_EditorClassIdentifier: Assembly-CSharp::InvenItemData
+  ItemID: 12001
+  ItemName: "\uBC8C\uAFC0"
+  Icon: {fileID: 0}
+  ItemType: "\uC7AC\uB8CC \uC544\uC774\uD15C"
+  SubType: "\uAC00\uACF5 \uC544\uC774\uD15C"
+  Description: "\uB2EC\uCF64\uD55C \uBC8C\uAFC0. \uC694\uB9AC\xB7\uAC00\uACF5 \uC7AC\uB8CC"
+  MaxStack: 99
+  SellPrice: 6
+  MinBuyGold: 12
+  MaxBuyGold: 16
+  BuyDiamond: 1
+  HungerRecovery: 0
+  BaseBuyGold: 14
+  ShopListed: 1
+  SellSeason: Spring;Summer;Autumn

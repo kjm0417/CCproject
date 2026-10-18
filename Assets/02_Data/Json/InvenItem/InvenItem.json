@@ -6,10 +6,14 @@
     "SubType":"화력 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":2,
+    "MinBuyGold":4,
+    "MaxBuyGold":5,
+    "BuyDiamond":0,
+    "HungerRecovery":"",
+    "BaseBuyGold":5,
+    "ShopListed":1,
+    "SellSeason":"Spring;Autumn"
   },
   {
     "ItemID":13001,
@@ -22,7 +26,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":11002,
@@ -34,7 +41,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":11003,
@@ -46,7 +57,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13002,
@@ -59,7 +74,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13003,
@@ -72,7 +90,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13004,
@@ -85,7 +106,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13005,
@@ -98,7 +122,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13006,
@@ -111,7 +138,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":13007,
@@ -124,7 +154,10 @@
     "MinBuyGold":"",
     "MaxBuyGold":"",
     "BuyDiamond":"",
-    "HungerRecovery":20
+    "HungerRecovery":20,
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":14001,
@@ -133,10 +166,14 @@
     "SubType":"씨앗 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":2,
+    "MinBuyGold":4,
+    "MaxBuyGold":6,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":5,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":14002,
@@ -145,10 +182,14 @@
     "SubType":"씨앗 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":3,
+    "MinBuyGold":6,
+    "MaxBuyGold":8,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":7,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":14003,
@@ -157,10 +198,14 @@
     "SubType":"씨앗 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":2,
+    "MinBuyGold":5,
+    "MaxBuyGold":7,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":6,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":14004,
@@ -169,10 +214,14 @@
     "SubType":"씨앗 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":3,
+    "MinBuyGold":7,
+    "MaxBuyGold":9,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":8,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":14005,
@@ -181,10 +230,14 @@
     "SubType":"씨앗 아이템",
     "Description":"",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":4,
+    "MinBuyGold":10,
+    "MaxBuyGold":14,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":12,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":21101,
@@ -196,7 +249,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":22101,
@@ -208,7 +265,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":23101,
@@ -220,7 +281,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":23102,
@@ -232,7 +297,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":25101,
@@ -244,7 +313,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":25102,
@@ -256,7 +329,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":11004,
@@ -265,10 +342,14 @@
     "SubType":"",
     "Description":"철 바위를 캐면 나오는 철 덩어리. 도구 강화에 쓴다",
     "MaxStack":99,
-    "SellPrice":"",
-    "MinBuyGold":"",
-    "MaxBuyGold":"",
-    "BuyDiamond":""
+    "SellPrice":5,
+    "MinBuyGold":10,
+    "MaxBuyGold":14,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":12,
+    "ShopListed":1,
+    "SellSeason":"Spring"
   },
   {
     "ItemID":21201,
@@ -280,7 +361,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":22201,
@@ -292,7 +377,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":25201,
@@ -304,7 +393,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":23201,
@@ -316,7 +409,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":23202,
@@ -328,7 +425,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":25202,
@@ -340,7 +441,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":42001,
@@ -352,7 +457,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":42002,
@@ -364,7 +473,11 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
   },
   {
     "ItemID":42003,
@@ -376,6 +489,74 @@
     "SellPrice":"",
     "MinBuyGold":"",
     "MaxBuyGold":"",
-    "BuyDiamond":""
+    "BuyDiamond":"",
+    "HungerRecovery":"",
+    "BaseBuyGold":"",
+    "ShopListed":"",
+    "SellSeason":""
+  },
+  {
+    "ItemID":11005,
+    "ItemName":"민들레",
+    "ItemType":"재료 아이템",
+    "SubType":"식물 아이템",
+    "Description":"봄 들판에 피는 노란 꽃",
+    "MaxStack":99,
+    "SellPrice":3,
+    "MinBuyGold":6,
+    "MaxBuyGold":8,
+    "BuyDiamond":0,
+    "HungerRecovery":"",
+    "BaseBuyGold":7,
+    "ShopListed":1,
+    "SellSeason":"Spring"
+  },
+  {
+    "ItemID":11006,
+    "ItemName":"벚꽃이 핀 나뭇가지",
+    "ItemType":"재료 아이템",
+    "SubType":"식물 아이템",
+    "Description":"벚꽃이 핀 나뭇가지",
+    "MaxStack":99,
+    "SellPrice":4,
+    "MinBuyGold":8,
+    "MaxBuyGold":11,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":10,
+    "ShopListed":1,
+    "SellSeason":"Spring"
+  },
+  {
+    "ItemID":12001,
+    "ItemName":"벌꿀",
+    "ItemType":"재료 아이템",
+    "SubType":"가공 아이템",
+    "Description":"달콤한 벌꿀. 요리·가공 재료",
+    "MaxStack":99,
+    "SellPrice":6,
+    "MinBuyGold":12,
+    "MaxBuyGold":16,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":14,
+    "ShopListed":1,
+    "SellSeason":"Spring;Summer;Autumn"
+  },
+  {
+    "ItemID":12002,
+    "ItemName":"설탕",
+    "ItemType":"재료 아이템",
+    "SubType":"가공 아이템",
+    "Description":"요리에 쓰는 설탕",
+    "MaxStack":99,
+    "SellPrice":5,
+    "MinBuyGold":10,
+    "MaxBuyGold":14,
+    "BuyDiamond":1,
+    "HungerRecovery":"",
+    "BaseBuyGold":12,
+    "ShopListed":1,
+    "SellSeason":"Spring;Summer"
   }
 ]

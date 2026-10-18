@@ -9,6 +9,8 @@ public class ItemDatabase : ScriptableObject
     [SerializeField]
     private List<InvenItemData> items = new List<InvenItemData>();
 
+    public IReadOnlyList<InvenItemData> Items => items.AsReadOnly();
+
     public InvenItemData FindById(int itemId)
     {
         return FindById(itemId.ToString());

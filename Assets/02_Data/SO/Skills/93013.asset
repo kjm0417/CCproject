@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360afb95d1734d5478bb0ba5b28bd9d8, type: 3}
+  m_Name: 93013
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillId: 93013
+  displayName: "\uD0C4\uB3C4\uD559"
+  description: "\uBC1C\uB9AC\uC2A4\uD0C0 \uD574\uAE08; \uD65C 3\uBC1C \uB3D9\uC2DC
+    \uBC1C\uC0AC"
+  icon: {fileID: 0}
+  pointCost: 1

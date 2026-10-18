@@ -1,0 +1,642 @@
+﻿[
+  {
+    "SkillID":91001,
+    "SkillName":"산업",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":1,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"강철·유리 해금; 건축 시 경험치 획득"
+  },
+  {
+    "SkillID":91002,
+    "SkillName":"재봉",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":2,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"가죽 해금; 재봉 시설 속도 +25%"
+  },
+  {
+    "SkillID":91003,
+    "SkillName":"목공",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":3,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"목공 작업대 해금; 건축 목재 비용 -25%"
+  },
+  {
+    "SkillID":91004,
+    "SkillName":"제련",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":4,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"용광로·대장간 속도 +25%"
+  },
+  {
+    "SkillID":91005,
+    "SkillName":"석공",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":5,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"석공 작업대·화로 해금; 건축 돌·벽돌 비용 -25%"
+  },
+  {
+    "SkillID":91006,
+    "SkillName":"직물",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":6,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"장화·장갑 해금"
+  },
+  {
+    "SkillID":91007,
+    "SkillName":"보석 세공",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":7,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"부적 해금; 보석 판매가 +20%"
+  },
+  {
+    "SkillID":91008,
+    "SkillName":"장인 기술",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":8,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"망치·왕실 강철·왕실 의복 해금"
+  },
+  {
+    "SkillID":91009,
+    "SkillName":"제조",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":9,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"공장 해금"
+  },
+  {
+    "SkillID":91010,
+    "SkillName":"시추",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":10,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"해상 시추기 해금; 모래 수집 가능; 땅 파기 시 석탄 발견 확률 25%"
+  },
+  {
+    "SkillID":91011,
+    "SkillName":"기계",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":11,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"꽃 압착기 해금; 시설 제작량이 2배가 될 확률 10%"
+  },
+  {
+    "SkillID":91012,
+    "SkillName":"자동화",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":12,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"채광봉 해금; 제작품 자동 수집"
+  },
+  {
+    "SkillID":91013,
+    "SkillName":"공학",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":13,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"드로이드·EMP 수류탄 해금; 산업 시설 속도 +25%"
+  },
+  {
+    "SkillID":91014,
+    "SkillName":"물리학",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":14,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"발전소·핵 단계 아이템 해금"
+  },
+  {
+    "SkillID":91015,
+    "SkillName":"레이저",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":15,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"채광봉·드로이드 피해 2배"
+  },
+  {
+    "SkillID":91016,
+    "SkillName":"철도",
+    "SkillTree":"Industry",
+    "SkillTreeName":"산업",
+    "Order":16,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"기관차·철로 해금"
+  },
+  {
+    "SkillID":92001,
+    "SkillName":"경제",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":1,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"즉시 코인 획득; 대장간 코인 제작량 +4"
+  },
+  {
+    "SkillID":92002,
+    "SkillName":"보관",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":2,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"보관소 해금"
+  },
+  {
+    "SkillID":92003,
+    "SkillName":"무역",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":3,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"시장 해금"
+  },
+  {
+    "SkillID":92004,
+    "SkillName":"흥정",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":4,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"시장 구매가 -15%"
+  },
+  {
+    "SkillID":92005,
+    "SkillName":"금융",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":5,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"은행 해금"
+  },
+  {
+    "SkillID":92006,
+    "SkillName":"자본주의",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":6,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"판매 시 경험치 획득; 버린 아이템 자동 판매"
+  },
+  {
+    "SkillID":92007,
+    "SkillName":"관리",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":7,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"인벤토리에서 보관소로 전송; 보관소 슬롯 잠금"
+  },
+  {
+    "SkillID":92008,
+    "SkillName":"공급",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":8,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"시장 상품 수 증가; 재입고 시간 -50%"
+  },
+  {
+    "SkillID":92009,
+    "SkillName":"예술성",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":9,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"제작 아이템 판매가 +25%"
+  },
+  {
+    "SkillID":92010,
+    "SkillName":"재정",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":10,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"인접 은행이 있을 때 은행 생산 속도 +50%"
+  },
+  {
+    "SkillID":92011,
+    "SkillName":"개척",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":11,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"토지 구매 비용 -30%"
+  },
+  {
+    "SkillID":92012,
+    "SkillName":"도박",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":12,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"슬롯머신 해금"
+  },
+  {
+    "SkillID":92013,
+    "SkillName":"광학",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":13,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"등대 해금; 빛 반경 2배"
+  },
+  {
+    "SkillID":92014,
+    "SkillName":"건축",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":14,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"시설 체력 2배; 건축 재료 -25%; 보관소 슬롯 증가"
+  },
+  {
+    "SkillID":92015,
+    "SkillName":"자동 수리",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":15,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"시설 자동 수리"
+  },
+  {
+    "SkillID":92016,
+    "SkillName":"물류",
+    "SkillTree":"Economy",
+    "SkillTreeName":"경제",
+    "Order":16,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"등대·채광봉·발전소·발리스타 효과 범위 2배"
+  },
+  {
+    "SkillID":93001,
+    "SkillName":"채집",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":1,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"밀·비트 등장; 목화 생성 빈도 증가"
+  },
+  {
+    "SkillID":93002,
+    "SkillName":"수집",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":2,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"인벤토리 +4칸; 식물·작물 경험치 +25%"
+  },
+  {
+    "SkillID":93003,
+    "SkillName":"낚시",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":3,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"낚싯대 해금; 물고기 덫 속도 +50%"
+  },
+  {
+    "SkillID":93004,
+    "SkillName":"채광",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":4,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"바위 광물 드롭량 +40%"
+  },
+  {
+    "SkillID":93005,
+    "SkillName":"지질학",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":5,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"모든 바위에서 석탄 드롭"
+  },
+  {
+    "SkillID":93006,
+    "SkillName":"사냥",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":6,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"활·화살 해금; 적 처치 시 코인 드롭"
+  },
+  {
+    "SkillID":93007,
+    "SkillName":"농사",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":7,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"풍차·스프링클러 해금"
+  },
+  {
+    "SkillID":93008,
+    "SkillName":"요리",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":8,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"요리 냄비·설탕·마요네즈·치즈 해금"
+  },
+  {
+    "SkillID":93009,
+    "SkillName":"폭식",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":9,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"섭취 시 경험치 획득; 에너지 회복량 +20%"
+  },
+  {
+    "SkillID":93010,
+    "SkillName":"탐광",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":10,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"바위 보석 드롭 확률 +10%; 땅 파기 희귀품 확률 +30%"
+  },
+  {
+    "SkillID":93011,
+    "SkillName":"숙련",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":11,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"농업 시설 속도 +25%"
+  },
+  {
+    "SkillID":93012,
+    "SkillName":"반려동물",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":12,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"우호적 동료 등장"
+  },
+  {
+    "SkillID":93013,
+    "SkillName":"탄도학",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":13,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"발리스타 해금; 활 3발 동시 발사"
+  },
+  {
+    "SkillID":93014,
+    "SkillName":"약탈",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":14,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"적·보스 전리품 +50%"
+  },
+  {
+    "SkillID":93015,
+    "SkillName":"광상",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":15,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"채석장 해금"
+  },
+  {
+    "SkillID":93016,
+    "SkillName":"광물 섭취",
+    "SkillTree":"Agriculture",
+    "SkillTreeName":"채집",
+    "Order":16,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"광물·보석 섭취 가능"
+  },
+  {
+    "SkillID":94001,
+    "SkillName":"마법",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":1,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"획득 경험치 +25%"
+  },
+  {
+    "SkillID":94002,
+    "SkillName":"전투",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":2,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"검 해금; 기본 피해 +1"
+  },
+  {
+    "SkillID":94003,
+    "SkillName":"회피",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":3,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"회피 확률 +15%"
+  },
+  {
+    "SkillID":94004,
+    "SkillName":"재생",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":4,
+    "GrowthStage":1,
+    "GrowthStageName":"초반 · 기반 확보",
+    "Effect":"적 처치 시 에너지 회복"
+  },
+  {
+    "SkillID":94005,
+    "SkillName":"연금술",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":5,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"가마솥 해금"
+  },
+  {
+    "SkillID":94006,
+    "SkillName":"각인",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":6,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"각인 작업대 해금"
+  },
+  {
+    "SkillID":94007,
+    "SkillName":"시약",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":7,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"물약·두루마리 제작 재료 감소"
+  },
+  {
+    "SkillID":94008,
+    "SkillName":"주문 강화",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":8,
+    "GrowthStage":2,
+    "GrowthStageName":"초중반 · 플레이 확장",
+    "Effect":"버프 지속 +50%; 물약·두루마리 사용 시 경험치"
+  },
+  {
+    "SkillID":94009,
+    "SkillName":"신앙",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":9,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"성소 해금"
+  },
+  {
+    "SkillID":94010,
+    "SkillName":"마법 운용",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":10,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"마법 시설 속도 +25%"
+  },
+  {
+    "SkillID":94011,
+    "SkillName":"마술",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":11,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"전문가 단계 두루마리·물약 해금"
+  },
+  {
+    "SkillID":94012,
+    "SkillName":"파괴",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":12,
+    "GrowthStage":3,
+    "GrowthStageName":"중후반 · 효율 강화",
+    "Effect":"보스 대상 피해 +25%"
+  },
+  {
+    "SkillID":94013,
+    "SkillName":"변환",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":13,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"공허 강철 해금; 가마솥에서 강철을 보석으로 변환"
+  },
+  {
+    "SkillID":94014,
+    "SkillName":"영성",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":14,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"정령 구슬 2개 획득; 영혼 대장간 해금"
+  },
+  {
+    "SkillID":94015,
+    "SkillName":"소환",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":15,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"인장 제작기 해금; 성소 재충전 속도 2배"
+  },
+  {
+    "SkillID":94016,
+    "SkillName":"점성술",
+    "SkillTree":"Magic",
+    "SkillTreeName":"마법",
+    "Order":16,
+    "GrowthStage":4,
+    "GrowthStageName":"후반 · 고도화",
+    "Effect":"우주 강철 해금; 유성 발생 빈도 증가"
+  }
+]

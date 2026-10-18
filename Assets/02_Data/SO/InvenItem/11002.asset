@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InvenItemData
   ItemID: 11002
   ItemName: "\uC790\uAC08"
+  Icon: {fileID: 0}
   ItemType: "\uC7AC\uB8CC \uC544\uC774\uD15C"
   SubType: 
   Description: 
@@ -22,3 +23,7 @@ MonoBehaviour:
   MinBuyGold: 0
   MaxBuyGold: 0
   BuyDiamond: 0
+  HungerRecovery: 0
+  BaseBuyGold: 0
+  ShopListed: 0
+  SellSeason: 

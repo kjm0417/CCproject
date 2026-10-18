@@ -14,11 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InvenItemData
   ItemID: 14002
   ItemName: "\uB9E4\uC2E4 \uC528\uC557"
+  Icon: {fileID: 0}
   ItemType: "\uBC30\uCE58 \uC544\uC774\uD15C"
   SubType: "\uC528\uC557 \uC544\uC774\uD15C"
   Description: 
   MaxStack: 99
-  SellPrice: 0
-  MinBuyGold: 0
-  MaxBuyGold: 0
-  BuyDiamond: 0
+  SellPrice: 3
+  MinBuyGold: 6
+  MaxBuyGold: 8
+  BuyDiamond: 1
+  HungerRecovery: 0
+  BaseBuyGold: 7
+  ShopListed: 1
+  SellSeason: Spring

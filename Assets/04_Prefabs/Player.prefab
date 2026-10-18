@@ -419,6 +419,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkills
   skillTrees:
   - {fileID: 11400000, guid: 6a062f1ca61846ec91f73eb5547c8801, type: 2}
+  - {fileID: 11400000, guid: 88a2a2e125edca048923272175dce280, type: 2}
+  - {fileID: 11400000, guid: 713fb23a45d53e54780658ecbbfda95e, type: 2}
+  - {fileID: 11400000, guid: 0e8b684f52ea49f458c8963bf9cab42a, type: 2}
+  - {fileID: 11400000, guid: 96eb9d6a4eaee60408113d25e8e57bd0, type: 2}
 --- !u!114 &902928968436892406
 MonoBehaviour:
   m_ObjectHideFlags: 0
