@@ -16,5 +16,32 @@
     "ATK":2,
     "EXP":4,
     "DropGroupID":71002
+  },
+  {
+    "MonsterID":50011,
+    "MonsterName":"빠른 슬라임",
+    "Level":2,
+    "HP":10,
+    "ATK":3,
+    "EXP":6,
+    "DropGroupID":71001
+  },
+  {
+    "MonsterID":50012,
+    "MonsterName":"단단한 슬라임",
+    "Level":2,
+    "HP":40,
+    "ATK":3,
+    "EXP":6,
+    "DropGroupID":71001
+  },
+  {
+    "MonsterID":50013,
+    "MonsterName":"강한 슬라임",
+    "Level":2,
+    "HP":10,
+    "ATK":8,
+    "EXP":6,
+    "DropGroupID":71001
   }
 ]

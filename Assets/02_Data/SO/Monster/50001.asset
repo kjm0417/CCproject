@@ -15,7 +15,7 @@ MonoBehaviour:
   MonsterID: 50001
   MonsterName: "\uC2AC\uB77C\uC784"
   Level: 1
-  HP: 5
+  HP: 20
   ATK: 2
   EXP: 4
   DropGroupID: 71001

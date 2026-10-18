@@ -11913,11 +11913,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4146911235499842538, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.41
+      value: -39.87
       objectReference: {fileID: 0}
     - target: {fileID: 4146911235499842538, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 153.17
+      value: 76.9
       objectReference: {fileID: 0}
     - target: {fileID: 4146911235499842538, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18862,7 +18862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eaea7770c39beb4893dffb627da3624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonSpring
-  startMap: {fileID: 783990706}
+  startMap: {fileID: 943895137}
   confiner: {fileID: 182130445}
   pathGrid: {fileID: 130939008}
   enemyCount1F: 4
@@ -33334,6 +33334,14 @@ PrefabInstance:
     - target: {fileID: 3124456622628183263, guid: 3d237cb4cd047894f9e727407590ebec, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3124456622628183263, guid: 3d237cb4cd047894f9e727407590ebec, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3124456622628183263, guid: 3d237cb4cd047894f9e727407590ebec, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1258410405
       objectReference: {fileID: 0}
     - target: {fileID: 9111809385211189237, guid: 3d237cb4cd047894f9e727407590ebec, type: 3}
       propertyPath: m_Name
