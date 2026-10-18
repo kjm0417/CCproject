@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uB3C4\uB07C"
   ToolType: Axe
   ToolGrade: common
-  Description: 
+  Description: "\uB098\uBB34\uB97C \uBCA0\uB294 \uAE30\uBCF8 \uB3C4\uB07C"
   Power: 1.5
   CraftRecipeID: 61002
   Icon: {fileID: -5825250732961213246, guid: 50c8847cd1186334a98a26fad850e3da, type: 3}

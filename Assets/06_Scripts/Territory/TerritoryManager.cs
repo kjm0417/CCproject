@@ -42,7 +42,7 @@ public class TerritoryManager : MonoBehaviour
         }
     }
 
-    private ICurrencyProvider currencyProvider;
+    private PlayerWallet playerWallet;
 
     private Dictionary<int, TerritoryZone> territoryZonesDic = new Dictionary<int, TerritoryZone>();
 
@@ -56,6 +56,9 @@ public class TerritoryManager : MonoBehaviour
 
     // 파낸 흙에 씨앗 심기 (같은 오브젝트에 붙어 있을 때만)
     public CropPlanter CropPlanter { get; private set; }
+
+    // 설치 아이템 배치 (같은 오브젝트에 붙어 있을 때만)
+    public StructurePlacer StructurePlacer { get; private set; }
 
     private Dictionary<int, Dictionary<ResourceSpawnEntry, float>> savedRespawningResources = new Dictionary<int, Dictionary<ResourceSpawnEntry, float>>();
 
@@ -77,12 +80,13 @@ public class TerritoryManager : MonoBehaviour
             territoryZonesDic.Add(zone.TerritoryZoneData.ZoneId, zone);
         }
 
-        currencyProvider = FindAnyObjectByType<CurrencyManager>();
+        playerWallet = FindAnyObjectByType<PlayerWallet>();
 
         territoryRunTimeData = new TerritoryRunTimeData();
 
         TileModifier = GetComponent<GroundTileModifier>();
         CropPlanter = GetComponent<CropPlanter>();
+        StructurePlacer = GetComponent<StructurePlacer>();
     }
 
     #region 영토 저장 및 불러오기
@@ -197,6 +201,18 @@ public class TerritoryManager : MonoBehaviour
             territorySaveData.plantedCrops = CropPlanter.Save();
         }
 
+        // 배치한 설치물 저장
+        if (StructurePlacer != null)
+        {
+            territorySaveData.placedStructures = StructurePlacer.Save();
+        }
+
+        // 퀘스트 진행 저장
+        if (QuestManager.Instance != null)
+        {
+            territorySaveData.quests = QuestManager.Instance.Save();
+        }
+
         // 상자 보관 아이템 저장
         foreach (ChestObject chest in FindObjectsByType<ChestObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
@@ -221,6 +237,20 @@ public class TerritoryManager : MonoBehaviour
         }
 
         return territorySaveData;
+    }
+
+    /// <summary>
+    /// 세이브가 없을 때(새 게임) 처음부터 열려 있는 구역의 자원/작물/구조물 생성
+    /// </summary>
+    public void SpawnStartZones()
+    {
+        foreach (var zone in territoryZonesDic.Values)
+        {
+            if (zone.IsLocked) continue;
+
+            ResourceSpawner spawner = zone.GetComponent<ResourceSpawner>();
+            if (spawner != null) spawner.SpawnInitial();
+        }
     }
 
     public void Load(TerritorySaveData data)
@@ -249,9 +279,12 @@ public class TerritoryManager : MonoBehaviour
             }
         }
 
-        // 구조물 생성
+        // 구조물 생성 (해금된 구역만)
         foreach (var zone in territoryZonesDic.Values)
         {
+            bool isUnlocked = zone.TerritoryZoneData.ZoneId == 1 || data.UnlockedZoneIds.Contains(zone.TerritoryZoneData.ZoneId);
+            if (!isUnlocked) continue;
+
             if (zone.TerritoryZoneData.StructSlots.Count > 0)
             {
                 foreach (var structSlot in zone.TerritoryZoneData.StructSlots)
@@ -303,6 +336,18 @@ public class TerritoryManager : MonoBehaviour
         if (CropPlanter != null)
         {
             CropPlanter.Load(data.plantedCrops);
+        }
+
+        // 배치한 설치물 복원 (상자 보관 아이템 복원보다 먼저)
+        if (StructurePlacer != null)
+        {
+            StructurePlacer.Load(data.placedStructures);
+        }
+
+        // 퀘스트 진행 복원
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.Load(data.quests);
         }
 
         foreach(var objState in data.fieldObjects)
@@ -437,7 +482,7 @@ public class TerritoryManager : MonoBehaviour
             return true;
         }
 
-        if (currencyProvider.TrySpend(territoryZone.TerritoryZoneData.RequireGold))
+        if (playerWallet.TrySpend(CurrencyType.Gold, (int)territoryZone.TerritoryZoneData.RequireGold))
         {
             territoryZone.UnLockZone();
             return true;

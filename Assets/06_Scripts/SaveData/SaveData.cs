@@ -158,7 +158,20 @@ public class TerritorySaveData
     public List<ModifiedTileData> modifiedTiles = new List<ModifiedTileData>();
     public List<DroppedItemData> droppedItems = new List<DroppedItemData>();
     public List<PlantedCropData> plantedCrops = new List<PlantedCropData>();
+    public List<PlacedStructureData> placedStructures = new List<PlacedStructureData>();
     public List<ChestSaveData> chests = new List<ChestSaveData>();
+    public List<QuestProgressData> quests = new List<QuestProgressData>();
+}
+
+/// <summary>
+/// 퀘스트 진행 저장 데이터
+/// </summary>
+[System.Serializable]
+public class QuestProgressData
+{
+    public string QuestID;
+    public int Count; //현재 진행 수
+    public int PaidCount; //보상 받은 횟수
 }
 
 /// <summary>
@@ -183,6 +196,18 @@ public class PlantedCropData
     public string SeedItemID; //심은 씨앗 ID -> CropPlanter 매핑으로 작물 prefab 찾음
     public int GrowthStage;
     public bool IsGrowthComplete;
+}
+
+/// <summary>
+/// 플레이어가 영지에 배치한 설치물 (상자 / 작업대 / 모닥불) 저장 데이터
+/// </summary>
+[System.Serializable]
+public class PlacedStructureData
+{
+    public int ZoneId;
+    public int CellX;
+    public int CellY;
+    public string ItemID; //설치 아이템 ID -> StructurePlacer 매핑으로 prefab 찾음
 }
 
 /// <summary>

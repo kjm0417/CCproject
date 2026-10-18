@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 742956056c5ac994ca6b466617bf20b9, type: 3}
+  m_Name: 61106
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  CraftRecipeID: 61106
+  ResultItemID: 25202
+  ResultCount: 1
+  CraftFacilityID: 42003
+  CraftTimeSec: 60
+  Materials:
+  - ItemID: 11001
+    Count: 5
+  - ItemID: 11004
+    Count: 3
+  - ItemID: 11003
+    Count: 4
+  LifeType: 4
+  Season: Spring
+  RequiredToolID: 25102

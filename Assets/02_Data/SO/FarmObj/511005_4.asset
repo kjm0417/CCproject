@@ -16,5 +16,5 @@ MonoBehaviour:
   CropName: "\uC624\uB514 (04)"
   TimePerStageSec: 5
   Regrowable: 100
-  DropGroupID: 73010
+  DropGroupID: 73012
   CropSeason: Spring

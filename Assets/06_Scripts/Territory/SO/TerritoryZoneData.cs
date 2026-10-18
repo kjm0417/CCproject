@@ -12,6 +12,8 @@ public class TerritoryZoneData : ScriptableObject
     public bool IsSpecialZone;//특별 구역 여부
 
     public List<ResourceSpawnEntry> ResourceSpawnTable; //자원 스폰 테이블
+    public List<CropSpawnEntry> CropSpawnTable; //작물 스폰 테이블 (해금 시 다 자란 상태)
+    public List<MonsterSpawnEntry> MonsterSpawnTable; //몬스터 스폰 테이블 (동시 최대 수)
     public List<NpcSlotData> NpcSlots; //NPC 스폰 테이블
     public List<StructSlotData> StructSlots; //구조물 스폰 테이블
 

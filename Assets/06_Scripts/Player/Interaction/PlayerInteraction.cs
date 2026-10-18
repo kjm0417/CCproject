@@ -23,6 +23,11 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     private Transform tileCheckOrigin;
 
 
+    [Header("타겟 강조")]
+    [Tooltip("도끼 / 곡괭이로 캘 대상의 알파 배율 (1이면 변화 없음)")]
+    [SerializeField, Range(0f, 1f)]
+    private float targetFadeAlpha = 0.5f;
+
     [Header("임시 도구 테스트")]
     [Tooltip("임시 테스트 값입니다. 나중에는 장착한 도구 데이터에서 자동으로 설정되게 하면 됨.")]
     [SerializeField]
@@ -70,6 +75,9 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         {
             tileCheckOrigin = transform;
         }
+
+        OnTargetChanged -= HandleTargetFade;
+        OnTargetChanged += HandleTargetFade;
     }
 
     private void Update()
@@ -207,7 +215,63 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
     {
         GroundTileModifier tileModifier = TerritoryManager.Instance != null ? TerritoryManager.Instance.TileModifier : null;
         if (tileModifier != null) tileModifier.HidePreview();
+
+        RestoreTargetFade();
     }
+
+    #region 타겟 강조
+    private SpriteRenderer[] fadedRenderers;
+    private float[] fadedOriginalAlphas;
+
+    /// <summary>
+    /// 도끼 / 곡괭이로 캘 대상(나무, 광물)이면 알파를 낮춰 표시
+    /// </summary>
+    private void HandleTargetFade(IInteractable target, ToolType toolType)
+    {
+        RestoreTargetFade();
+
+        // 대상이 요구하는 도구가 도끼 / 곡괭이이고 그 도구로 칠 수 있을 때만
+        // (요구 도구 없는 오브젝트는 들고 있는 도구가 그대로 넘어오므로 toolType 만으로 판정하면 안 됨)
+        IToolInteractionTarget toolTarget = target as IToolInteractionTarget;
+        if (toolTarget == null) return;
+
+        ToolType preferredToolType = toolTarget.PreferredToolType;
+        if (preferredToolType != ToolType.Axe && preferredToolType != ToolType.Pickaxe) return;
+        if (toolType != preferredToolType) return;
+
+        Component targetComponent = target as Component;
+        if (targetComponent == null) return;
+
+        fadedRenderers = targetComponent.GetComponentsInChildren<SpriteRenderer>();
+        fadedOriginalAlphas = new float[fadedRenderers.Length];
+
+        for (int i = 0; i < fadedRenderers.Length; i++)
+        {
+            Color color = fadedRenderers[i].color;
+            fadedOriginalAlphas[i] = color.a;
+            color.a *= targetFadeAlpha;
+            fadedRenderers[i].color = color;
+        }
+    }
+
+    private void RestoreTargetFade()
+    {
+        if (fadedRenderers == null) return;
+
+        for (int i = 0; i < fadedRenderers.Length; i++)
+        {
+            // 파괴된 오브젝트는 건너뜀 (풀링으로 비활성된 건 복구)
+            if (fadedRenderers[i] == null) continue;
+
+            Color color = fadedRenderers[i].color;
+            color.a = fadedOriginalAlphas[i];
+            fadedRenderers[i].color = color;
+        }
+
+        fadedRenderers = null;
+        fadedOriginalAlphas = null;
+    }
+    #endregion
 
     private bool TryInteractTile(ToolType toolType)
     {
@@ -235,6 +299,17 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
         if (cropPlanter == null || context == null) return false;
 
         return cropPlanter.TryPlant(tileCheckOrigin.position, seed, context.Inventory);
+    }
+
+    /// <summary>
+    /// 발밑 칸에 설치 아이템(상자 / 작업대 / 모닥불) 배치
+    /// </summary>
+    public bool TryPlaceStructure(InvenItemData item)
+    {
+        StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+        if (placer == null || context == null) return false;
+
+        return placer.TryPlace(tileCheckOrigin.position, item, context.Inventory);
     }
 
     /// <summary>
@@ -352,7 +427,8 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
             InvenItemData item = inventory.Slots[i].Item;
             if (item == null) continue;
 
-            if (!string.IsNullOrEmpty(itemId) && item.ItemID == itemId) return true;
+            // 강화 도구도 같은 종류로 인정 (21201 -> 21101)
+            if (!string.IsNullOrEmpty(itemId) && ToolItemIds.IsSameTool(item.ItemID, itemId)) return true;
             if (!string.IsNullOrEmpty(itemName) && item.ItemName == itemName) return true;
         }
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uAD2D\uC774"
   ToolType: Hoe
   ToolGrade: common
-  Description: 
+  Description: "\uBC2D\uC744 \uAC00\uB294 \uAE30\uBCF8 \uAD2D\uC774"
   Power: 1.5
   CraftRecipeID: 61005
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 633d225e1b6563a4d9ced557b11dff2b, type: 3}

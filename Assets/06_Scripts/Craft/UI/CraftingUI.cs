@@ -53,6 +53,11 @@ public class CraftingUI : MonoBehaviour
     [Tooltip("재료 충족도 (0~1)")]
     [SerializeField]
     private Slider materialFillSlider;
+    [Tooltip("강화 레시피일 때만 켜지는 필요 도구 영역 (슬롯 + 화살표)")]
+    [SerializeField]
+    private GameObject requiredToolRoot;
+    [SerializeField]
+    private CraftMaterialSlotView requiredToolSlot;
 
     [Header("개수 / 시간 / 제작")]
     [SerializeField]
@@ -310,6 +315,13 @@ public class CraftingUI : MonoBehaviour
         }
         if (resultNameText != null) resultNameText.text = GetResultName(recipe);
 
+        // 강화 레시피: 필요 도구 아이콘 + 보유 여부(0/1, 1/1)
+        if (requiredToolRoot != null) requiredToolRoot.SetActive(recipe.IsUpgrade);
+        if (recipe.IsUpgrade && requiredToolSlot != null && !IsCrafting)
+        {
+            requiredToolSlot.Set(GetItemIcon(recipe.RequiredToolID), Mathf.Min(1, GetItemCount(recipe.RequiredToolID)), 1);
+        }
+
         // 재료: 제작 개수만큼 곱한 필요량 기준 (제작 중이면 이미 소모했으므로 갱신하지 않는다)
         if (!IsCrafting)
         {
@@ -339,7 +351,12 @@ public class CraftingUI : MonoBehaviour
         if (IsCrafting) return;
 
         if (countText != null) countText.text = $"{craftCount}/{Mathf.Max(0, max)}";
-        if (timeText != null) timeText.text = $"소요시간 : {FormatSeconds(recipe.CraftTimeSec * craftCount)}";
+        if (timeText != null)
+        {
+            // 도구 보유 조건 때문에 막혔으면 소요시간 대신 사유 표시
+            string blockReason = GetToolBlockReason(recipe);
+            timeText.text = blockReason ?? $"소요시간 : {FormatSeconds(recipe.CraftTimeSec * craftCount)}";
+        }
 
         if (!IsCrafting)
         {
@@ -405,6 +422,7 @@ public class CraftingUI : MonoBehaviour
 
     /// <summary>
     /// 결과물 지급. 도구도 인벤토리 아이템(도구 아이템)으로 지급한다.
+    /// 강화 레시피는 기존 도구를 제거하고 강화 도구로 교체한다.
     /// </summary>
     private void GiveResult(RecipeData recipe)
     {
@@ -415,6 +433,12 @@ public class CraftingUI : MonoBehaviour
         {
             Debug.LogWarning($"[CraftingUI] 아이템 지급 실패: {recipe.ResultItemID}");
             return;
+        }
+
+        if (recipe.IsUpgrade)
+        {
+            InvenItemData oldTool = FindInventoryItem(recipe.RequiredToolID);
+            if (oldTool != null) player.Inventory.Remove(oldTool, 1);
         }
 
         int left = player.Inventory.Add(item, recipe.ResultCount);
@@ -487,14 +511,52 @@ public class CraftingUI : MonoBehaviour
     private int GetMaxCraftCount(RecipeData recipe)
     {
         if (recipe == null) return 0;
+        if (GetToolBlockReason(recipe) != null) return 0;
 
-        int max = maxCraftCountCap;
+        // 도구는 1개만 보유하므로 한 번에 1개
+        int max = recipe.IsToolResult ? 1 : maxCraftCountCap;
         foreach (CraftMaterial material in recipe.Materials)
         {
             if (material.Count <= 0) continue;
             max = Mathf.Min(max, GetItemCount(material.ItemID) / material.Count);
         }
         return max;
+    }
+
+    /// <summary>
+    /// 도구 보유 조건으로 제작이 막힌 사유. 막히지 않았으면 null.
+    /// 기본 도구: 같은 종류 도구(강화 포함)를 이미 가지고 있으면 불가.
+    /// 강화 도구: 기존 도구(RequiredToolID)를 가지고 있어야 가능.
+    /// </summary>
+    private string GetToolBlockReason(RecipeData recipe)
+    {
+        if (recipe == null || !recipe.IsToolResult) return null;
+
+        if (recipe.IsUpgrade)
+        {
+            if (GetItemCount(recipe.ResultItemID) > 0) return "이미 보유한 도구";
+            if (GetItemCount(recipe.RequiredToolID) <= 0) return $"{GetItemName(recipe.RequiredToolID)} 필요";
+            return null;
+        }
+
+        return HasSameTool(recipe.ResultItemID) ? "이미 보유한 도구" : null;
+    }
+
+    /// <summary>
+    /// 같은 종류 도구(등급 무관)를 인벤토리에 가지고 있는지
+    /// </summary>
+    private bool HasSameTool(string toolId)
+    {
+        PlayerInventory inventory = player != null ? player.Inventory : null;
+        if (inventory == null) return false;
+
+        string baseId = ToolItemIds.ToBaseId(toolId);
+        for (int i = 0; i < inventory.Slots.Count; i++)
+        {
+            InventorySlot slot = inventory.Slots[i];
+            if (slot.Item != null && slot.Count > 0 && ToolItemIds.IsSameTool(slot.Item.ItemID, baseId)) return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -532,8 +594,13 @@ public class CraftingUI : MonoBehaviour
 
     private string GetResultName(RecipeData recipe)
     {
-        InvenItemData item = itemDatabase != null ? itemDatabase.FindById(recipe.ResultItemID) : null;
-        return item != null ? item.ItemName : recipe.ResultItemID;
+        return GetItemName(recipe.ResultItemID);
+    }
+
+    private string GetItemName(string itemId)
+    {
+        InvenItemData item = itemDatabase != null ? itemDatabase.FindById(itemId) : null;
+        return item != null ? item.ItemName : itemId;
     }
 
     /// <summary>

@@ -49,6 +49,13 @@
     "MaxCount":1
   },
   {
+    "DropGroupID":71006,
+    "ItemID":11004,
+    "DropRate":100,
+    "MinCount":1,
+    "MaxCount":2
+  },
+  {
     "DropGroupID":73001,
     "ItemID":13003,
     "DropRate":100,

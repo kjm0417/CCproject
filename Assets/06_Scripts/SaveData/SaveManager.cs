@@ -87,6 +87,11 @@ public class SaveManager : MonoBehaviour
                 Debug.Log("영토 데이터 로드1");
                 territoryManager.Load(territoryData);
             }
+            else
+            {
+                // 새 게임 - 시작 구역 자원 생성
+                territoryManager.SpawnStartZones();
+            }
         }
     }
 

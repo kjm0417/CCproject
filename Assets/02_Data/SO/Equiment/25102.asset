@@ -16,7 +16,7 @@ MonoBehaviour:
   ToolName: "\uB9C8\uBC95 \uC9C0\uD321\uC774"
   ToolType: Staff
   ToolGrade: common
-  Description: 
+  Description: "\uB9E4\uC2E4 \uAE30\uC6B4\uC774 \uAE43\uB4E0 \uB098\uBB34 \uC9C0\uD321\uC774"
   Power: 2
   CraftRecipeID: 61007
   Icon: {fileID: 0}

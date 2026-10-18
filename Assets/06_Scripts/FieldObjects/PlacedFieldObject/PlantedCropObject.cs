@@ -38,6 +38,8 @@ public class PlantedCropObject : InteractivePlacedFieldObject, IGrowable, IPoola
     /// </summary>
     public event Action<PlantedCropObject> OnRemoved;
 
+    public int MaxGrowthStage => maxGrowthStage;
+
     public int GrowthStage
     {
         get => growth.CurrentStage;

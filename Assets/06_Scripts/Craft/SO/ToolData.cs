@@ -24,6 +24,7 @@ public class ToolData : ScriptableObject
     /// </summary>
     public Sprite GetIcon()
     {
+        if (Icon == null && !string.IsNullOrEmpty(ToolID)) Icon = Resources.Load<Sprite>(ToolItemIds.IconPath(ToolID));
         if (Icon == null && !string.IsNullOrEmpty(ToolType)) Icon = Resources.Load<Sprite>($"Equipment/{ToolType}");
         return Icon;
     }

@@ -154,6 +154,21 @@ public class GroundTileModifier : MonoBehaviour
     }
 
     /// <summary>
+    /// 도구 사용 없이 해당 칸을 도구 변환 결과 타일로 바꾼다 (구역 해금 시 작물 흙 등)
+    /// </summary>
+    public bool TryForceConvertTile(TerritoryZone zone, Vector3Int cell, ToolType toolType)
+    {
+        if (conversionData == null || zone == null || zone.TerritoryTileMapGround == null) return false;
+
+        TileBase originalTile = zone.TerritoryTileMapGround.GetTile(cell);
+        if (!conversionData.TryGetResult(toolType, originalTile, out TileBase resultTile)) return false;
+
+        zone.TerritoryTileMapGround.SetTile(cell, resultTile);
+        RecordCell(zone.TerritoryZoneData.ZoneId, cell, originalTile, resultTile);
+        return true;
+    }
+
+    /// <summary>
     /// 발밑 칸 기준 상하좌우 인접 칸 중 neighborReach 안에서 가까운 순으로 변환 가능한 칸 찾기
     /// </summary>
     private bool TryFindNeighborConversion(Vector3 worldPosition, ToolType toolType,
@@ -228,6 +243,14 @@ public class GroundTileModifier : MonoBehaviour
             return false;
         }
 
+        // 설치물이 놓인 칸은 변환 불가
+        StructurePlacer placer = Manager.StructurePlacer;
+        if (placer != null && placer.IsPlaced(zone, cell))
+        {
+            if (logFailure) Log($"{zone.name} {cell} 설치물이 있어 변환 불가");
+            return false;
+        }
+
         return true;
     }
 
@@ -246,6 +269,14 @@ public class GroundTileModifier : MonoBehaviour
     public bool IsModified(TerritoryZone zone, Vector3Int cell)
     {
         return modifiedCells.TryGetValue(zone.TerritoryZoneData.ZoneId, out var cells) && cells.ContainsKey(cell);
+    }
+
+    /// <summary>
+    /// 해금된 구역 중 해당 위치에 Ground 타일이 있는 구역과 칸 (설치물 배치 등 외부용)
+    /// </summary>
+    public TerritoryZone FindZoneAt(Vector3 worldPosition, out Vector3Int cell)
+    {
+        return FindUnlockedZoneAt(worldPosition, out cell);
     }
 
     /// <summary>

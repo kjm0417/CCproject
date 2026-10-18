@@ -27,6 +27,11 @@ public class ResourceSpawner : MonoBehaviour
     private Dictionary<Vector3Int, GameObject> occupiedCells = new Dictionary<Vector3Int, GameObject>();
     private Dictionary<GameObject, List<Vector3Int>> occupiedCellsByObject = new Dictionary<GameObject, List<Vector3Int>>();
 
+    /// <summary>
+    /// 영지 자원이 채집(파괴)될 때 (자원 prefab) - 퀘스트 진행용
+    /// </summary>
+    public static event System.Action<GameObject> OnAnyResourceDepleted;
+
     // 재생성 예정 자원: (entry, 시작시간, 대기시간)
     private List<(ResourceSpawnEntry entry, float startTime, float delay)> respawningResources = new List<(ResourceSpawnEntry, float, float)>();
 
@@ -64,6 +69,14 @@ public class ResourceSpawner : MonoBehaviour
     public bool IsOccupied(Vector3Int cell)
     {
         return occupiedCells.ContainsKey(cell);
+    }
+
+    /// <summary>
+    /// 자원 / 작물 / 구조물 주변이 아닌 빈 칸인지 (몬스터 생성 위치 판정용)
+    /// </summary>
+    public bool IsSpawnableCell(Vector3Int cell)
+    {
+        return CanSpawnAt(cell, 1, 1);
     }
 
     /// <summary>
@@ -170,17 +183,20 @@ public class ResourceSpawner : MonoBehaviour
         {
             Debug.Log($"Spawning {entry.ResourcePrefab.name}, GridWidth: {entry.GridWidth}, GridHeight: {entry.GridHeight}, MaxCount: {entry.MaxCount}");
 
+            // 이 자원 크기로 못 쓰는 칸은 이 자원 후보에서만 제외 (작은 자원은 다시 쓸 수 있게)
+            List<Vector3Int> candidateCells = new List<Vector3Int>(availableCells);
+
             for (int i = 0; i < entry.MaxCount; i++)
             {
-                if (availableCells.Count == 0) break; // 저번에 얘기한 안전장치
+                if (candidateCells.Count == 0) break; // 저번에 얘기한 안전장치
 
-                int index =  Random.Range(0, availableCells.Count);
+                int index =  Random.Range(0, candidateCells.Count);
 
-                Vector3Int pickedCell = availableCells[index]; //리스트에서 index 번째 자리에 있는 좌표값 = 우리가 사용할 자원의 스폰 위치
+                Vector3Int pickedCell = candidateCells[index]; //리스트에서 index 번째 자리에 있는 좌표값 = 우리가 사용할 자원의 스폰 위치
+                candidateCells.RemoveAt(index);
 
                 if (!CanSpawnAt(pickedCell, entry.GridWidth, entry.GridHeight))
                 {
-                    availableCells.RemoveAt(index);
                     i--; // 이 반복 다시 시도
                     continue;
                 }
@@ -199,6 +215,36 @@ public class ResourceSpawner : MonoBehaviour
                         availableCells.Remove(adjacentCell);
                     }
                 }
+            }
+        }
+
+        SpawnInitialCrops(availableCells);
+    }
+
+    /// <summary>
+    /// 작물 스폰 테이블대로 남은 빈 칸에 다 자란 작물 심기 (파낸 흙 1칸 + 작물 1포기)
+    /// </summary>
+    private void SpawnInitialCrops(List<Vector3Int> availableCells)
+    {
+        List<CropSpawnEntry> table = territoryZone.TerritoryZoneData.CropSpawnTable;
+        CropPlanter cropPlanter = TerritoryManager.Instance != null ? TerritoryManager.Instance.CropPlanter : null;
+        if (table == null || cropPlanter == null) return;
+
+        foreach (CropSpawnEntry entry in table)
+        {
+            if (entry.Seed == null) continue;
+
+            int planted = 0;
+            while (planted < entry.MaxCount && availableCells.Count > 0)
+            {
+                int index = Random.Range(0, availableCells.Count);
+                Vector3Int pickedCell = availableCells[index];
+                availableCells.RemoveAt(index);
+
+                if (!CanSpawnAt(pickedCell, 1, 1)) continue;
+
+                if (cropPlanter.TryPlantGrown(territoryZone, pickedCell, entry.Seed))
+                    planted++;
             }
         }
     }
@@ -278,6 +324,11 @@ public class ResourceSpawner : MonoBehaviour
                 if (cropPlanter != null && cropPlanter.IsPlanted(territoryZone, checkCell))
                     return false;
 
+                // 플레이어가 배치한 설치물 칸이면 불가
+                StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+                if (placer != null && placer.IsPlaced(territoryZone, checkCell))
+                    return false;
+
                 // 구조물 셀 주변 structBlockRadius칸 안이면 불가
                 foreach (var structSlot in territoryZone.TerritoryZoneData.StructSlots)
                 {
@@ -308,6 +359,8 @@ public class ResourceSpawner : MonoBehaviour
         {
             damageable.OnDestroyed -= OnResourceDestroyed;
         }
+
+        OnAnyResourceDepleted?.Invoke(entry.ResourcePrefab);
 
         // 재생성 예정 자원 기록
         respawningResources.Add((entry, Time.time, respawnTime));

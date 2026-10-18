@@ -10,8 +10,27 @@ public class DungeonEntrance : InteractiveFixedStructureObject
     private DungeonData dungeonData;
     [SerializeField, Tooltip("비우면 씬에서 자동 탐색")]
     private DungeonEntryUI entryUI;
+    [SerializeField, Tooltip("던전 클리어 후 입구 스프라이트 ( 비우면 변경 안 함 )")]
+    private Sprite clearSprite;
 
     private const string DefaultSceneName = "KJ_DungeonScene";
+
+    private void Start()
+    {
+        RefreshSprite();
+    }
+
+    /// <summary>
+    /// 클리어 기록 ( DungeonSave ) 있으면 클리어 스프라이트로 교체 - 영지 씬 로드마다 저장 기준으로 판정
+    /// </summary>
+    public void RefreshSprite()
+    {
+        if (dungeonData == null || clearSprite == null) return;
+        if (!DungeonSession.GetRecord(dungeonData).HasCleared) return;
+
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (spriteRenderer != null) spriteRenderer.sprite = clearSprite;
+    }
 
     public override bool CanInteract(InteractionContext context)
     {

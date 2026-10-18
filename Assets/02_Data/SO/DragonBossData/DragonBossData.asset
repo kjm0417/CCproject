@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c9e385ce41c354692ae72695167e04, type: 3}
   m_Name: DragonBossData
   m_EditorClassIdentifier: Assembly-CSharp::BossData
-  bossName: Dragon
+  bossName: "\uCCAD\uB8E1"
   maxHp: 1000
   invulnerableUnlessStunned: 0
   stunDamageMultiplier: 1

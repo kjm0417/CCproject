@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff85c4497a59b5e4abb73b6ed8abb5fd, type: 3}
+  m_Name: Quest_FirstMine
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  QuestID: Q_FIRST_MINE
+  QuestName: "\uCCAB \uCC44\uAD11"
+  ConditionText: "\uB3CC \uCC44\uAD11"
+  Icon: {fileID: 8794254266326841416, guid: ba91d3d4e351e6742a73857b3572809d, type: 3}
+  TargetType: 0
+  TargetPrefab: {fileID: 4801886088550710931, guid: 7452d390e8442384f8e0f20eb71c39d9, type: 3}
+  RequiredCount: 2
+  RewardGold: 30
+  MaxPayCount: 1

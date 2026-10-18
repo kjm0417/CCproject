@@ -19,6 +19,7 @@ public class RecipeDTO
     public int Material3Count;
     public string LifeType;
     public string Season;
+    public int RequiredToolID;
 }
 
 [System.Serializable]
@@ -47,6 +48,7 @@ public class RecipeDataImporter : BaseDataImporter<RecipeDTO, RecipeData>
         so.CraftTimeSec = dto.CraftTimeSec;
         so.Season = dto.Season;
         so.LifeType = Enum.TryParse(dto.LifeType, true, out CraftLifeType lifeType) ? lifeType : CraftLifeType.None;
+        so.RequiredToolID = dto.RequiredToolID > 0 ? dto.RequiredToolID.ToString() : string.Empty;
 
         so.Materials = new List<CraftMaterial>();
         AddMaterial(so, dto.Material1ID, dto.Material1Count);

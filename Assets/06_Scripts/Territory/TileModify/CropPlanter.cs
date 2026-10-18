@@ -98,6 +98,14 @@ public class CropPlanter : MonoBehaviour
             return false;
         }
 
+        // 설치물이 놓인 칸이면 심기 불가
+        StructurePlacer placer = TerritoryManager.Instance != null ? TerritoryManager.Instance.StructurePlacer : null;
+        if (placer != null && placer.IsPlaced(zone, cell))
+        {
+            Log($"{zone.name} {cell} 설치물이 있어 심기 불가");
+            return false;
+        }
+
         if (inventory.Remove(seed, 1) <= 0)
         {
             Log($"{seed.ItemName} 소모 실패");
@@ -105,6 +113,38 @@ public class CropPlanter : MonoBehaviour
         }
 
         SpawnCrop(cropPrefab, zone, cell, seed.ItemID);
+        return true;
+    }
+
+    /// <summary>
+    /// 해당 칸을 파낸 흙으로 바꾸고 씨앗 소모 없이 다 자란 작물을 심는다 (구역 해금 시 배치)
+    /// </summary>
+    public bool TryPlantGrown(TerritoryZone zone, Vector3Int cell, InvenItemData seed)
+    {
+        PlantedCropObject cropPrefab = FindCropPrefab(seed);
+        if (cropPrefab == null)
+        {
+            Log($"{(seed != null ? seed.ItemID : "null")} 매핑된 작물 없음");
+            return false;
+        }
+
+        if (plantedCells.ContainsKey((zone.TerritoryZoneData.ZoneId, cell)))
+        {
+            Log($"{zone.name} {cell} 이미 작물이 심겨 있음");
+            return false;
+        }
+
+        if (!TileModifier.IsModified(zone, cell) && !TileModifier.TryForceConvertTile(zone, cell, ToolType.Shovel))
+        {
+            Log($"{zone.name} {cell} 흙으로 변환 불가");
+            return false;
+        }
+
+        PlantedCropObject crop = SpawnCrop(cropPrefab, zone, cell, seed.ItemID);
+
+        // Start 전에 채워두면 성장 없이 바로 수확 가능
+        crop.GrowthStage = crop.MaxGrowthStage;
+        crop.IsGrowthComplete = true;
         return true;
     }
 

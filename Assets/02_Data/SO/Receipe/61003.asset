@@ -19,10 +19,9 @@ MonoBehaviour:
   CraftTimeSec: 15
   Materials:
   - ItemID: 11001
-    Count: 1
+    Count: 2
   - ItemID: 11002
-    Count: 2
-  - ItemID: 11003
-    Count: 2
+    Count: 4
   LifeType: 1
   Season: Spring
+  RequiredToolID: 

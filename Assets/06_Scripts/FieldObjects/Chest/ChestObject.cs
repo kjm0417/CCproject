@@ -92,6 +92,14 @@ public class ChestObject : MonoBehaviour, IInteractable
     }
 
     /// <summary>
+    /// 런타임에 배치된 상자에 보관 UI 연결 (StructurePlacer에서 호출)
+    /// </summary>
+    public void SetChestUI(ChestUI ui)
+    {
+        chestUI = ui;
+    }
+
+    /// <summary>
     /// 상자를 열고 열림 Sprite로 변경, 보관 UI를 열고 플레이어 이동을 정지한다.
     /// </summary>
     public void Open(PlayerContext player)

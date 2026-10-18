@@ -97,6 +97,50 @@ public class BossArenaGrid : MonoBehaviour
         return result;
     }
 
+    /// <summary> origin ( 좌하단 칸 ) 부터 size 칸 묶음 영역 </summary>
+    public ZoneShape GetBlockShape(Vector2Int origin, Vector2Int size)
+    {
+        Vector2 center = (Vector2)transform.position + Vector2.Scale((Vector2)origin + (Vector2)size * 0.5f, cellSize);
+        return ZoneShape.Fixed(center, Vector2.Scale(size, cellSize));
+    }
+
+    /// <summary> 묶음 안 모든 칸이 유효한지 ( 제외 칸 / grid 밖 X ) </summary>
+    public bool IsBlockValid(Vector2Int origin, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                if (!validCells.Contains(origin + new Vector2Int(x, y))) return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary> 서로 겹치지 않는 랜덤 size 칸 묶음 count 개 ( 반환값 = 묶음 좌하단 칸 ) </summary>
+    public List<Vector2Int> GetRandomBlocks(int count, Vector2Int size)
+    {
+        size = Vector2Int.Max(size, Vector2Int.one);
+
+        List<Vector2Int> pool = new List<Vector2Int>();
+        foreach (Vector2Int cell in validCells)
+        {
+            if (IsBlockValid(cell, size)) pool.Add(cell);
+        }
+
+        List<Vector2Int> result = new List<Vector2Int>();
+        while (result.Count < count && pool.Count > 0)
+        {
+            int index = Random.Range(0, pool.Count);
+            Vector2Int origin = pool[index];
+            result.Add(origin);
+
+            // 선택된 묶음과 겹치는 후보 제거
+            pool.RemoveAll(o => Mathf.Abs(o.x - origin.x) < size.x && Mathf.Abs(o.y - origin.y) < size.y);
+        }
+        return result;
+    }
+
     private void OnDrawGizmosSelected()
     {
         for (int x = 0; x < gridSize.x; x++)
