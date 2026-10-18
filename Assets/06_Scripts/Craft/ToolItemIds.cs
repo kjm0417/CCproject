@@ -29,6 +29,14 @@ public static class ToolItemIds
         return "ItemIcons/" + itemId;
     }
 
+    /// <summary>
+    /// 도구 아이템인지 (검 / 도끼 / 곡괭이 / 삽 / 괭이 등, 강화 포함)
+    /// </summary>
+    public static bool IsTool(string itemId)
+    {
+        return IsToolId(itemId);
+    }
+
     private static bool IsToolId(string itemId)
     {
         return !string.IsNullOrEmpty(itemId) && itemId.Length == 5 && itemId[0] == '2';

@@ -34,7 +34,22 @@ public class DragonWaterspoutPattern : BossPattern
     [SerializeField] private Color eruptZoneColor = new Color(0.3f, 0.6f, 1f, 0.45f);
     [SerializeField] private float eruptFlashTime = 0.2f;
 
+    [Header("기믹 시도 중 가중치")]
+    [SerializeField, Tooltip("비우면 씬의 BossStunGimmick 자동 탐색")]
+    private BossStunGimmick gimmick;
+    [SerializeField, Min(0f), Tooltip("기믹 시도 중일 때 가중치 배율")]
+    private float gimmickWeightMultiplier = 3f;
+
     private readonly List<GameObject> eruptVisuals = new List<GameObject>();
+
+    public override float Weight
+    {
+        get
+        {
+            if (gimmick == null) gimmick = FindAnyObjectByType<BossStunGimmick>(FindObjectsInactive.Include);
+            return gimmick != null && gimmick.IsAttempting ? base.Weight * gimmickWeightMultiplier : base.Weight;
+        }
+    }
 
     protected override IEnumerator Execute()
     {

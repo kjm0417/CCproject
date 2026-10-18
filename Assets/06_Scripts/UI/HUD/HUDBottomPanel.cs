@@ -149,6 +149,8 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         {
             inventory.OnInventoryChanged -= RefreshQuickSlots;
         }
+
+        Context.HeldTool?.Hide();
     }
 
     // 6. Release �� ����
@@ -201,6 +203,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         }
 
         attackButton.UpdateTarget(target, toolType);
+        UpdateHeldTool();
     }
 
     private void HandleAttackTargetAvailabilityChanged(bool hasTarget)
@@ -592,6 +595,86 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     }
 
     private void RefreshInteractionButton()
+    {
+        ApplyInteractionButton();
+        UpdateHeldTool();
+    }
+
+    /// <summary>
+    /// 상호작용 버튼에 표시 중인 도구를 플레이어 손에도 표시 ( 버튼에 도구가 없으면 숨김 )
+    /// </summary>
+    private void UpdateHeldTool()
+    {
+        PlayerHeldTool heldTool = Context != null ? Context.HeldTool : null;
+        if (heldTool == null) return;
+
+        heldTool.Show(ResolveHeldToolSprite());
+    }
+
+    private Sprite ResolveHeldToolSprite()
+    {
+        if (attackButton == null) return null;
+
+        // 퀵슬롯 선택 중: 선택한 아이템이 도구일 때만 ( 버튼 아이콘과 같은 스프라이트 )
+        if (selectedQuickSlotItem != null)
+        {
+            return ToolItemIds.IsTool(selectedQuickSlotItem.ItemID)
+                ? ResolveInventoryIcon(selectedQuickSlotItem)
+                : null;
+        }
+
+        // 공격 범위에 적이 있으면 버튼이 검으로 바뀜
+        PlayerCombat combat = Context != null ? Context.Combat : null;
+        if (combat != null && combat.HasTargetInAttackArea())
+        {
+            return ResolveOwnedToolSprite(swordItemId, GetIcon(swordIcon, "Equipment/Sword"));
+        }
+
+        // 대상에 맞춰 자동 선택된 도구
+        PlayerInteraction interaction = Context != null ? Context.Interaction : null;
+        if (interaction == null) return null;
+
+        switch (interaction.CurrentTargetToolType)
+        {
+            case ToolType.Sword:
+                return ResolveOwnedToolSprite(swordItemId, GetIcon(swordIcon, "Equipment/Sword"));
+            case ToolType.Axe:
+                return ResolveOwnedToolSprite(axeItemId, GetIcon(axeIcon, "Equipment/Axe"));
+            case ToolType.Pickaxe:
+                return ResolveOwnedToolSprite(pickaxeItemId, GetIcon(pickaxeIcon, "Equipment/Pick"));
+            case ToolType.Shovel:
+                return ResolveOwnedToolSprite(shovelItemId, GetIcon(shovelIcon, "Equipment/Shovel"));
+            default:
+                return null;
+        }
+    }
+
+    /// <summary>
+    /// 보유한 같은 종류 도구 중 가장 높은 등급의 아이콘 ( 강화 도구 우선 ), 없으면 기본 아이콘
+    /// </summary>
+    private Sprite ResolveOwnedToolSprite(string baseToolId, Sprite fallback)
+    {
+        InvenItemData bestItem = null;
+        if (inventory != null)
+        {
+            for (int i = 0; i < inventory.Slots.Count; i++)
+            {
+                InvenItemData item = inventory.Slots[i].Item;
+                if (item == null || !ToolItemIds.IsSameTool(item.ItemID, baseToolId)) continue;
+
+                // 등급 자리 ( 2 X G YY 의 G ) 비교
+                if (bestItem == null || item.ItemID[2] > bestItem.ItemID[2])
+                {
+                    bestItem = item;
+                }
+            }
+        }
+
+        Sprite icon = bestItem != null ? ResolveInventoryIcon(bestItem) : null;
+        return icon != null ? icon : fallback;
+    }
+
+    private void ApplyInteractionButton()
     {
         if (attackButton == null) return;
 

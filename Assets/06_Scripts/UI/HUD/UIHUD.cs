@@ -5,6 +5,7 @@ public class UIHUD : MonoBehaviour
     [Header("HUD Panels")]
     [SerializeField] private HUDTopPanel topPanel;
     [SerializeField] private HUDBottomPanel bottomPanel;
+    [SerializeField, Tooltip("Off: Top panel hidden ( e.g. dungeon scene )")] private bool showTopPanel = true;
 
     public PlayerContext Context { get; private set; }
     public bool IsInitialized => Context != null;
@@ -49,9 +50,14 @@ public class UIHUD : MonoBehaviour
     {
         panels = new IHUDPanel[]
         {
-            topPanel,
+            showTopPanel ? topPanel : null,
             bottomPanel
         };
+
+        if (!showTopPanel && topPanel != null)
+        {
+            topPanel.gameObject.SetActive(false);
+        }
     }
 
     public void Initialize(PlayerContext context)

@@ -64,8 +64,8 @@ public class BossHpUI : MonoBehaviour
     {
         if (boss == null) return;
 
-        // 보스 맵 활성화 = 보스 조우
-        bool active = boss.gameObject.activeInHierarchy && !boss.IsDead;
+        // 보스 맵 활성화 = 보스 조우 ( 등장 연출 끝난 뒤 표시 )
+        bool active = boss.gameObject.activeInHierarchy && !boss.IsDead && !boss.IsIntroPlaying;
         if (active && !shown) Show();
         else if (!active && shown && !boss.IsDead) Hide(); //보스 처치 전 맵 이탈
 

@@ -32,7 +32,8 @@ public abstract class BossPattern : MonoBehaviour
     protected BossBase Boss { get; private set; }
 
     public string PatternId => string.IsNullOrEmpty(patternId) ? GetType().Name : patternId;
-    public float Weight => weight;
+    /// <summary> 선택 가중치 - 상황별 가중치는 override </summary>
+    public virtual float Weight => weight;
     public string AnimTrigger => animTrigger;
 
     public void Initialize(BossBase boss)

@@ -41,6 +41,9 @@ public class PlayerContext : MonoBehaviour
     public PlayerSkills Skills { get; internal set; }
     public PlayerCooking Cooking { get; private set; }
 
+    // 손에 든 도구 표시 (없으면 null)
+    public PlayerHeldTool HeldTool { get; private set; }
+
     private void Awake()
     {
         YAxisSorting.EnsureAttached(gameObject);
@@ -62,6 +65,12 @@ public class PlayerContext : MonoBehaviour
         // TryGetComponent는 현재 GameObject만 검색하므로 자식 컴포넌트는 별도로 찾는다.
         Animation = GetComponentInChildren<PlayerAnimation>(true);
         SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        HeldTool = GetComponentInChildren<PlayerHeldTool>(true);
+        if (HeldTool == null)
+        {
+            // 프리팹에 없으면 기본값으로 붙인다 ( 위치 / 크기 조절은 인스펙터에서 )
+            HeldTool = gameObject.AddComponent<PlayerHeldTool>();
+        }
 
         // 자신과 자식에 있는 모든 플레이어 컴포넌트에 Context를 전달한다.
         InitializeComponents();

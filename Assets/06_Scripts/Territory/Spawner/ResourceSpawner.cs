@@ -338,9 +338,35 @@ public class ResourceSpawner : MonoBehaviour
                         Mathf.Abs(checkCell.y - structCell.y) <= structBlockRadius)
                         return false;
                 }
+
+                // 씬에 직접 배치한 고정 오브젝트 (제작대 / 상자 등) 칸이면 불가
+                if (HasFixedObjectAt(checkCell))
+                    return false;
             }
         }
         return true;
+    }
+
+    /// <summary>
+    /// 칸 안에 막는 콜라이더가 있는지 (트리거 / 타일맵 콜라이더 제외)
+    /// </summary>
+    private bool HasFixedObjectAt(Vector3Int cell)
+    {
+        Tilemap ground = territoryZone.TerritoryTileMapGround;
+        Vector2 cellSize = ground.layoutGrid.cellSize;
+
+        // 같은 프레임에 풀에서 꺼내 옮긴 오브젝트 위치를 물리에 반영
+        Physics2D.SyncTransforms();
+        Collider2D[] hits = Physics2D.OverlapBoxAll(ground.GetCellCenterWorld(cell), cellSize * 0.8f, 0f);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.isTrigger) continue;
+            if (hit is TilemapCollider2D || hit is CompositeCollider2D) continue;
+
+            return true;
+        }
+        return false;
     }
 
     void OnResourceDestroyed(GameObject destroyedObj,ResourceSpawnEntry entry, float respawnTime)

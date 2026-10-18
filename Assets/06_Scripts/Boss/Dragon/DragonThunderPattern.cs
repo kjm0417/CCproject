@@ -43,6 +43,10 @@ public class DragonThunderPattern : BossPattern
     private GameObject lightningVfx;
     [SerializeField, Tooltip("이펙트 크기 배율")]
     private float lightningVfxScale = 1f;
+    [SerializeField, Tooltip("전조 ( 번개 떨어지기 전 ) 프레임 크기 배율")]
+    private float lightningWarnScale = 2f;
+    [SerializeField, Tooltip("앞에서부터 전조 프레임 수 ( 이후 프레임은 lightningVfxScale )")]
+    private int lightningWarnFrames = 6;
     [SerializeField, Tooltip("영역 중심 기준 이펙트 위치 보정")]
     private Vector2 lightningVfxOffset;
 
@@ -174,12 +178,12 @@ public class DragonThunderPattern : BossPattern
                 if (zone.Vfx != null)
                 {
                     zone.Vfx.transform.position = shape.Center + lightningVfxOffset;
-                    zone.Vfx.transform.localScale = Vector3.one * lightningVfxScale;
                     float length = GetClipLength(zone.Vfx);
                     if (length > 0f) zone.HideVfxAfter(length + vfxHideDelay);
+                    StartSubRoutine(LightningVfxRoutine(zone.Vfx, shape.Center));
                 }
+                else if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
                 if (lightningVfx == null) StartSubRoutine(StrikeRoutine(shape));
-                if (mouthPoint != null && mouthBoltVfx != null) StartSubRoutine(MouthBoltRoutine(shape.Center));
             }
 
             yield return null;
@@ -266,6 +270,45 @@ public class DragonThunderPattern : BossPattern
 
         length = GetClipLength(go) + vfxHideDelay;
         return go;
+    }
+
+    /// <summary> 전조 프레임은 크게 -> 이후 원래 크기, 마지막 프레임 시작 시 입 번개 </summary>
+    private IEnumerator LightningVfxRoutine(GameObject vfx, Vector2 target)
+    {
+        float frameTime = 1f / GetClipFrameRate(vfx);
+        float warnEnd = lightningWarnFrames * frameTime;
+        float boltTime = Mathf.Max(0f, GetClipLength(vfx) - frameTime);
+        bool boltSpawned = mouthPoint == null || mouthBoltVfx == null;
+
+        float elapsed = 0f;
+        while (vfx != null && vfx.activeInHierarchy)
+        {
+            // Animator 는 코루틴 이후 갱신 - 이번 프레임 애니 시간 기준으로 맞춤
+            float animTime = elapsed + Time.deltaTime;
+            vfx.transform.localScale = Vector3.one * (animTime < warnEnd ? lightningWarnScale : lightningVfxScale);
+
+            if (!boltSpawned && animTime >= boltTime)
+            {
+                boltSpawned = true;
+                StartSubRoutine(MouthBoltRoutine(target));
+            }
+            if (boltSpawned && animTime >= warnEnd) yield break;
+
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+    }
+
+    private static float GetClipFrameRate(GameObject go)
+    {
+        Animator animator = go != null ? go.GetComponent<Animator>() : null;
+        if (animator == null || animator.runtimeAnimatorController == null) return 12f;
+
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.frameRate > 0f) return clip.frameRate;
+        }
+        return 12f;
     }
 
     /// <summary> 이펙트 애니 1회 재생 시간 ( 풀 재활성화 시 Animator 는 처음부터 재생 ) </summary>

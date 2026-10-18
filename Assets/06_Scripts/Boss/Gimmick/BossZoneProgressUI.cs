@@ -18,12 +18,16 @@ public class BossZoneProgressUI : MonoBehaviour
     private bool hideWhenActivated = true;
     [SerializeField, Tooltip("플레이어가 구역 밖이면 숨김 ( 진행도는 유지 )")]
     private bool hideWhenOutside = true;
+    [SerializeField, Tooltip("활성화 ( 기믹 성공 ) 시 캔버스 전체 ( BG 포함 ) 숨김 - 스턴 종료로 리셋되면 다시 표시")]
+    private bool hideCanvasWhenActivated = true;
 
     private float progress;
+    private Canvas canvas;
 
     private void Awake()
     {
         if (zone == null) zone = GetComponentInParent<BossActivationZone>();
+        canvas = GetComponent<Canvas>();
         if (visualRoot == null && transform.childCount > 0) visualRoot = transform.GetChild(0).gameObject;
     }
 
@@ -65,6 +69,9 @@ public class BossZoneProgressUI : MonoBehaviour
                        && !(hideWhenActivated && zone.IsActivated)
                        && !(hideWhenOutside && !zone.IsPlayerInside);
         if (visualRoot != null && visualRoot.activeSelf != visible) visualRoot.SetActive(visible);
+
+        // 오브젝트를 끄면 리셋 이벤트를 못 받으므로 Canvas 컴포넌트만 끔
+        if (canvas != null) canvas.enabled = !(hideCanvasWhenActivated && zone.IsActivated);
     }
 
     #region [이전] 진행도 / 활성화만으로 표시 판단
