@@ -46,6 +46,15 @@ public class PlayerStats : MonoBehaviour, IPlayerComponent
         calculator.SetBase(StatType.MaxHp, maxHp);
         OnStatsChanged?.Invoke();
     }
+    /// <summary>
+    /// 기본값 하나만 교체 ( 씬별 보정 등 ) - 저장은 BaseData 기준이라 세이브에 영향 없음
+    /// </summary>
+    public void SetBase(StatType type, float value)
+    {
+        calculator.SetBase(type, value);
+        OnStatsChanged?.Invoke();
+    }
+
     public void AddModifier(StatModifier modifier)
     {
         calculator.AddModifier(modifier);

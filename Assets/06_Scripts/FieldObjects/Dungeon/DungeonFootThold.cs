@@ -55,8 +55,8 @@ public class DungeonFootThold : DungeonGimmickObject
     {
         bool isPlayerOn = Physics2D.OverlapBox(transform.position, stepSize, 0f, playerLayer) != null;
 
-        //밟으면 눌림 스프라이트 / 떼면 원복 ( 조건 충족 후에도 동일 )
-        SetPressed(isPlayerOn);
+        //밟으면 눌림 스프라이트 / 떼면 원복 ( 조건 충족 후엔 눌림 유지 )
+        SetPressed(isPlayerOn || IsCompleted);
 
         if (IsCompleted) return;
 

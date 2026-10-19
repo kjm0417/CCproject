@@ -13258,6 +13258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonProgressManager
   fallbackDungeon: {fileID: 11400000, guid: f09d1892a66266941ac657026d74e5eb, type: 2}
+  playerAttackRange: 2
   returnSceneName: KJ_Scene
   autoExit: 1
   autoExitDelay: 3

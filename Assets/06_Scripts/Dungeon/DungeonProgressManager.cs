@@ -51,6 +51,10 @@ public class DungeonProgressManager : MonoBehaviour
     [SerializeField]
     private DungeonData fallbackDungeon;
 
+    [Header("플레이어 보정")]
+    [SerializeField, Tooltip("던전 씬 플레이어 AttackRange ( 영지와 플레이어 크기가 달라서 별도 적용 )")]
+    private float playerAttackRange = 2f;
+
     [Header("던전 종료 후 돌아갈 씬")]
     [SerializeField]
     private string returnSceneName = "KJ_Scene";
@@ -149,6 +153,10 @@ public class DungeonProgressManager : MonoBehaviour
         if (player != null)
         {
             inventory = player.GetComponentInChildren<PlayerInventory>();
+
+            //세이브 로드 이후라 덮어써도 됨 - 영지 복귀 시 세이브 값으로 다시 로드
+            player.Stats?.SetBase(StatType.AttackRange, playerAttackRange);
+
             if (player.Vitals != null)
             {
                 player.Vitals.OnDied += OnPlayerDied;
