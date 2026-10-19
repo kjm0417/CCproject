@@ -7764,7 +7764,7 @@ Transform:
   m_GameObject: {fileID: 1434393418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6, y: 0.110000014, z: -10}
+  m_LocalPosition: {x: -4.8333335, y: 0.95277, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12636,26 +12636,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8126804809284526011, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
-      propertyPath: skillTrees.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8126804809284526011, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
-      propertyPath: 'skillTrees.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8126804809284526011, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
-      propertyPath: 'skillTrees.Array.data[2]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8126804809284526011, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
-      propertyPath: 'skillTrees.Array.data[3]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8126804809284526011, guid: a90c72acee1c66d4fb1f5004d9f784d3, type: 3}
-      propertyPath: 'skillTrees.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 6a062f1ca61846ec91f73eb5547c8801, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

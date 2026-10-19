@@ -29,6 +29,12 @@ public class ShopkeeperAI : MonoBehaviour
     [SerializeField] private Vector2 idleDuration = new Vector2(1f, 3f);
     [SerializeField, Min(0f)] private float leaveShopDelay = 2f;
 
+    [Header("상점 응대 후")]
+    [Tooltip("구매 후 상점을 닫았을 때 Standing을 유지하는 시간 (초). 이후 Idle → 기본 로직")]
+    [SerializeField, Min(0f)] private float purchaseStandingTime = 1.5f;
+    [Tooltip("구매 없이 상점을 닫았을 때 플레이어를 무시하고 돌아다니는 시간 (초)")]
+    [SerializeField, Min(0f)] private float noPurchaseIgnoreTime = 5f;
+
     [Header("애니메이션")]
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -37,6 +43,7 @@ public class ShopkeeperAI : MonoBehaviour
     private static readonly int IdleAnimation = Animator.StringToHash("Squirrel_Idle");
     private static readonly int WalkAnimation = Animator.StringToHash("Squirrel_Walk");
     private static readonly int RunAnimation = Animator.StringToHash("Squirrel_Run");
+    private static readonly int StandingAnimation = Animator.StringToHash("Squirrel_Standing");
 
     private NavMeshAgent agent;
     private NavMeshPath navigationPath;
@@ -50,15 +57,64 @@ public class ShopkeeperAI : MonoBehaviour
     private int currentAnimation;
     private bool hasDestination;
     private bool warnedAboutNavMesh;
+    private bool isServing;
+    private float standingTimer;
+    private float ignorePlayerTimer;
 
     public ShopkeeperState CurrentState { get; private set; }
     public bool IsReadyToServe => CurrentState == ShopkeeperState.AttendShop;
+    public bool IsServing => isServing;
 
     public void Configure(Transform[] points, Transform standPoint, ShopArea area)
     {
         wanderPoints = points;
         shopStandPoint = standPoint;
         shopArea = area;
+    }
+
+    // 상점 상호작용 중 Standing 자세로 손님을 맞는다. 상점에 도착한 상태(AttendShop)에서만 켤 수 있다.
+    public void SetServing(bool serving)
+    {
+        if (serving && !IsReadyToServe) return;
+        standingTimer = 0f;
+        if (isServing == serving) return;
+
+        isServing = serving;
+        PlayAnimation(isServing ? StandingAnimation : IdleAnimation);
+    }
+
+    // 상점 UI가 닫혔을 때 호출.
+    // 구매함: Standing을 잠시 유지 → Idle → 기본 로직 (플레이어가 있으면 계속 상점 대기)
+    // 구매 안 함: 바로 걸어서 돌아다닌다 (noPurchaseIgnoreTime 동안 플레이어 무시)
+    public void FinishServing(bool purchased)
+    {
+        if (!isServing) return;
+
+        if (purchased && purchaseStandingTime > 0f)
+        {
+            standingTimer = purchaseStandingTime;
+            return;
+        }
+
+        isServing = false;
+        standingTimer = 0f;
+        if (purchased)
+        {
+            PlayAnimation(IdleAnimation);
+            return;
+        }
+
+        ignorePlayerTimer = noPurchaseIgnoreTime;
+        StopMovement();
+        CurrentState = ShopkeeperState.Idle;
+        TryBeginWander();
+        if (CurrentState != ShopkeeperState.Wander) BeginIdle();
+    }
+
+    // 플레이어가 상점에 상호작용했는데 청설모가 자리에 없을 때 호출. 무시 시간을 풀고 바로 복귀시킨다.
+    public void RequestService()
+    {
+        ignorePlayerTimer = 0f;
     }
 
     private void Awake()
@@ -79,6 +135,7 @@ public class ShopkeeperAI : MonoBehaviour
     private void OnEnable()
     {
         retryTimer = 0f;
+        ignorePlayerTimer = 0f;
         warnedAboutNavMesh = false;
         currentAnimation = 0;
         BeginIdle();
@@ -95,7 +152,8 @@ public class ShopkeeperAI : MonoBehaviour
     private void Update()
     {
         retryTimer -= Time.deltaTime;
-        bool hasPlayer = shopArea != null && shopArea.HasPlayer;
+        if (ignorePlayerTimer > 0f) ignorePlayerTimer -= Time.deltaTime;
+        bool hasPlayer = shopArea != null && shopArea.HasPlayer && ignorePlayerTimer <= 0f;
 
         if (hasPlayer && (CurrentState == ShopkeeperState.Idle || CurrentState == ShopkeeperState.Wander))
         {
@@ -124,12 +182,25 @@ public class ShopkeeperAI : MonoBehaviour
                 UpdateTravel(true);
                 break;
             case ShopkeeperState.AttendShop:
-                leaveTimer = hasPlayer ? leaveShopDelay : leaveTimer - Time.deltaTime;
+                UpdatePurchaseStanding();
+                // 손님 응대 중에는 자리를 뜨지 않는다
+                leaveTimer = hasPlayer || isServing ? leaveShopDelay : leaveTimer - Time.deltaTime;
                 if (!hasPlayer && leaveTimer <= 0f) BeginIdle();
                 break;
         }
 
         UpdateMovementAnimation();
+    }
+
+    private void UpdatePurchaseStanding()
+    {
+        if (!isServing || standingTimer <= 0f) return;
+
+        standingTimer -= Time.deltaTime;
+        if (standingTimer > 0f) return;
+
+        isServing = false;
+        PlayAnimation(IdleAnimation);
     }
 
     private bool EnsureAgentOnNavMesh()
@@ -245,6 +316,8 @@ public class ShopkeeperAI : MonoBehaviour
 
     private void BeginIdle()
     {
+        isServing = false;
+        standingTimer = 0f;
         StopMovement();
         CurrentState = ShopkeeperState.Idle;
         idleTimer = Random.Range(Mathf.Max(0f, idleDuration.x), Mathf.Max(idleDuration.x, idleDuration.y, 0f));
@@ -263,6 +336,12 @@ public class ShopkeeperAI : MonoBehaviour
 
     private void UpdateMovementAnimation()
     {
+        if (isServing)
+        {
+            PlayAnimation(StandingAnimation);
+            return;
+        }
+
         Vector2 velocity = agent.velocity;
         if (!hasDestination || velocity.sqrMagnitude <= 0.0001f)
         {

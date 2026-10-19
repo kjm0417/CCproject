@@ -27,6 +27,8 @@ public static class CookingRecipeDataImporter
     public const string RecipeFolder = "Assets/02_Data/SO/Recipes";
     public const string CookingAssetPath = "Assets/02_Data/SO/Cooking/CookingData.asset";
     private const string ItemFolder = "Assets/02_Data/SO/InvenItem";
+    // 레시피 JSON에는 작업대 제작식도 함께 있다. 결과물이 이 타입인 행만 요리 레시피로 가져온다.
+    private const string CookedItemType = "요리 아이템";
 
     [Serializable]
     private class RecipeRows
@@ -64,6 +66,7 @@ public static class CookingRecipeDataImporter
         Dictionary<string, InvenItemData> items = LoadItems();
         var ids = new HashSet<int>();
         var entries = new List<ImportEntry>();
+        int skipped = 0;
 
         // 모든 행을 먼저 검증한다. 잘못된 재료를 조용히 빼서 더 싼 레시피를 만들지 않는다.
         foreach (CookingRecipeDTO row in data.items)
@@ -76,6 +79,13 @@ public static class CookingRecipeDataImporter
                 || float.IsNaN(row.CraftTimeSec) || float.IsInfinity(row.CraftTimeSec))
                 throw new InvalidDataException($"레시피 {row.CraftRecipeID}: 결과 수량/시설 ID/제작 시간을 확인하세요.");
 
+            InvenItemData result = FindItem(items, row.ResultItemID, row.CraftRecipeID);
+            if (result.ItemType != CookedItemType)
+            {
+                skipped++;
+                continue;
+            }
+
             var ingredients = new List<RecipeIngredient>();
             AddIngredient(ingredients, items, row.CraftRecipeID, row.Material1ID, row.Material1Count);
             AddIngredient(ingredients, items, row.CraftRecipeID, row.Material2ID, row.Material2Count);
@@ -86,7 +96,7 @@ public static class CookingRecipeDataImporter
             entries.Add(new ImportEntry
             {
                 Row = row,
-                Result = FindItem(items, row.ResultItemID, row.CraftRecipeID),
+                Result = result,
                 Ingredients = ingredients
             });
             ValidateAssetPath<CookingRecipeData>(RecipePath(row.CraftRecipeID));
@@ -131,7 +141,7 @@ public static class CookingRecipeDataImporter
         serialized.ApplyModifiedPropertiesWithoutUndo();
         EditorUtility.SetDirty(cooking);
         AssetDatabase.SaveAssets();
-        Debug.Log($"[CookingRecipeDataImporter] 레시피 {imported.Count}개 갱신 완료 (전체 해금)");
+        Debug.Log($"[CookingRecipeDataImporter] 요리 레시피 {imported.Count}개 갱신 완료 (전체 해금), 요리가 아닌 제작식 {skipped}개 제외");
         return cooking;
     }
 

@@ -49,6 +49,9 @@ public class ShopPanelUI : MonoBehaviour
 
     public event Action OnShopClosed;
 
+    // 이번에 상점을 연 뒤 한 번이라도 구매했는지 (청설모 퇴장 연출 분기용)
+    public bool PurchasedThisVisit { get; private set; }
+
     private PlayerWallet wallet;
     private PlayerInventory inventory;
     private InvenItemData selectedItem;
@@ -64,6 +67,7 @@ public class ShopPanelUI : MonoBehaviour
         isDiamondMode = false;
         quantity = 1;
         selectedItem = null;
+        PurchasedThisVisit = false;
 
         gameObject.SetActive(true);
         ShowMain();
@@ -381,6 +385,7 @@ public class ShopPanelUI : MonoBehaviour
         }
 
         int leftover = inventory.Add(selectedItem, quantity);
+        if (leftover < quantity) PurchasedThisVisit = true;
         if (leftover > 0)
         {
             int refundAmount = selectedPrice * leftover;
