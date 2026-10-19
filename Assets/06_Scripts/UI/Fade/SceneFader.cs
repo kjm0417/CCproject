@@ -77,6 +77,9 @@ public class SceneFader : MonoBehaviour
 
     private void Start()
     {
+        //중복 ( 각 씬에 배치된 복사본 ) 은 Awake 에서 파괴 예약 - 연출 실행 X
+        if (instance != this) return;
+
         //첫 씬도 닫힌 원에서 열림
         StartCoroutine(FirstSceneRoutine());
     }

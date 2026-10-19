@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.57, y: 4.65, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4938550422846298039, guid: f5fc89985cb700b45bea3acce0f93d64, type: 3}
+  m_Sprite: {fileID: -3492462220673286247, guid: 9157e19098cf6f647a124fb58d3438cc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -132,7 +132,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.05, y: 0.935}
+    oldSize: {x: 2.07, y: 1.88}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -157,3 +157,6 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  idleSprite: {fileID: -3492462220673286247, guid: 9157e19098cf6f647a124fb58d3438cc, type: 3}
+  pressedSprite: {fileID: -2684767099796576909, guid: 9157e19098cf6f647a124fb58d3438cc, type: 3}
+  spriteRenderer: {fileID: 0}

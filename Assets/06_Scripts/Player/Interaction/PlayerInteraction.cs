@@ -172,7 +172,9 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
 
         context.Animation?.PlayToolInteraction(toolType);
         CurrentTarget.Interact(interactionContext);
-        PlayToolHitSFX(toolType);
+
+        // 삽 효과음은 흙 타일 변경 ( TryInteractTile ) 에서만 - 오브젝트 상호작용 ( 발판 등 ) 은 무음
+        if (toolType != ToolType.Shovel) PlayToolHitSFX(toolType);
         return true;
     }
 

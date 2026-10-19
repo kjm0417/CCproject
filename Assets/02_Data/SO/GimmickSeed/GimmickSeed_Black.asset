@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GimmickSeedData
   ItemID: 14901
   ItemName: "\uAC80\uC740 \uC528\uC557"
+  Icon: {fileID: 963598044487354103, guid: ed403906bccfc9843abdbc48a2d629b6, type: 3}
   ItemType: "\uAE30\uBBF9 \uC544\uC774\uD15C"
   SubType: "\uC528\uC557 \uC544\uC774\uD15C"
   Description: "\uB358\uC804 \uAE30\uBBF9\uC6A9 \uC528\uC557"
@@ -23,4 +24,7 @@ MonoBehaviour:
   MaxBuyGold: 0
   BuyDiamond: 0
   HungerRecovery: 0
+  BaseBuyGold: 0
+  ShopListed: 0
+  SellSeason: 
   Icon: {fileID: -2860855075553226979, guid: 1868559577709eb478b8b7dce41f8135, type: 3}

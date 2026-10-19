@@ -15,8 +15,17 @@ public class DungeonFootThold : DungeonGimmickObject
     [SerializeField, Tooltip("밟음 감지 레이어 ( 비우면 Player 레이어 )")]
     private LayerMask playerLayer;
 
+    [Header("스프라이트")]
+    [SerializeField, Tooltip("안 밟았을 때")]
+    private Sprite idleSprite;
+    [SerializeField, Tooltip("밟고 있을 때")]
+    private Sprite pressedSprite;
+    [SerializeField, Tooltip("비우면 자식에서 자동 탐색")]
+    private SpriteRenderer spriteRenderer;
+
     private Collider2D interactCollider; //본체 콜라이더 ( 활성화 상태일 때만 켜짐 -> 상호작용 버튼 노출 )
     private float stepTime; //누적 밟은 시간
+    private bool isPressed; //현재 밟힘 스프라이트 표시 중
 
     public bool IsActivated { get; private set; } //N초 밟아서 활성화된 상태 ( 떼면 해제 )
     public bool IsCompleted { get; private set; } //버튼 클릭까지 완료 ( 조건 충족 )
@@ -37,13 +46,19 @@ public class DungeonFootThold : DungeonGimmickObject
         //밟음 감지는 OverlapBox 라 콜라이더는 상호작용 감지용 - 켜져 있으면 근처만 가도 버튼 노출됨
         interactCollider = GetComponent<Collider2D>();
         SetInteractable(false);
+
+        if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        SetPressed(false, true);
     }
 
     private void Update()
     {
-        if (IsCompleted) return;
-
         bool isPlayerOn = Physics2D.OverlapBox(transform.position, stepSize, 0f, playerLayer) != null;
+
+        //밟으면 눌림 스프라이트 / 떼면 원복 ( 조건 충족 후에도 동일 )
+        SetPressed(isPlayerOn);
+
+        if (IsCompleted) return;
 
         //2. 플레이어 발판 밟고 있음
         if (isPlayerOn)
@@ -94,6 +109,22 @@ public class DungeonFootThold : DungeonGimmickObject
         IsActivated = false;
         IsCompleted = false;
         SetInteractable(false);
+        SetPressed(false, true);
+    }
+
+    /// <summary>
+    /// 발판 스프라이트 변경 - 상태가 바뀔 때만 교체
+    /// </summary>
+    private void SetPressed(bool pressed, bool force = false)
+    {
+        if (!force && pressed == isPressed) return;
+        isPressed = pressed;
+
+        Sprite sprite = pressed ? pressedSprite : idleSprite;
+        if (spriteRenderer != null && sprite != null)
+        {
+            spriteRenderer.sprite = sprite;
+        }
     }
 
     /// <summary>

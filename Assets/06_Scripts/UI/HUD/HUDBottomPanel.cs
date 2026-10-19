@@ -748,7 +748,10 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return;
         }
 
-        bool canInteract = toolType == ToolType.Shovel
+        // 삽은 흙 타일이 있는 씬 ( 영지 ) 에서만 단독 사용 가능 - 던전은 근처 상호작용 대상이 있을 때만
+        bool canDig = toolType == ToolType.Shovel
+            && TerritoryManager.Instance != null && TerritoryManager.Instance.TileModifier != null;
+        bool canInteract = canDig
             || (interaction.CurrentTarget != null
                 && interaction.CurrentTargetToolType == toolType);
         attackButton.SetQuickSlotOverride(icon, interaction.Interact, canInteract);

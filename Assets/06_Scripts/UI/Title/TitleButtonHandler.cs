@@ -1,29 +1,51 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Å¸ÀÌÆ² ¾À ¹öÆ° ÀÌº¥Æ® Ã³¸®
-/// ¹öÆ° Ãß°¡ ½Ã : ÇÊµå Ãß°¡ -> Bind µî·Ï -> ÇÚµé·¯ ¸Ş¼­µå ÀÛ¼º
+/// íƒ€ì´í‹€ ì”¬ ë²„íŠ¼ ì´ë²¤íŠ¸ ì²˜ë¦¬
+/// ë²„íŠ¼ ì¶”ê°€ ì‹œ : í•„ë“œ ì¶”ê°€ -> Bind ë“±ë¡ -> í•¸ë“¤ëŸ¬ ë©”ì„œë“œ ì‘ì„±
 /// </summary>
 public class TitleButtonHandler : MonoBehaviour
 {
     [Header("Buttons")]
     [SerializeField] Button startButton;
-    [SerializeField] Button optionButton; //ÃßÈÄ »ç¿ë
-    [SerializeField] Button quitButton;   //ÃßÈÄ »ç¿ë
+    [SerializeField] Button optionButton;
+    [SerializeField] Button quitButton;   //ì¶”í›„ ì‚¬ìš©
+
+    [Header("Option")]
+    [SerializeField] OptionUI optionUI;
+
+    [Header("Start Text")]
+    [SerializeField] TMP_Text startButtonText;
+    [SerializeField] string newGameText = "ê²Œì„ ì‹œì‘";
+    [SerializeField] string continueText = "ì´ì–´ì„œ í•˜ê¸°";
+
+    private const string HasStartedKey = "HasStartedGame"; //ê²Œì„ ì‹œì‘ ì—¬ë¶€ ì €ì¥ í‚¤ (PlayerPrefs)
 
     [Header("Scene")]
-    [SerializeField] string startSceneName = "KJ_DungeonScene"; //½ÃÀÛ ¹öÆ° Å¬¸¯ ½Ã ÀÌµ¿ÇÒ ¾À
+    [SerializeField] string startSceneName = "KJ_DungeonScene"; //ì‹œì‘ ë²„íŠ¼ í´ë¦­ ì‹œ ì´ë™í•  ì”¬
 
     private void Awake()
     {
         Bind(startButton, OnClickStart);
         Bind(optionButton, OnClickOption);
         Bind(quitButton, OnClickQuit);
+
+        if (optionUI != null) optionUI.gameObject.SetActive(false);
+        RefreshStartText();
     }
 
-    //¹öÆ°ÀÌ ÇÒ´çµÈ °æ¿ì¿¡¸¸ ¸®½º³Ê µî·Ï
+    //í•œ ë²ˆì´ë¼ë„ ì‹œì‘í–ˆìœ¼ë©´ "ì´ì–´ì„œ í•˜ê¸°"
+    private void RefreshStartText()
+    {
+        if (startButtonText == null) return;
+        bool hasStarted = PlayerPrefs.GetInt(HasStartedKey, 0) == 1;
+        startButtonText.text = hasStarted ? continueText : newGameText;
+    }
+
+    //ë²„íŠ¼ì´ í• ë‹¹ëœ ê²½ìš°ì—ë§Œ ë¦¬ìŠ¤ë„ˆ ë“±ë¡
     private void Bind(Button button, UnityEngine.Events.UnityAction action)
     {
         if (button == null) return;
@@ -34,16 +56,20 @@ public class TitleButtonHandler : MonoBehaviour
     {
         if (string.IsNullOrEmpty(startSceneName))
         {
-            Debug.LogWarning("½ÃÀÛ ¾À ÀÌ¸§ÀÌ ºñ¾îÀÖÀ½");
+            Debug.LogWarning("ì‹œì‘ ì”¬ ì´ë¦„ì´ ë¹„ì–´ìˆìŒ");
             return;
         }
+
+        PlayerPrefs.SetInt(HasStartedKey, 1);
+        PlayerPrefs.Save();
 
         SceneFader.LoadScene(startSceneName);
     }
 
     private void OnClickOption()
     {
-        //TODO : ¿É¼Ç ÆĞ³Î ¿­±â
+        if (optionUI == null) return;
+        optionUI.Open();
     }
 
     private void OnClickQuit()

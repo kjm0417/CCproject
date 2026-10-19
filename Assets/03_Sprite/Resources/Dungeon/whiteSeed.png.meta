@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 1868559577709eb478b8b7dce41f8135
+guid: 205e883b63c8d4f4a9286f032ea62e8f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5615301740586721416
-    second: Seed_Three-removebg-preview_0
-  - first:
-      213: 1298226711053400874
-    second: Seed_Three-removebg-preview_1
-  - first:
-      213: 8023180237678489780
-    second: Seed_Three-removebg-preview_2
-  - first:
-      213: -2860855075553226979
-    second: Seed_Three-removebg-preview_3
+      213: -7635674496094648800
+    second: whiteSeed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -135,67 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Seed_Three-removebg-preview_0
+      name: whiteSeed_0
       rect:
         serializedVersion: 2
-        x: 57
-        y: 695
-        width: 127
-        height: 261
+        x: 0
+        y: 0
+        width: 232
+        height: 362
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87f12bd61d07212b0800000000000000
-      internalID: -5615301740586721416
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Seed_Three-removebg-preview_2
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 357
-        width: 151
-        height: 273
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4b0b2c3eaef085f60800000000000000
-      internalID: 8023180237678489780
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Seed_Three-removebg-preview_3
-      rect:
-        serializedVersion: 2
-        x: 41
-        y: 53
-        width: 155
-        height: 228
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d1fc6cb57733c48d0800000000000000
-      internalID: -2860855075553226979
+      spriteID: 026c4c75082a80690800000000000000
+      internalID: -7635674496094648800
       vertices: []
       indices: 
       edges: []
@@ -204,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 23c4f705c70cc5647b478d6220770748
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -214,10 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Seed_Three-removebg-preview_0: -5615301740586721416
-      Seed_Three-removebg-preview_1: 1298226711053400874
-      Seed_Three-removebg-preview_2: 8023180237678489780
-      Seed_Three-removebg-preview_3: -2860855075553226979
+      whiteSeed_0: -7635674496094648800
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -61,6 +61,9 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
             SoundManager.Instance.PlaySFX(SFXType.SwordSwing);
         }
 
+        // 검 휘두르기 모션 ( 재생 중에는 손에 든 검 표시를 숨김 )
+        context.Animation?.PlayToolInteraction(ToolType.Sword);
+
         Vector2 origin = attackOrigin.position;
         Vector2 facing = GetAttackFacingDirection();
         float range = context.Stats.AttackRange;
@@ -141,6 +144,9 @@ public class PlayerCombat : MonoBehaviour, IPlayerComponent
 
     private bool IsInsideAttackArea(Collider2D targetCollider, Vector2 origin, Vector2 facing)
     {
+        // 보스는 플레이어 위쪽에 있어 좌우 부채꼴로는 판정 불가 - 사거리 안이면 방향 무관
+        if (targetCollider.GetComponentInParent<BossBase>() != null) return true;
+
         Vector2 hitPosition = targetCollider.ClosestPoint(origin);
         Vector2 direction = hitPosition - origin;
 

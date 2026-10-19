@@ -35,6 +35,13 @@ public class BossHpUI : MonoBehaviour
     [SerializeField, Tooltip("잔상 바 초당 감소량 ( 비율 )")]
     private float trailSpeed = 0.6f;
 
+    [Header("무적 표시")]
+    [SerializeField, Tooltip("무적일 때 체력바 색 ( 피격 가능하면 원래 색 )")]
+    private Color invulnerableColor = new Color(0.55f, 0.55f, 0.55f, 1f);
+    [SerializeField, Tooltip("색 전환 시간 ( 0 = 즉시 )")]
+    private float colorChangeDuration = 0.15f;
+
+    private Color fillOriginColor;
     private bool shown;
     private bool introPlaying;
     private float trailHoldUntil;
@@ -43,6 +50,7 @@ public class BossHpUI : MonoBehaviour
     private void Awake()
     {
         if (boss == null) boss = FindAnyObjectByType<BossBase>(FindObjectsInactive.Include);
+        if (fill != null) fillOriginColor = fill.color;
         SetAlpha(0f);
     }
 
@@ -70,6 +78,18 @@ public class BossHpUI : MonoBehaviour
         else if (!active && shown && !boss.IsDead) Hide(); //보스 처치 전 맵 이탈
 
         UpdateTrail();
+        UpdateFillColor();
+    }
+
+    /// <summary> 무적 : 회색 / 피격 가능 ( 스턴 ) : 원래 색 </summary>
+    private void UpdateFillColor()
+    {
+        if (fill == null) return;
+
+        Color target = boss.IsInvulnerable ? invulnerableColor : fillOriginColor;
+        fill.color = colorChangeDuration > 0f
+            ? Vector4.MoveTowards(fill.color, target, Time.deltaTime / colorChangeDuration)
+            : target;
     }
 
     private void Show()

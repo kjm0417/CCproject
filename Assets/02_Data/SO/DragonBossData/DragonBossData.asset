@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DragonBossData
   m_EditorClassIdentifier: Assembly-CSharp::BossData
   bossName: "\uCCAD\uB8E1"
-  maxHp: 500
-  invulnerableUnlessStunned: 0
+  maxHp: 200
+  invulnerableUnlessStunned: 1
   stunDamageMultiplier: 1
   avoidRepeatPattern: 1
   idleIntervalRange: {x: 1.5, y: 2.5}

@@ -38,7 +38,17 @@ public class SoundManager : MonoBehaviour
     private BGMType currentBGM = BGMType.None;
     private Coroutine bgmFadeCoroutine;
 
+    // 옵션 볼륨 저장 키 (PlayerPrefs)
+    private const string BGMVolumeKey = "Option_BGMVolume";
+    private const string SFXVolumeKey = "Option_SFXVolume";
+
+    private float bgmVolume = 1f;   //옵션 배경음 볼륨 (0~1)
+    private float sfxVolume = 1f;   //옵션 효과음 볼륨 (0~1)
+    private float bgmLevel;         //페이드 중인 BGM 볼륨 (옵션 볼륨 적용 전)
+
     public BGMType CurrentBGM => currentBGM;
+    public float BGMVolume => bgmVolume;
+    public float SFXVolume => sfxVolume;
 
     private void Awake()
     {
@@ -80,6 +90,9 @@ public class SoundManager : MonoBehaviour
         sfxPitchSource.outputAudioMixerGroup = sfxGroup;
 
         gameObject.AddComponent<UIClickSoundPlayer>();
+
+        bgmVolume = PlayerPrefs.GetFloat(BGMVolumeKey, 1f);
+        sfxVolume = PlayerPrefs.GetFloat(SFXVolumeKey, 1f);
     }
 
     // 시작 씬(TitleScene)도 Awake/OnEnable 이후 sceneLoaded가 호출되므로 별도 처리 불필요
@@ -156,11 +169,11 @@ public class SoundManager : MonoBehaviour
     {
         if (bgmSource.isPlaying)
         {
-            yield return FadeVolume(bgmSource.volume, 0f, bgmFadeTime * 0.5f);
+            yield return FadeVolume(bgmLevel, 0f, bgmFadeTime * 0.5f);
         }
 
         bgmSource.clip = clip;
-        bgmSource.volume = 0f;
+        SetBGMLevel(0f);
         bgmSource.Play();
 
         yield return FadeVolume(0f, targetVolume, bgmFadeTime * 0.5f);
@@ -169,7 +182,7 @@ public class SoundManager : MonoBehaviour
 
     private IEnumerator FadeOutBGM()
     {
-        yield return FadeVolume(bgmSource.volume, 0f, bgmFadeTime * 0.5f);
+        yield return FadeVolume(bgmLevel, 0f, bgmFadeTime * 0.5f);
         bgmSource.Stop();
         bgmSource.clip = null;
         bgmFadeCoroutine = null;
@@ -182,10 +195,17 @@ public class SoundManager : MonoBehaviour
         while (time < duration)
         {
             time += Time.unscaledDeltaTime;
-            bgmSource.volume = Mathf.Lerp(from, to, time / duration);
+            SetBGMLevel(Mathf.Lerp(from, to, time / duration));
             yield return null;
         }
-        bgmSource.volume = to;
+        SetBGMLevel(to);
+    }
+
+    // 옵션 볼륨 곱해서 실제 소스에 적용
+    private void SetBGMLevel(float level)
+    {
+        bgmLevel = level;
+        bgmSource.volume = bgmLevel * bgmVolume;
     }
     #endregion
 
@@ -209,15 +229,48 @@ public class SoundManager : MonoBehaviour
         {
             // 피치 변경은 공용 소스에 영향 주지 않도록 별도 소스 사용
             sfxPitchSource.pitch = 1f + Random.Range(-entry.pitchRandom, entry.pitchRandom);
-            sfxPitchSource.PlayOneShot(clip, entry.volume);
+            sfxPitchSource.PlayOneShot(clip, entry.volume * sfxVolume);
             return;
         }
 
-        sfxSource.PlayOneShot(clip, entry.volume);
+        sfxSource.PlayOneShot(clip, entry.volume * sfxVolume);
     }
     #endregion
 
     #region 볼륨
+    /// <summary>
+    /// 옵션 배경음 볼륨 설정 (0~1). PlayerPrefs에 기록, 앱 종료 후에도 유지
+    /// </summary>
+    public void SetBGMVolume(float volume01)
+    {
+        bgmVolume = Mathf.Clamp01(volume01);
+        bgmSource.volume = bgmLevel * bgmVolume;
+        PlayerPrefs.SetFloat(BGMVolumeKey, bgmVolume);
+    }
+
+    /// <summary>
+    /// 옵션 효과음 볼륨 설정 (0~1). PlayerPrefs에 기록, 앱 종료 후에도 유지
+    /// </summary>
+    public void SetSFXVolume(float volume01)
+    {
+        sfxVolume = Mathf.Clamp01(volume01);
+        PlayerPrefs.SetFloat(SFXVolumeKey, sfxVolume);
+    }
+
+    /// <summary>
+    /// 볼륨 설정 디스크 저장. 슬라이더 드래그마다 쓰지 않도록 옵션 닫을 때 호출
+    /// </summary>
+    public void SaveVolume()
+    {
+        PlayerPrefs.Save();
+    }
+
+    // 모바일은 홈 버튼 / 화면 꺼짐 후 강제 종료될 수 있으므로 백그라운드 진입 시 저장
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause) SaveVolume();
+    }
+
     /// <summary>
     /// 믹서 볼륨 설정 (0~1). parameterName은 AudioMixer에서 Expose한 파라미터 이름
     /// </summary>

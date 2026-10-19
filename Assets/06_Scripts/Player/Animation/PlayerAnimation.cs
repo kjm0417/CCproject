@@ -25,7 +25,7 @@ public class PlayerAnimation : MonoBehaviour, IPlayerComponent
     private bool facingRight = true;
 
     public bool FacingRight => facingRight;
-    // 도끼 / 곡괭이 등 도구 모션 재생 중 ( 손에 든 도구 표시를 숨기는 데 사용 )
+    // 도끼 / 곡괭이 / 검 등 도구 모션 재생 중 ( 손에 든 도구 표시를 숨기는 데 사용 )
     public bool IsPlayingToolInteraction => interactionRoutine != null;
 
     public void Initialize(PlayerContext context)
@@ -107,6 +107,8 @@ public class PlayerAnimation : MonoBehaviour, IPlayerComponent
                 return PlayerAnimHash.PlayerAxe;
             case ToolType.Pickaxe:
                 return PlayerAnimHash.PlayerPick;
+            case ToolType.Sword:
+                return PlayerAnimHash.PlayerSword;
             default:
                 return 0;
         }

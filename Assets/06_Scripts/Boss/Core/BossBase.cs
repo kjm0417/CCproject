@@ -40,6 +40,8 @@ public abstract class BossBase : MonoBehaviour, IEnemyDamageable
     public float HpRatio => data.maxHp > 0 ? (float)currentHp / data.maxHp : 0f;
     public bool IsDead => isDead;
     public bool IsStunned => isStunned;
+    /// <summary> 무적 - 스턴 중에만 피격 가능한 보스가 스턴이 아닐 때 </summary>
+    public bool IsInvulnerable => !isDead && data.invulnerableUnlessStunned && !isStunned;
     public bool IsPatternRunning => patternRoutine != null;
     public BossPattern SelectedPattern { get; private set; }
 
