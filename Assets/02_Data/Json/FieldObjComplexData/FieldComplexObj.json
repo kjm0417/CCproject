@@ -3,7 +3,7 @@
     "ObjectID":41005,
     "ObjectName":"매실 나무",
     "ObjectType":"Tree",
-    "HP":5,
+    "HP":45,
     "ExpReward":10,
     "Description":"",
     "RespawnTimeMin":45,

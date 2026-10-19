@@ -47,7 +47,9 @@ MonoBehaviour:
     RespawnDelay: 30
     KillGold: 0
   NpcSlots: []
-  StructSlots: []
+  StructSlots:
+  - StructPrefab: {fileID: 248843539877973973, guid: f137c7bfdc4ce5c4685063a7613e5ac2, type: 3}
+    StructSpawnPos: {x: 2.42, y: -8.5}
   AdjacentZoneId_Up: 3
   AdjacentZoneId_Down: -1
   AdjacentZoneId_Left: 5

@@ -68,6 +68,20 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
         return remaining; // 못 넣은 수량 (필드에 유지할 몫)
     }
 
+    // 두 칸의 자리 교환 (퀵슬롯 = 앞 7칸이므로 퀵슬롯 등록에 사용). 성공 여부 반환.
+    public bool SwapSlots(int indexA, int indexB)
+    {
+        if (indexA == indexB) return false;
+        if (indexA < 0 || indexA >= slots.Count || indexB < 0 || indexB >= slots.Count) return false;
+
+        InventorySlot temp = slots[indexA];
+        slots[indexA] = slots[indexB];
+        slots[indexB] = temp;
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
     public List<InventoryItemSaveData> CreateSaveData()
     {
         List<InventoryItemSaveData> data = new List<InventoryItemSaveData>();

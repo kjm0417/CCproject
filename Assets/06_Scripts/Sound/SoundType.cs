@@ -34,4 +34,7 @@ public enum SFXType
 
     // 플레이어 공격 ( 기존 값 유지 위해 맨 뒤에 추가 )
     SwordSwing,
+
+    // 보스
+    BossIntro,
 }

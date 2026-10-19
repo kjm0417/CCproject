@@ -55,6 +55,9 @@ public class HUDBottomPanel : PlayerHUDPanelBase
 
     // 상자 등 외부 UI가 열려 있을 때 인벤토리 칸 클릭 동작을 대체 (null이면 기본 동작)
     private Action<InventorySlot> itemClickOverride;
+    // 탭 두 번 교환 : 먼저 고른 인벤토리 칸 또는 퀵슬롯 번호 ( 다음에 누른 쪽과 교환 )
+    private InventorySlot pendingMoveSlot;
+    private int pendingQuickSlotIndex = -1;
 
     public event Action OnInventoryRequested;
     public bool IsInventoryOpen => isInventoryOpen;
@@ -214,6 +217,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private void RefreshQuickSlots()
     {
         ValidateSelectedQuickSlotItem();
+        ValidatePendingMoveSlot();
 
         HashSet<InventorySlot> registeredSlots = PopulateQuickSlotSet(quickSlots);
 
@@ -253,9 +257,10 @@ public class HUDBottomPanel : PlayerHUDPanelBase
                     ? inventorySlot.Count
                     : 0;
                 Sprite icon = ResolveInventoryIcon(item);
-                targetSlots[i].SetItem(item, displayCount, icon, () => OnQuickSlotItemClicked(inventorySlot, item));
+                int quickSlotIndex = i;
+                targetSlots[i].SetItem(item, displayCount, icon, () => OnQuickSlotItemClicked(inventorySlot, item, quickSlotIndex));
 
-                targetSlots[i].SetSelected(IsSelectedQuickSlotItem(item));
+                targetSlots[i].SetSelected(IsQuickSlotHighlighted(i, item));
 
                 registeredSlots.Add(inventorySlot);
 
@@ -411,10 +416,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
 
             UnityEngine.Events.UnityAction onClick = itemClickOverride != null
                 ? () => itemClickOverride?.Invoke(inventorySlot)
-                : null;
+                : () => OnInventoryItemClicked(inventorySlot);
 
             slot.SetItem(item, inventorySlot.Count, ResolveInventoryIcon(item), onClick);
             slot.SetItemName(item.ItemName);
+            slot.SetSelected(inventorySlot == pendingMoveSlot);
         }
 
         for (int i = inventory.MaxSlots; i < inventoryItemSlots.Count; i++)
@@ -495,7 +501,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     /// <summary>
     /// 퀵슬롯 아이템 클릭. 대체 동작이 등록돼 있으면 그쪽으로, 아니면 아이템 선택.
     /// </summary>
-    private void OnQuickSlotItemClicked(InventorySlot inventorySlot, InvenItemData item)
+    private void OnQuickSlotItemClicked(InventorySlot inventorySlot, InvenItemData item, int quickSlotIndex)
     {
         if (itemClickOverride != null)
         {
@@ -503,7 +509,63 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             return;
         }
 
+        // 인벤토리에서 옮길 아이템을 고른 상태면, 누른 퀵슬롯 칸과 자리 교환
+        if (pendingMoveSlot != null)
+        {
+            InventorySlot movingSlot = pendingMoveSlot;
+            pendingMoveSlot = null;
+            SwapWithQuickSlot(movingSlot, quickSlotIndex);
+            return;
+        }
+
+        // 인벤토리가 열려 있으면 퀵슬롯 탭 = 교체할 칸 선택 ( 다시 누르면 취소 )
+        if (isInventoryOpen)
+        {
+            pendingQuickSlotIndex = pendingQuickSlotIndex == quickSlotIndex ? -1 : quickSlotIndex;
+            RefreshQuickSlots();
+            return;
+        }
+
         SelectQuickSlotItem(item);
+    }
+
+    /// <summary>
+    /// 인벤토리 칸 탭. 퀵슬롯을 먼저 골랐으면 바로 교환, 아니면 이 칸을 선택 ( 다시 누르면 취소 ).
+    /// </summary>
+    private void OnInventoryItemClicked(InventorySlot inventorySlot)
+    {
+        if (pendingQuickSlotIndex >= 0)
+        {
+            int quickSlotIndex = pendingQuickSlotIndex;
+            pendingQuickSlotIndex = -1;
+            SwapWithQuickSlot(inventorySlot, quickSlotIndex);
+            return;
+        }
+
+        pendingMoveSlot = pendingMoveSlot == inventorySlot ? null : inventorySlot;
+        RefreshQuickSlots();
+    }
+
+    /// <summary>
+    /// 인벤토리 칸을 퀵슬롯 칸과 교환
+    /// </summary>
+    private void SwapWithQuickSlot(InventorySlot movingSlot, int quickSlotIndex)
+    {
+        int fromIndex = -1;
+        for (int i = 0; i < inventory.Slots.Count; i++)
+        {
+            if (inventory.Slots[i] == movingSlot)
+            {
+                fromIndex = i;
+                break;
+            }
+        }
+
+        // 교환되면 OnInventoryChanged로 갱신, 아니면 선택 표시만 지움
+        if (fromIndex < 0 || !inventory.SwapSlots(fromIndex, quickSlotIndex))
+        {
+            RefreshQuickSlots();
+        }
     }
 
     private void SelectQuickSlotItem(InvenItemData item)
@@ -530,6 +592,40 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         Context?.Interaction?.SetCurrentTool(ToolType.None, false);
         RefreshQuickSlotSelection();
         RefreshInteractionButton();
+    }
+
+    // 인벤토리가 열려 있으면 교체할 퀵슬롯, 아니면 사용 중인 아이템 표시
+    private bool IsQuickSlotHighlighted(int quickSlotIndex, InvenItemData item)
+    {
+        return isInventoryOpen
+            ? quickSlotIndex == pendingQuickSlotIndex
+            : IsSelectedQuickSlotItem(item);
+    }
+
+    // 고른 칸이 사라졌거나 ( 소비 / 버림 ) 상자 UI가 열리면 교환 취소
+    private void ValidatePendingMoveSlot()
+    {
+        if (inventory == null || itemClickOverride != null || pendingQuickSlotIndex >= inventory.Slots.Count)
+        {
+            pendingQuickSlotIndex = -1;
+        }
+
+        if (pendingMoveSlot == null) return;
+
+        bool exists = false;
+        if (inventory != null && itemClickOverride == null)
+        {
+            for (int i = 0; i < inventory.Slots.Count; i++)
+            {
+                if (inventory.Slots[i] == pendingMoveSlot)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+
+        if (!exists) pendingMoveSlot = null;
     }
 
     private void ValidateSelectedQuickSlotItem()
@@ -577,7 +673,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         for (int i = 0; i < targetSlots.Length; i++)
         {
             bool isSelected = i < itemSlotCount
-                && IsSelectedQuickSlotItem(inventory.Slots[i].Item);
+                && IsQuickSlotHighlighted(i, inventory.Slots[i].Item);
             targetSlots[i]?.SetSelected(isSelected);
         }
     }
@@ -890,6 +986,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     public void SetInventoryOpen(bool isOpen)
     {
         isInventoryOpen = isOpen;
+        if (!isOpen)
+        {
+            pendingMoveSlot = null;
+            pendingQuickSlotIndex = -1;
+        }
 
         if (inventoryPanel != null && inventoryPanel.activeSelf != isOpen)
         {

@@ -19,6 +19,7 @@ public class HUDQuickSlot : MonoBehaviour
     private Color defaultOutlineColor;
     private Vector2 defaultOutlineDistance;
     private bool outlineDefaultsCaptured;
+    private bool runtimeOutline;
 
     private void Awake()
     {
@@ -110,7 +111,22 @@ public class HUDQuickSlot : MonoBehaviour
     public void SetSelected(bool isSelected)
     {
         AutoAssignReferences();
-        if (selectionOutline == null) return;
+        if (selectionOutline == null)
+        {
+            if (!isSelected) return;
+
+            // Outline 없는 칸 (인벤토리 칸 등) : 선택 시 테두리를 만들고, 해제 시 끔
+            selectionOutline = gameObject.AddComponent<Outline>();
+            runtimeOutline = true;
+            defaultOutlineColor = selectionOutline.effectColor;
+            defaultOutlineDistance = selectionOutline.effectDistance;
+            outlineDefaultsCaptured = true;
+        }
+
+        if (runtimeOutline)
+        {
+            selectionOutline.enabled = isSelected;
+        }
 
         selectionOutline.effectColor = isSelected
             ? selectedOutlineColor

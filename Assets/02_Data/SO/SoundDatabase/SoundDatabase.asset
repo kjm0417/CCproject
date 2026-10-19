@@ -82,6 +82,11 @@ MonoBehaviour:
     volume: 1
     randomClips: []
     pitchRandom: 0.05
+  - type: 11
+    clip: {fileID: 8300000, guid: 308e1c745356907448460d44bb6d3618, type: 3}
+    volume: 1
+    randomClips: []
+    pitchRandom: 0
   sceneBGMList:
   - sceneName: KJ_Scene
     bgm: 2

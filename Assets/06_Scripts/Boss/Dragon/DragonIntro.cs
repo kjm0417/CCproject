@@ -21,6 +21,8 @@ public class DragonIntro : MonoBehaviour
     private bool playOnce = true;
     [SerializeField, Tooltip("연출 동안 숨길 UI ( HUD Bottom 패널 등 ) - 연출 끝나면 다시 표시")]
     private GameObject[] hideDuringIntro;
+    [SerializeField, Tooltip("보스 맵 도착 ( 연출 시작 ) 시 효과음")]
+    private SFXType introSFX = SFXType.BossIntro;
 
     [Header("1. 검은 화면")]
     [SerializeField, Tooltip("가릴 영역 ( 비우면 부모 DungeonMap 의 CamBound )")]
@@ -81,6 +83,7 @@ public class DragonIntro : MonoBehaviour
         boss.BeginIntro();
         SetHiddenUI(false);
         ShowCover(1f);
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(introSFX);
         introRoutine = StartCoroutine(IntroRoutine());
     }
 

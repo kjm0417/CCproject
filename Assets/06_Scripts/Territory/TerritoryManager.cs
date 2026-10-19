@@ -90,7 +90,11 @@ public class TerritoryManager : MonoBehaviour
     }
 
     #region 영토 저장 및 불러오기
-    public TerritorySaveData Save()
+    /// <summary>
+    /// 영토 저장 데이터 생성
+    /// </summary>
+    /// <param name="stopRespawn">씬 이동 시 true - 재생성 코루틴 중단. 자동 저장처럼 게임이 계속되면 false</param>
+    public TerritorySaveData Save(bool stopRespawn = true)
     {
         // 재생성 예정 자원 정보 저장
         savedRespawningResources.Clear();
@@ -115,6 +119,8 @@ public class TerritoryManager : MonoBehaviour
         // 재생성 대기 중인 코루틴 모두 중단
         foreach (var zone in territoryZonesDic.Values)
         {
+            if (!stopRespawn) break;
+
             ResourceSpawner spawner = zone.GetComponent<ResourceSpawner>();
             if (spawner != null)
             {
@@ -126,6 +132,14 @@ public class TerritoryManager : MonoBehaviour
         territorySaveData.UnlockedZoneIds = new List<int>();
         territorySaveData.fieldObjects = new List<FieldObjectStateData>();
         territorySaveData.respawningResources = new List<RespawningResourceData>();
+
+        // 플레이어 카메라 바운드 저장
+        TerritoryDirectionManager directionManager = GetDirectionManager();
+        if (directionManager != null)
+        {
+            territorySaveData.CameraBoundSize = directionManager.DefaultBoundSize;
+            territorySaveData.CameraBoundOffset = directionManager.DefaultBoundOffset;
+        }
 
         foreach(var zone in territoryZonesDic.Values)
         {
@@ -239,6 +253,14 @@ public class TerritoryManager : MonoBehaviour
         return territorySaveData;
     }
 
+    // SaveManager.Awake에서 로드될 때 TerritoryDirectionManager.Awake가 아직 안 돌았을 수 있음
+    private TerritoryDirectionManager GetDirectionManager()
+    {
+        return TerritoryDirectionManager.Instance != null
+            ? TerritoryDirectionManager.Instance
+            : FindAnyObjectByType<TerritoryDirectionManager>();
+    }
+
     /// <summary>
     /// 세이브가 없을 때(새 게임) 처음부터 열려 있는 구역의 자원/작물/구조물 생성
     /// </summary>
@@ -322,8 +344,15 @@ public class TerritoryManager : MonoBehaviour
 
             if (shouldBeUnlocked && zone.IsLocked)
             {
-                zone.UnLockZone(false);  // SpawnInitial() 스킵
+                zone.UnLockZone(true);  // SpawnInitial() / 카메라 연출 스킵
             }
+        }
+
+        // 플레이어 카메라 바운드 복원 (바운드 저장 이전 세이브는 size 0 -> 기본값 유지)
+        TerritoryDirectionManager directionManager = GetDirectionManager();
+        if (directionManager != null && data.CameraBoundSize != Vector2.zero)
+        {
+            directionManager.LoadDefaultBound(data.CameraBoundSize, data.CameraBoundOffset);
         }
 
         // 도구로 변환한 타일 복원

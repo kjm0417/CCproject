@@ -27,6 +27,8 @@ public class TerritoryDirectionManager : MonoBehaviour
     CinemachineConfiner2D cinemachineConfiner2DPlayer;
     [SerializeField]
     private BoxCollider2D defalutBound; //기본 플레이어 카메라 범위
+    public Vector2 DefaultBoundSize => defalutBound.size;
+    public Vector2 DefaultBoundOffset => defalutBound.offset;
 
     private float initcinemachineCameraPlayerSize; //플레이어 카메라의 초기 사이즈
     [Header("영역 카메라")]
@@ -286,6 +288,16 @@ public class TerritoryDirectionManager : MonoBehaviour
         areaCameraZoom.SetLenSize(3);
 
 
+    }
+
+    /// <summary>
+    /// 저장된 DefaultBound 복원
+    /// </summary>
+    public void LoadDefaultBound(Vector2 size, Vector2 offset)
+    {
+        defalutBound.size = size;
+        defalutBound.offset = offset;
+        cinemachineConfiner2DPlayer.InvalidateBoundingShapeCache();
     }
 
     /// <summary>

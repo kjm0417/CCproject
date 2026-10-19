@@ -470,4 +470,44 @@ public class PlayerInteraction : MonoBehaviour, IPlayerComponent
                 return string.Empty;
         }
     }
+
+    [Header("상호작용 범위 표시")]
+    [SerializeField] private bool showInteractionRangeGizmo = true;
+    [SerializeField] private Color interactionGizmoColor = new Color(0.2f, 0.8f, 1f, 0.8f);
+    private void OnDrawGizmos()
+    {
+        if (!showInteractionRangeGizmo) return;
+
+        // FindNearestInteractable과 같은 기준 ( 중심 interactionOrigin, 반지름 AttackRange )
+        Vector3 origin = interactionOrigin != null ? interactionOrigin.position : transform.position;
+        float range = 1f;
+
+        if (Application.isPlaying && stats != null)
+        {
+            range = stats.AttackRange;
+        }
+        else
+        {
+            PlayerContext playerContext = GetComponent<PlayerContext>();
+            if (playerContext != null && playerContext.BaseData != null)
+            {
+                range = playerContext.BaseData.AttackRange;
+            }
+        }
+
+        Color previousColor = Gizmos.color;
+        Gizmos.color = interactionGizmoColor;
+
+        const int segmentCount = 48;
+        Vector3 previousPoint = origin + new Vector3(range, 0f, 0f);
+        for (int i = 1; i <= segmentCount; i++)
+        {
+            float angle = i * Mathf.PI * 2f / segmentCount;
+            Vector3 nextPoint = origin + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * range;
+            Gizmos.DrawLine(previousPoint, nextPoint);
+            previousPoint = nextPoint;
+        }
+
+        Gizmos.color = previousColor;
+    }
 }

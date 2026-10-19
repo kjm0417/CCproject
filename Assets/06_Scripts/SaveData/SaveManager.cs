@@ -95,6 +95,45 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    #region 자동 저장 (백그라운드 전환 / 종료)
+    /// <summary>
+    /// 모바일은 백그라운드로 간 뒤 OS가 앱을 종료할 수 있어 Pause 시점에 저장
+    /// </summary>
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause) AutoSave();
+    }
+
+    private void OnApplicationQuit()
+    {
+        AutoSave();
+    }
+
+    /// <summary>
+    /// 영지에서만 플레이어 + 영토 저장. 던전은 중간 종료 = 포기라 입장 시점 저장 유지
+    /// </summary>
+    private void AutoSave()
+    {
+        if (SceneManager.GetActiveScene().name != "KJ_Scene") return;
+        if (SceneFader.IsTransitioning) return; //씬 이동 중에는 이동 직전 저장으로 충분
+
+        TerritoryManager territoryManager = TerritoryManager.Instance;
+        PlayerContext playerContext = FindAnyObjectByType<PlayerContext>();
+        if (territoryManager == null || playerContext == null || playerContext.Vitals == null) return;
+
+        try
+        {
+            Save(PlayerSaveData.Save(playerContext));
+            SaveTerritory(territoryManager.Save(false));
+            Debug.Log("자동 저장 완료");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"자동 저장 실패: {e}");
+        }
+    }
+    #endregion
+
     private void LoadPlayerState()
     {
         //플레이어 데이터 실제 로드

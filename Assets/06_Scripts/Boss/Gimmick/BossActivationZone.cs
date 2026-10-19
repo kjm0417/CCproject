@@ -10,6 +10,8 @@ public class BossActivationZone : MonoBehaviour
     [SerializeField] private float requiredStayTime = 6f;
     [SerializeField, Tooltip("구역 밖에 있을 때 초당 감소량 ( 0 이면 유지 )")]
     private float decayPerSecond;
+    [SerializeField, Tooltip("구역 테두리 ( 빨간 영역 ) 표시 - 진행도는 ProgressUI 로 표시")]
+    private bool showOutline;
     [SerializeField] private TelegraphStyle outlineStyle = new TelegraphStyle();
 
     private BossBase boss;
@@ -29,6 +31,8 @@ public class BossActivationZone : MonoBehaviour
     {
         boss = owner;
         this.canProgress = canProgress;
+
+        if (!showOutline) return;
 
         if (outline == null) outline = BossTelegraph.Create(shape, outlineStyle, transform);
         outline.SetVisible(true);

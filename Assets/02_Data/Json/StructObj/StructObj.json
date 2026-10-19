@@ -11,11 +11,11 @@
     "RequireSubmit":1,
     "SubmitItems":"11001:3;11002:1",
     "FailRefundRatio":0.5,
-    "FirstExp":50,
-    "FirstGold":100,
-    "FirstItems":"13001:2",
-    "RepeatExp":5,
-    "RepeatGold":10,
+    "FirstExp":250,
+    "FirstGold":300,
+    "FirstItems":"11004:3;13001:3",
+    "RepeatExp":40,
+    "RepeatGold":60,
     "RepeatItems":""
   }
 ]

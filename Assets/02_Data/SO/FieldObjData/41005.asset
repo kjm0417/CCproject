@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413f0c690c613c14eaed7a0ea7824a0e, type: 3}
   m_Name: 41005
   m_EditorClassIdentifier: Assembly-CSharp::FieldObjData
-  HP: 7
+  HP: 75
   ExpReward: 15
   RespawnTimeMin: 60
   RespawnTimeMax: 70

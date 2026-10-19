@@ -161,6 +161,10 @@ public class TerritorySaveData
     public List<PlacedStructureData> placedStructures = new List<PlacedStructureData>();
     public List<ChestSaveData> chests = new List<ChestSaveData>();
     public List<QuestProgressData> quests = new List<QuestProgressData>();
+
+    //플레이어 카메라 Confiner 범위 (구역 해금 시 확장된 값)
+    public Vector2 CameraBoundSize;
+    public Vector2 CameraBoundOffset;
 }
 
 /// <summary>

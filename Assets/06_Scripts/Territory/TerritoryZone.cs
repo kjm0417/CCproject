@@ -158,7 +158,8 @@ public class TerritoryZone : MonoBehaviour
     /// <summary>
     /// 구역 해금 후 지역 상태를 변경하는 메서드
     /// </summary>
-    public void UnLockZone(bool shouldSpawnResources = true)
+    /// <param name="isLoading">세이브 로드로 해금 시 true - 자원 생성 / 카메라 연출 생략</param>
+    public void UnLockZone(bool isLoading = false)
     {
         isLocked = false;
         ChangeState(unlockedState);
@@ -166,10 +167,10 @@ public class TerritoryZone : MonoBehaviour
         string[] objParts = this.gameObject.name.Split('_');
         this.gameObject.name = "Zone_" + objParts[1];
 
-        StartCoroutine(TerritoryAlpha(shouldSpawnResources));
+        StartCoroutine(TerritoryAlpha(isLoading));
     }
 
-    IEnumerator TerritoryAlpha(bool shouldSpawnResources = true)
+    IEnumerator TerritoryAlpha(bool isLoading)
     {
         Color c1 = territoryTileMapGround.color;
         Color c2 = territoryTileMapWall.color;
@@ -194,7 +195,7 @@ public class TerritoryZone : MonoBehaviour
 
         ChangeState(unlockedState);
 
-        if (shouldSpawnResources)
+        if (!isLoading)
         {
             GetComponent<ResourceSpawner>().SpawnInitial();
         }
@@ -204,6 +205,9 @@ public class TerritoryZone : MonoBehaviour
         if (monsterSpawner != null) monsterSpawner.SpawnAll();
 
         OnTerritoryUnlocked?.Invoke(false);
+
+        //로드 시 카메라 바운드는 저장값으로 복원하므로 연출/확장 생략
+        if (isLoading) yield break;
 
         yield return new WaitForSeconds(1.5f);
 

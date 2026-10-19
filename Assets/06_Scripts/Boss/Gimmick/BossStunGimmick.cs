@@ -12,6 +12,10 @@ public class BossStunGimmick : MonoBehaviour
     [SerializeField] protected BossBase boss;
     [SerializeField] protected List<BossActivationZone> zones = new List<BossActivationZone>();
     [SerializeField] protected float stunDuration = 8f;
+    [SerializeField, Min(0f), Tooltip("두 번째 기절부터 줄어드는 시간 ( 한 번만 적용, 누적 X )")]
+    private float repeatStunReduction = 1f;
+
+    private int stunCount;
 
     private readonly List<Action> zoneHandlers = new List<Action>();
 
@@ -80,9 +84,12 @@ public class BossStunGimmick : MonoBehaviour
         ApplyStun();
     }
 
+    /// <summary> 첫 기절은 stunDuration, 이후는 repeatStunReduction 만큼 짧게 ( 1회 감소 고정 ) </summary>
     protected void ApplyStun()
     {
-        boss.ApplyStun(stunDuration);
+        float duration = stunCount > 0 ? Mathf.Max(0f, stunDuration - repeatStunReduction) : stunDuration;
+        stunCount++;
+        boss.ApplyStun(duration);
     }
 
     /// <summary> 스턴 종료 시 처음부터 </summary>

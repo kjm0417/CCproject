@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBaseData
   MoveSpeed: 7
   AttackPower: 10
-  AttackRange: 2
+  AttackRange: 1
   MaxHp: 100
   AttackCooldown: 0.4
   StartingLevel: 1
