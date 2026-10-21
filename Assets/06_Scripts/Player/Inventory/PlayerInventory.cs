@@ -28,7 +28,23 @@ public class PlayerInventory : MonoBehaviour, IPlayerComponent
 
     public void Initialize(PlayerContext context)
     {
-        // 시작 시 비어 있음. 세이브가 생기면 여기서 불러오면 된다.
+        // 새 게임 시작 아이템(기본 도구 등)을 지급한다.
+        // 저장 파일이 있으면 이후 Load()가 슬롯을 저장된 내용으로 교체한다.
+        GiveStartingItems(context != null ? context.BaseData : null);
+    }
+
+    private void GiveStartingItems(PlayerBaseData data)
+    {
+        if (data == null || data.StartingItems == null) return;
+
+        bool added = false;
+        foreach (StartingItemAmount entry in data.StartingItems)
+        {
+            if (entry.Item == null || entry.Count <= 0) continue;
+            added |= AddInternal(entry.Item, entry.Count, false) < entry.Count;
+        }
+
+        if (added) OnInventoryChanged?.Invoke();
     }
 
     // 아이템 획득. 넣지 못하고 남은 개수를 반환한다(0이면 전부 들어감 - 문서 3.1 꽉 참 처리).

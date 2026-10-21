@@ -23,3 +23,10 @@ MonoBehaviour:
     Amount: 0
   - Type: 1
     Amount: 0
+  StartingItems:
+  - Item: {fileID: 11400000, guid: 3cebf7874d09d804ea3ef295b9fd9124, type: 2}
+    Count: 1
+  - Item: {fileID: 11400000, guid: 8449107cd56827f478584e7d51b5c699, type: 2}
+    Count: 1
+  - Item: {fileID: 11400000, guid: 11db51e703d3ff04792173763176b4b9, type: 2}
+    Count: 1

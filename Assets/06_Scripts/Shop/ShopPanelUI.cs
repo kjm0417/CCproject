@@ -44,6 +44,10 @@ public class ShopPanelUI : MonoBehaviour
     [SerializeField] private Button btnClose;
     [SerializeField] private Button btnBackChange; // Grp_ShopChange의 Btn_Back
 
+    [Header("매각")]
+    [Tooltip("매각하기 버튼을 한 번 누를 때 지급하는 골드 (임시: 아이템 판매 구현 전)")]
+    [SerializeField, Min(0)] private int saleGoldAmount = 100;
+
     [Header("데이터")]
     [SerializeField] private ItemDatabase itemDatabase;
 
@@ -267,9 +271,11 @@ public class ShopPanelUI : MonoBehaviour
         BuildItemList();
     }
 
+    // 임시 매각: 누를 때마다 골드를 saleGoldAmount만큼 지급한다. 아이템은 소모하지 않는다.
     private void OnSaleTabClicked()
     {
-        Debug.Log("ShopPanelUI: 판매 기능은 추후 구현됩니다.");
+        if (wallet == null || saleGoldAmount <= 0) return;
+        wallet.Add(CurrencyType.Gold, saleGoldAmount);
     }
 
     // ─── 아이템 목록 ───

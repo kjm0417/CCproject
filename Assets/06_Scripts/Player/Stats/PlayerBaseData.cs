@@ -9,6 +9,14 @@ public struct CurrencyAmount
     public int Amount;
 }
 
+// 아이템 한 종류의 시작 지급량 (새 게임 시작 시 인벤토리에 들어간다)
+[System.Serializable]
+public struct StartingItemAmount
+{
+    public InvenItemData Item;
+    [Min(1)] public int Count;
+}
+
 // 플레이어 기본 지급 데이터(SO). 시작 스탯/레벨/재화를 한 애셋에 담는다.
 // 런타임 부품(Stats/Wallet/Progression)이 시작 시 이 값을 읽어가고,
 // 이후 "현재값"은 각 부품이 각자 관리한다. (기본 지급 = 데이터, 현재값 = 런타임)
@@ -25,4 +33,5 @@ public class PlayerBaseData : ScriptableObject
     [Header("시작 지급")]
     public int StartingLevel = 1;  // 시작 레벨
     public List<CurrencyAmount> StartingCurrencies = new List<CurrencyAmount>(); // 시작 재화(돈 등)
+    public List<StartingItemAmount> StartingItems = new List<StartingItemAmount>(); // 시작 아이템(도구 등)
 }

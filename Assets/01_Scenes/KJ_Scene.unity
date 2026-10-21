@@ -9098,6 +9098,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Shop
       objectReference: {fileID: 0}
+    - target: {fileID: 2617221270531579867, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084254555849487405, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8705587658677776991, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
+      propertyPath: m_SortingOrder
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8792193126628388262, guid: 3bd2635a2d4baf245a183c67a2cbf4ed, type: 3}
       propertyPath: m_Pivot.x
       value: 0
