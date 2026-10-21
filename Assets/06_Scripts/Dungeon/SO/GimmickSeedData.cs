@@ -7,6 +7,4 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GimmickSeed", menuName = "Game/GimmickSeedData")]
 public class GimmickSeedData : InvenItemData
 {
-    [Tooltip("인벤토리 / 퀵슬롯 아이콘")]
-    public Sprite Icon;
 }
