@@ -159,6 +159,8 @@ public class DungeonProgressManager : MonoBehaviour
 
             if (player.Vitals != null)
             {
+                //던전 입장 시 체력 / 허기 가득 채움
+                player.Vitals.RestoreToFull();
                 player.Vitals.OnDied += OnPlayerDied;
             }
         }
