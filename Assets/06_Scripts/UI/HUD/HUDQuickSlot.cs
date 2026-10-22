@@ -100,6 +100,16 @@ public class HUDQuickSlot : MonoBehaviour
         ClearClickAction();
     }
 
+    /// <summary>
+    /// 키보드 단축키(1~8)로 이 칸을 누른다. 버튼을 클릭한 것과 같다. 눌렀으면 true.
+    /// </summary>
+    public bool Press()
+    {
+        if (button == null || !button.isActiveAndEnabled || !button.interactable) return false;
+        button.onClick.Invoke();
+        return true;
+    }
+
     public void SetNumberVisible(bool isVisible)
     {
         if (txtNumber != null)

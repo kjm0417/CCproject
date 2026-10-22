@@ -10,7 +10,7 @@ using UnityEngine.UI;
 ///   Grp_ShopMain  (아이템 목록 그리드 + 탭 버튼)
 ///   Grp_ShopChange (아이템 상세 + 수량 + 구매) — 기본 비활성
 /// </summary>
-public class ShopPanelUI : MonoBehaviour
+public class ShopPanelUI : MonoBehaviour, IEscapeClosable
 {
     [Header("화면 그룹")]
     [SerializeField] private GameObject grpShopMain;
@@ -76,6 +76,21 @@ public class ShopPanelUI : MonoBehaviour
         gameObject.SetActive(true);
         ShowMain();
         BuildItemList();
+        UIEscapeStack.Push(this);
+    }
+
+    // ESC: 상세 화면이면 목록으로, 목록 화면이면 상점 닫기
+    public bool IsEscapeOpen => gameObject.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape()
+    {
+        if (grpShopChange != null && grpShopChange.activeSelf)
+        {
+            ShowMain();
+            return;
+        }
+
+        Close();
     }
 
     public void Close()

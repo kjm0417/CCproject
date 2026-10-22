@@ -53,6 +53,22 @@ public class HUDTopPanel : PlayerHUDPanelBase
         skillTreePanel.Open(Context.Skills);
     }
 
+    /// <summary>
+    /// 키보드 단축키(K): 스킬 창이 열려 있으면 닫고, 닫혀 있으면 연다.
+    /// </summary>
+    public void ToggleSkills()
+    {
+        if (!isActiveAndEnabled) return;
+
+        if (skillTreePanel != null && skillTreePanel.gameObject.activeInHierarchy)
+        {
+            skillTreePanel.Close();
+            return;
+        }
+
+        OpenSkills();
+    }
+
     protected override void OnRelease()
     {
         if (skillTreePanel != null) skillTreePanel.Close();

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// 상세 패널: 결과 아이콘/이름, 재료 3칸(보유/필요), 제작 개수(화살표, 1~max), 소요시간, 제작 버튼, 진행 슬라이더.
 /// 제작 시작 시 재료를 소모하고, 1개씩 소요시간이 지나면 결과물 지급. 모두 끝나면 자동으로 UI를 닫는다.
 /// </summary>
-public class CraftingUI : MonoBehaviour
+public class CraftingUI : MonoBehaviour, IEscapeClosable
 {
     [Serializable]
     private class CategoryButton
@@ -131,6 +131,7 @@ public class CraftingUI : MonoBehaviour
         if (player != null && player.Inventory != null) player.Inventory.OnInventoryChanged += RefreshDetail;
 
         panelRoot.SetActive(true);
+        UIEscapeStack.Push(this);
         openedCategory = CraftLifeType.None;
         selectedRecipe = null;
         if (recipeListRoot != null) recipeListRoot.gameObject.SetActive(false);
@@ -160,6 +161,11 @@ public class CraftingUI : MonoBehaviour
         player = null;
         panelRoot.SetActive(false);
     }
+
+    // ESC: 닫기 버튼과 같다 (제작 중이면 닫지 않는다)
+    public bool IsEscapeOpen => panelRoot != null && panelRoot.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape() => OnCloseButton();
 
     /// <summary>
     /// 닫기 버튼 -> 제작대 Close (이동 정지 해제 + UI 닫기)

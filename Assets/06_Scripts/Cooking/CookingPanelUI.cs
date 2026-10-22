@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CookingPanelUI : MonoBehaviour
+public class CookingPanelUI : MonoBehaviour, IEscapeClosable
 {
     [SerializeField] private CookingData cookingData;
     [SerializeField] private int craftFacilityID;
@@ -64,10 +64,15 @@ public class CookingPanelUI : MonoBehaviour
 
     public void Close() => gameObject.SetActive(false);
 
+    // ESC: 요리 창 닫기 (조리·미니게임 중이면 취소되고 재료는 소모되지 않는다)
+    public bool IsEscapeOpen => gameObject.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape() => Close();
+
     // 외부 스테이션이 세션을 이어받을 때 호출. UI가 닫혀도 요리를 취소하지 않는다.
     public void DetachSession() => ownsSession = false;
 
-    private void OnEnable() { if (initialized) { Subscribe(); Refresh(); } }
+    private void OnEnable() { UIEscapeStack.Push(this); if (initialized) { Subscribe(); Refresh(); } }
     private void OnDisable() { Unsubscribe(); CancelSession(); OnPanelClosed?.Invoke(); }
 
     private void Subscribe()

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// 옵션 패널 - 배경음 / 효과음 볼륨 조절
 /// 값은 SoundManager가 PlayerPrefs에 저장 ( 앱 종료 후에도 유지 )
 /// </summary>
-public class OptionUI : MonoBehaviour
+public class OptionUI : MonoBehaviour, IEscapeClosable
 {
     [Header("Sliders")]
     [SerializeField] Slider bgmSlider;
@@ -22,8 +22,14 @@ public class OptionUI : MonoBehaviour
     }
 
     //열릴 때마다 저장된 값으로 슬라이더 맞춤
+    // ESC: 옵션 창 닫기 (볼륨 저장 포함)
+    public bool IsEscapeOpen => gameObject.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape() => Close();
+
     private void OnEnable()
     {
+        UIEscapeStack.Push(this);
         SoundManager sound = SoundManager.Instance;
         if (sound == null) return;
 

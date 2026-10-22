@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// 슬롯은 HUDQuickSlot 템플릿을 복제해서 사용한다.
 /// 상자 1개당 ChestUI 1개를 사용한다 (ChestObject가 자신의 ChestUI를 소유).
 /// </summary>
-public class ChestUI : MonoBehaviour
+public class ChestUI : MonoBehaviour, IEscapeClosable
 {
     [Header("패널")]
     [SerializeField]
@@ -70,6 +70,7 @@ public class ChestUI : MonoBehaviour
         if (currentChest != null) currentChest.OnStorageChanged += Refresh;
 
         panelRoot.SetActive(true);
+        UIEscapeStack.Push(this);
         PrepareChestSlots();
         if (ownedItemsView != null) ownedItemsView.Show(playerInventory, MoveToChest);
 
@@ -95,6 +96,11 @@ public class ChestUI : MonoBehaviour
         HUDBottomPanel hud = GetHUDPanel();
         if (hud != null) hud.SetItemClickOverride(null);
     }
+
+    // ESC: 닫기 버튼과 같다
+    public bool IsEscapeOpen => panelRoot != null && panelRoot.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape() => OnCloseButton();
 
     /// <summary>
     /// 닫기 버튼 클릭 처리. 상자 Close로 Sprite 복구 + 이동 정지 해제 + UI 닫기까지 진행된다.

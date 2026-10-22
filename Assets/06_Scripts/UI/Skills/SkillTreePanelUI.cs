@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [DisallowMultipleComponent]
-public class SkillTreePanelUI : MonoBehaviour
+public class SkillTreePanelUI : MonoBehaviour, IEscapeClosable
 {
     [SerializeField] private PlayerSkills playerSkills;
     [SerializeField] private TMP_Text pointsText;
@@ -112,7 +112,7 @@ public class SkillTreePanelUI : MonoBehaviour
         content.sizeDelta = Vector2.zero;
     }
 
-    private void OnEnable() { Subscribe(); Refresh(); }
+    private void OnEnable() { Subscribe(); Refresh(); UIEscapeStack.Push(this); }
     private void OnDisable() => Unsubscribe();
     private void OnDestroy() => Unsubscribe();
 
@@ -214,4 +214,9 @@ public class SkillTreePanelUI : MonoBehaviour
 
     public void Open() => gameObject.SetActive(true);
     public void Close() => gameObject.SetActive(false);
+
+    // ESC: 스킬 창 (다른 단축키는 막지 않는다)
+    public bool IsEscapeOpen => gameObject.activeInHierarchy;
+    public bool BlocksShortcuts => false;
+    public void CloseByEscape() => Close();
 }

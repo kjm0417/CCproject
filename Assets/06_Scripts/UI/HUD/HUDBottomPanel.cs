@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 
-public class HUDBottomPanel : PlayerHUDPanelBase
+public class HUDBottomPanel : PlayerHUDPanelBase, IEscapeClosable
 {
     private const int QuickSlotCount = 8;
     private const int InventorySlotIndex = 7;
@@ -60,6 +60,11 @@ public class HUDBottomPanel : PlayerHUDPanelBase
     private int pendingQuickSlotIndex = -1;
 
     public event Action OnInventoryRequested;
+
+    // ESC: 인벤토리 창 (다른 단축키는 막지 않는다)
+    public bool IsEscapeOpen => isInventoryOpen && inventoryPanel != null && inventoryPanel.activeInHierarchy;
+    public bool BlocksShortcuts => false;
+    public void CloseByEscape() => SetInventoryOpen(false);
     public bool IsInventoryOpen => isInventoryOpen;
 
     private void OnRectTransformDimensionsChange()
@@ -973,6 +978,33 @@ public class HUDBottomPanel : PlayerHUDPanelBase
             && targetSlots[index] != null;
     }
 
+    /// <summary>
+    /// 키보드 단축키(1~8): 퀵슬롯 index번 칸을 누른다. 8번 칸은 인벤토리 버튼이다.
+    /// </summary>
+    public void PressQuickSlot(int index)
+    {
+        if (!isActiveAndEnabled || quickSlots == null || index < 0 || index >= quickSlots.Length) return;
+        if (quickSlots[index] != null) quickSlots[index].Press();
+    }
+
+    /// <summary>
+    /// 키보드 단축키(Space): 상호작용 버튼을 누른다.
+    /// </summary>
+    public void PressInteractButton()
+    {
+        if (!isActiveAndEnabled || attackButton == null) return;
+        attackButton.TryPress();
+    }
+
+    /// <summary>
+    /// 키보드 단축키(I): 인벤토리 열기/닫기
+    /// </summary>
+    public void ToggleInventoryByKey()
+    {
+        if (!isActiveAndEnabled) return;
+        ToggleInventory();
+    }
+
     private void ToggleInventory()
     {
         if (inventoryPanel != null)
@@ -1001,6 +1033,7 @@ public class HUDBottomPanel : PlayerHUDPanelBase
         {
             inventoryPanel?.transform.SetAsLastSibling();
             RefreshQuickSlots();
+            UIEscapeStack.Push(this);
         }
 
         if (Context != null && Context.Movement != null)

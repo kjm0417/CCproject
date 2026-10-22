@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// 상태 : 제출 없음 ( B 던전 / 클리어 후 ) / 첫 클리어 전 제출 / 재료 부족
 /// 던전 입구에서 멀어지면 자동 닫힘
 /// </summary>
-public class DungeonEntryUI : MonoBehaviour
+public class DungeonEntryUI : MonoBehaviour, IEscapeClosable
 {
     [Header("패널")]
     [SerializeField]
@@ -107,6 +107,11 @@ public class DungeonEntryUI : MonoBehaviour
 
     public bool IsOpen => panelRoot.activeSelf;
 
+    // ESC: 던전 입장 창 닫기
+    public bool IsEscapeOpen => panelRoot != null && panelRoot.activeInHierarchy;
+    public bool BlocksShortcuts => true;
+    public void CloseByEscape() => Close();
+
     private void Awake()
     {
         if (panelRoot == null) panelRoot = gameObject;
@@ -149,6 +154,7 @@ public class DungeonEntryUI : MonoBehaviour
         this.onEnter = onEnter;
 
         panelRoot.SetActive(true);
+        UIEscapeStack.Push(this);
         if (refundTooltip != null) refundTooltip.SetActive(false);
         if (toastGroup != null) toastGroup.alpha = 0f;
 

@@ -7,24 +7,24 @@ using UnityEngine;
 /// </summary>
 public class EnemySkeleton : EnemyBase
 {
-    private void OnGUI()
-    {
-        if (enemyContext == null) return;
+    //private void OnGUI()
+    //{
+    //    if (enemyContext == null) return;
 
-        GUILayout.BeginArea(new Rect(310, 10, 220, 150), GUI.skin.box);
+    //    GUILayout.BeginArea(new Rect(310, 10, 220, 150), GUI.skin.box);
 
-        GUILayout.Label($"{name}");
-        GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
-        GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
+    //    GUILayout.Label($"{name}");
+    //    GUILayout.Label($"HP: {enemyContext.EnemyHelath.CurrentHealth} / {enemyContext.EnemyHelath.MaxHealth}");
+    //    GUILayout.Label($"IsDie: {enemyContext.EnemyHelath.IsDie}");
 
-        if (GUILayout.Button("TakeDamage 10"))
-            TakeDamage(10);
+    //    if (GUILayout.Button("TakeDamage 10"))
+    //        TakeDamage(10);
 
-        if (GUILayout.Button("TakeDamage 100"))
-            TakeDamage(100);
+    //    if (GUILayout.Button("TakeDamage 100"))
+    //        TakeDamage(100);
 
-        GUILayout.EndArea();
-    }
+    //    GUILayout.EndArea();
+    //}
     private EnemySkeltetonContext skeletonContext;
 
     [SerializeField]

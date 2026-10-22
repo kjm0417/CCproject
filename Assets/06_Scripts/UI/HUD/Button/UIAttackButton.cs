@@ -43,6 +43,19 @@ public class UIAttackButton : MonoBehaviour
         quickSlotAction = null;
     }
 
+    /// <summary>
+    /// 키보드 단축키(Space)로 상호작용 버튼을 누른다. 눌렀으면 true.
+    /// 윈도우 버전은 버튼을 화면에서 숨길 수 있으므로 활성 여부는 보지 않고,
+    /// 지금 상호작용할 수 있는지(interactable)만 확인한다.
+    /// </summary>
+    public bool TryPress()
+    {
+        if (context == null) return false;
+        if (btnAttack != null && !btnAttack.interactable) return false;
+        OnClick();
+        return true;
+    }
+
     public void UpdateTarget(IInteractable target,ToolType toolType)
     {
         currentTarget = target;

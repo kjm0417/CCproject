@@ -3907,30 +3907,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - HUDUI
       objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6173647550199469390, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6516656082310115263, guid: deb24c8238947bc42abba2c7ad864c8e, type: 3}
       propertyPath: m_Pivot.x
       value: 0

@@ -8,6 +8,10 @@ public class UIHUD : MonoBehaviour
     [SerializeField, Tooltip("Off: Top panel hidden ( e.g. dungeon scene )")] private bool showTopPanel = true;
 
     public PlayerContext Context { get; private set; }
+
+    // 키보드 단축키에서 사용 (상단 패널을 숨긴 씬에서는 null)
+    public HUDTopPanel TopPanel => showTopPanel ? topPanel : null;
+    public HUDBottomPanel BottomPanel => bottomPanel;
     public bool IsInitialized => Context != null;
 
     private IHUDPanel[] panels;
